@@ -6,13 +6,46 @@ if ($_SESSION['role'] !== 'admin') {
 }
 ?>
 
-<h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
-<ul>
-    <li><a href="admin/clients/list.php">View Clients</a></li>
-    <li><a href="admin/receipts/receipts.php">View Receipts</a></li>
-    <li><a href="expenses/view.php">View Expenses</a></li>
-    <li><a href="sales/view.php">View Sales</a></li>
-    <li><a href="reports/summary.php">Reports</a></li>
-    <li><a href="employees/manage.php">Manage Employees</a></li>
-    <li><a href="process/logout.php">Logout</a></li>
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .dashboard {
+            width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        .dashboard h2 {
+            margin-bottom: 30px;
+        }
+        .dashboard a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .dashboard a:hover {
+            background-color: #003f7f;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h2>Admin Dashboard</h2>
+        <a href="admin/clients/add.php">➕ Add New Client</a>
+        <a href="admin/clients/list.php">📋 View Clients</a>
+        <a href="employees/manage.php">👥 Manage Employees</a>
+        <a href="admin/receipts/add.php">🧾 Add Receipt</a>
+        <a href="admin/receipts/list.php">📂 View All Receipts</a>
+        <a href="reports/all_receipts.php">📄 View All Receipts Report</a>
+        <a href="process/logout.php">🚪 Logout</a>
+    </div>
+</body>
+</html>

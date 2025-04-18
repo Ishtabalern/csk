@@ -6,11 +6,43 @@ if ($_SESSION['role'] !== 'employee') {
 }
 ?>
 
-<h1>Welcome, <?php echo $_SESSION['username']; ?> (Employee)</h1>
-<ul>
-    <li><a href="receipts/add.php">Add Receipt</a></li>
-    <li><a href="receipts/view.php">My Receipts</a></li>
-    <li><a href="expenses/add.php">Add Expense</a></li>
-    <li><a href="sales/add.php">Add Sale</a></li>
-    <li><a href="process/logout.php">Logout</a></li>
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .dashboard {
+            width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        .dashboard h2 {
+            margin-bottom: 30px;
+        }
+        .dashboard a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .dashboard a:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h2>Employee Dashboard</h2>
+        <a href="receipts/add.php">🧾 Add Receipt</a>
+        <a href="receipts/view.php">📂 View My Receipts</a>
+        <a href="reports/all_receipts.php">📄 All Receipts Report</a>
+        <a href="process/logout.php">🚪 Logout</a>
+    </div>
+</body>
+</html>
