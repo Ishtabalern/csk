@@ -6,9 +6,10 @@ if ($_SESSION['role'] !== 'admin') {
 }
 ?>
 
-<h1>Welcome, Admin <?php echo $_SESSION['username']; ?>!</h1>
+<h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
 <ul>
-    <li><a href="receipts/view.php">View Receipts</a></li>
+    <li><a href="admin/clients/list.php">View Clients</a></li>
+    <li><a href="admin/receipts/receipts.php">View Receipts</a></li>
     <li><a href="expenses/view.php">View Expenses</a></li>
     <li><a href="sales/view.php">View Sales</a></li>
     <li><a href="reports/summary.php">Reports</a></li>

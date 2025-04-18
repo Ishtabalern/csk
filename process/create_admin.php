@@ -1,5 +1,5 @@
 <?php
-include 'includes/db.php';
+include '../includes/db.php';
 
 $username = "admin";
 $password = "admin123"; // change this later
