@@ -10,6 +10,7 @@ if ($_SESSION['role'] !== 'admin') {
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="partials/sidebar.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,6 +38,10 @@ if ($_SESSION['role'] !== 'admin') {
     </style>
 </head>
 <body>
+    <?php 
+    $page = 'admin_dashboard';
+    include 'partials/sidebar.php'; 
+    ?>
     <div class="dashboard">
         <h2>Admin Dashboard</h2>
         <a href="admin/clients/add.php">➕ Add New Client</a>
@@ -45,6 +50,8 @@ if ($_SESSION['role'] !== 'admin') {
         <a href="admin/receipts/add.php">🧾 Add Receipt</a>
         <a href="admin/receipts/list.php">📂 View All Receipts</a>
         <a href="reports/all_receipts.php">📄 View All Receipts Report</a>
+        <a href="admin/reports/sales_expense.php">📄 View Sales Vs Expense Report</a>
+        <a href="admin/reports/category_summary.php">📄 View Category Summary</a>
         <a href="process/logout.php">🚪 Logout</a>
     </div>
 </body>

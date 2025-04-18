@@ -10,6 +10,7 @@ if ($_SESSION['role'] !== 'employee') {
 <html>
 <head>
     <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="partials/sidebar.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,11 +38,17 @@ if ($_SESSION['role'] !== 'employee') {
     </style>
 </head>
 <body>
+    <?php
+    $page = 'employee_dashboard';
+    include 'partials/sidebar.php'; 
+    ?>
+
     <div class="dashboard">
         <h2>Employee Dashboard</h2>
         <a href="receipts/add.php">🧾 Add Receipt</a>
         <a href="receipts/view.php">📂 View My Receipts</a>
         <a href="reports/all_receipts.php">📄 All Receipts Report</a>
+        <a href="reports/category_summary.php">📄 View Category Summary</a>
         <a href="process/logout.php">🚪 Logout</a>
     </div>
 </body>

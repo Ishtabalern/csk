@@ -20,25 +20,34 @@ $payment_methods = $conn->query("SELECT DISTINCT payment_method FROM receipts");
 <head>
     <title>All Receipts Report</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../partials/sidebar.css">
     <style>
         body { font-family: Arial; padding: 20px; }
         h2 { margin-bottom: 20px; }
         select, input[type="date"] { padding: 5px; margin-right: 10px; }
         table { width: 100%; margin-top: 20px; }
+        .main {margin-left: 250px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        }
     </style>
 </head>
 <body>
-    <h2>📄 All Receipts Report</h2>
+    <?php
+     $page = 'all_receipts';
+     include '../partials/sidebar.php'; ?>
     <?php
     $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
     ?>
 
+<div class="main">
+    <h2>📄 All Receipts Report</h2>
     <a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
         ⬅️ Back to Dashboard
     </a>
     <br><br>
-
-
     <form method="GET">
         <label>Client:</label>
         <select name="client_id">
@@ -153,6 +162,7 @@ $payment_methods = $conn->query("SELECT DISTINCT payment_method FROM receipts");
         <input type="hidden" name="filters" value='<?= json_encode($_GET) ?>'>
         <button type="submit">📥 Export to Excel</button>
     </form>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

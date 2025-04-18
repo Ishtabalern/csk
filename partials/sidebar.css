@@ -1,0 +1,141 @@
+body {font-family: Arial, Helvetica, sans-serif;}
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: Arial, sans-serif;
+ 
+}
+
+:root{
+  --whiteBG :#fff;
+  --greenBG : #0B440F;
+  --flex: flex;
+  --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+  --border: #D0D0D0;
+}
+
+.sidebar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+    width: 230px; /* Expanded width to show text */
+    background-color: #062335;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px; /* Inner padding for spacing */
+    border-radius: 10px;
+    color: white;
+    overflow: hidden;
+    transition: width 0.3s ease; /* Smooth transition */
+    }
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Full width in expanded mode */
+    margin-top: 10px;
+  }
+  
+  .btn-container .btn-tabs {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 10px;
+    font-size: 17px;
+    color: var(--whiteBG);
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: transparent;
+    white-space: nowrap; /* Prevents text wrapping */
+    overflow: hidden; /* Hides text in collapsed mode */
+    text-overflow: ellipsis;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  
+  .btn-container .btn-tabs i {
+    margin-right: 10px;
+    min-width: 30px; /* Fixed width for consistent icon alignment */
+    text-align: center;
+  }
+  
+  .sidebar:hover .btn-tabs {
+    overflow: visible; /* Shows text content when expanded */
+  }
+  
+  .btn-container .btn-tabs:hover {
+    background-color: var(--whiteBG);
+    color: var(--greenBG);
+  }
+
+  .bottom-link {
+    margin-top: auto;
+  }
+  .bottom-btn {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 10px;
+    font-size: 17px;
+    color: var(--whiteBG);
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: transparent;
+    white-space: nowrap; /* Prevents text wrapping */
+    overflow: hidden; /* Hides text in collapsed mode */
+    text-overflow: ellipsis;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .bottom-link .bottom-btn:hover{
+    background-color: var(--whiteBG);
+    color: var(--greenBG);
+  }
+  
+  /* Company Logo */
+  .sidebar .company-logo img {
+    max-width: 100%; /* Icon size in collapsed mode */
+    height: auto;
+    transition: max-width 0.3s ease; /* Smooth transition for logo */
+    background-color:#f7f7f7 ;
+    border-radius: 7px;
+  }
+  
+  .sidebar:hover .company-logo img {
+    max-width: 100%; /* Full width for logo in expanded mode */
+  }
+
+  /* Responsive design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100px;
+    }
+  
+    .dashboard {
+        margin-left: 100px;
+    }
+  
+    .sidebar a {
+        font-size: 14px;
+        padding: 10px;
+    }
+  
+    .subcontainer {
+        flex-direction: column;
+    }
+  
+    .report-card {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+  
+    .transaction-list li span {
+        font-size: 14px;
+    }
+  }

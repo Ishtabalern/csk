@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $uploaded_by = $_SESSION['user_id'];
 
     // Handle image upload
-    $target_dir = "../uploads/";
+    $target_dir = "../uploads/receipts/";
     if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
 
     $image_name = basename($_FILES["image"]["name"]);
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $image_path)) {
         $stmt = $conn->prepare("INSERT INTO receipts (client_id, receipt_date, vendor, category, amount, payment_method, uploaded_by, image_path, created_at)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->bind_param("issssdss", $client_id, $receipt_date, $vendor, $category, $amount, $payment_method, $uploaded_by, $image_path);
+        $stmt->bind_param("isssssss", $client_id, $receipt_date, $vendor, $category, $amount, $payment_method, $uploaded_by, $image_path);
 
         if ($stmt->execute()) {
             $success = "Receipt uploaded successfully.";

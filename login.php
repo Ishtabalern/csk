@@ -33,11 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = "Invalid username or password.";
 }
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
 <!-- Simple login form -->
-<form method="POST">
-    <input type="text" name="username" placeholder="Username" required />
-    <input type="password" name="password" placeholder="Password" required />
-    <button type="submit">Login</button>
-    <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
-</form>
+<div class="center-container">
+    <div class="login-form">
+        <form method="POST" class="form">
+            <img src="imgs/csk_logo.png" alt="" class="logo">
+            <div class="title">Welcome,<br><span>please sign in to continue</span></div>
+            <input type="text" class="input" name="username" placeholder="Username" required />
+            <input type="password" class="input" name="password" placeholder="Password" required />
+            <button type="submit" class="button-confirm">Login</button>
+            <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
+        </form>
+    </div>
+</div>
+</body>
+</html>

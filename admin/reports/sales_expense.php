@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../../includes/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
+    header("Location: ../../login.php");
     exit();
 }
 
@@ -73,7 +73,7 @@ while ($row = $result->fetch_assoc()) {
 <body>
 
 <?php
-$dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+$dashboard_link = ($_SESSION['role'] === 'admin') ? '../../admin_dashboard.php' : '../employee_dashboard.php';
 ?>
 <a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
     ⬅️ Back to Dashboard

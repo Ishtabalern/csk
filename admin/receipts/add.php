@@ -87,3 +87,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <br>
 <a href="list.php">← Back to Receipt List</a>
+<a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>

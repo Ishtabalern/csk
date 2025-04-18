@@ -1,5 +1,5 @@
 <?php
-include_once '../includes/db.php';
+include_once '../../includes/db.php';
 
 // Get list of clients for the dropdown
 $clients = mysqli_query($conn, "SELECT id, name FROM clients");
@@ -15,14 +15,13 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../partials/sidebar.css">
+    <link rel="stylesheet" href="../../partials/sidebar.css">
 </head>
 <body>
- <!--   <?php include '../partials/sidebar.php'; ?> -->
+ <!--   <?php include '../../partials/sidebar.php'; ?> -->
 
 <div class="main-content p-4">
     <h2 class="mb-4">Category Summary Report</h2>
-    
     <form method="GET" class="mb-4 row g-3">
         <div class="col-md-4">
             <label for="client_id" class="form-label">Select Client:</label>
@@ -99,7 +98,7 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
         </tbody>
     </table>
 </div>
-<a href="../employee_dashboard.php">← Back to Employee Dashboard</a>
+<a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
 
 <!-- DataTables JS -->
 <script>
