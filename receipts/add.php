@@ -30,15 +30,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO receipts (client_id, receipt_date, vendor, category, amount, payment_method, uploaded_by, image_path, created_at)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
         $stmt->bind_param("isssssss", $client_id, $receipt_date, $vendor, $category, $amount, $payment_method, $uploaded_by, $image_path);
-
+    
         if ($stmt->execute()) {
-            $success = "Receipt uploaded successfully.";
+            $receipt_id = $stmt->insert_id;
+    
+            // 1. Create a journal entry
+            $description = "Receipt from $vendor for $category";
+            $entry_stmt = $conn->prepare("INSERT INTO journal_entries (client_id, entry_date, description, created_at) VALUES (?, ?, ?, NOW())");
+            $entry_stmt->bind_param("iss", $client_id, $receipt_date, $description);
+            $entry_stmt->execute();
+            $entry_id = $entry_stmt->insert_id;
+    
+            // 2. Determine account IDs
+            $debit_account_id = (stripos($category, 'sale') !== false) ? 1 : 2;  // Example: 1 = Cash, 2 = Expense
+            $credit_account_id = (stripos($category, 'sale') !== false) ? 3 : 1; // Example: 3 = Revenue, 1 = Cash
+    
+            // 3. Insert Debit line
+            $line_stmt = $conn->prepare("INSERT INTO journal_lines (entry_id, account_id, debit, credit) VALUES (?, ?, ?, 0)");
+            $line_stmt->bind_param("iid", $entry_id, $debit_account_id, $amount);
+            $line_stmt->execute();
+    
+            // 4. Insert Credit line
+            $line_stmt = $conn->prepare("INSERT INTO journal_lines (entry_id, account_id, debit, credit) VALUES (?, ?, 0, ?)");
+            $line_stmt->bind_param("iid", $entry_id, $credit_account_id, $amount);
+            $line_stmt->execute();
+    
+            $success = "Receipt uploaded and journal entry recorded successfully.";
         } else {
             $error = "Database error: " . $stmt->error;
         }
     } else {
         $error = "Failed to upload image.";
-    }
+    }    
 }
 ?>
 
