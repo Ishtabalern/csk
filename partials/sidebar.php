@@ -26,6 +26,9 @@ if (!isset($page)) {
         <?php if ($page === 'all_receipts'): ?>
             <img src="../imgs/csk_logo.png" alt="">
         <?php endif; ?>
+        <?php if ($page === 'view_reports'): ?>
+            <img src="../imgs/csk_logo.png" alt="">
+        <?php endif; ?>
             <img src="imgs/csk_logo.png" alt="">
         </div>
         
@@ -60,7 +63,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs" href="reports/all_receipts.php">All Receipts Report</a>
-                <a class="btn-tabs" href="reports/sales_expense.php">Sales Vs Expense</a>
+                <a class="btn-tabs" href="reports/view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
                 <a class="bottom-btn" href="process/logout.php">Logout</a>
@@ -69,15 +72,29 @@ if (!isset($page)) {
         
         <?php if ($_SESSION['role'] === 'employee' && $page === 'all_receipts'): ?>
             <div class="btn-container">
+                <a class="btn-tabs" href="../employee_dashboard.php">Home</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
-                <a class="btn-tabs" href="sales_expense.php">Sales Vs Expense</a>
+                <a class="btn-tabs" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
                 <a class="bottom-btn" href="process/logout.php">Logout</a>
             </div> 
         <?php endif; ?>   
+
+        <?php if ($_SESSION['role'] === 'employee' && $page === 'view_reports'): ?>
+            <div class="btn-container">
+                <a class="btn-tabs" href="../employee_dashboard.php">Home</a>
+                <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
+                <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
+                <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs" href="view_reports.php">Reports</a>
+            </div>
+            <div class="bottom-link">
+                <a class="bottom-btn" href="process/logout.php">Logout</a>
+            </div> 
+        <?php endif; ?>
 </div>
 </body>
 </html>

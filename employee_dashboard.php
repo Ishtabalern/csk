@@ -48,7 +48,6 @@ if ($_SESSION['role'] !== 'employee') {
         <a href="receipts/add.php">🧾 Add Receipt</a>
         <a href="receipts/view.php">📂 View My Receipts</a>
         <a href="reports/all_receipts.php">📄 All Receipts Report</a>
-        <a href="reports/category_summary.php">📄 View Category Summary</a>
         <a href="process/logout.php">🚪 Logout</a>
     </div>
 </body>
