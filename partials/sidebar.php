@@ -29,20 +29,38 @@ if (!isset($page)) {
         <?php if ($page === 'view_reports'): ?>
             <img src="../imgs/csk_logo.png" alt="">
         <?php endif; ?>
+        <?php if ($page === 'view_reports_admin'): ?>
+            <img src="../../imgs/csk_logo.png" alt="">
+        <?php endif; ?>
             <img src="imgs/csk_logo.png" alt="">
         </div>
         
         <?php if ($_SESSION['role'] === 'admin' && $page === 'admin_dashboard'): ?>
             <div class="btn-container">
+                <a class="btn-tabs <?= $page === 'admin_dashboard' ? 'active' : '' ?>" href="admin_dashboard.php">Home</a>
                 <a class="btn-tabs" href="admin/clients/add.php">Add New Client</a>
                 <a class="btn-tabs" href="admin/clients/list.php">View Clients</a>
                 <a class="btn-tabs" href="employees/manage.php">Manage Employees</a>
                 <a class="btn-tabs" href="admin/receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="admin/receipts/list.php">View All Receipts</a>
+                <a class="btn-tabs" href="admin/reports/view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
                 <a class="bottom-btn" href="process/logout.php">Logout</a>
             </div>    
+        <?php endif; ?>
+
+        <?php if ($_SESSION['role'] === 'admin' && $page === 'view_reports_admin'): ?>
+            <div class="btn-container">
+                <a class="btn-tabs" href="../../admin_dashboard.php">Home</a>
+                <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
+                <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
+                <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs <?= $page === 'view_reports_admin' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
+            </div>
+            <div class="bottom-link">
+                <a class="bottom-btn" href="process/logout.php">Logout</a>
+            </div> 
         <?php endif; ?>
 
         <?php if ($_SESSION['role'] === 'admin' && $page === 'all_receipts'): ?>
@@ -60,6 +78,7 @@ if (!isset($page)) {
         
         <?php if ($_SESSION['role'] === 'employee' && $page === 'employee_dashboard'): ?>
             <div class="btn-container">
+                <a class="btn-tabs <?= $page === 'employee_dashboard' ? 'active' : '' ?>" href="employee_dashboard.php">Home</a>
                 <a class="btn-tabs" href="receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs" href="reports/all_receipts.php">All Receipts Report</a>
@@ -75,7 +94,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../employee_dashboard.php">Home</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
-                <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs <?= $page === 'all_receipts' ? 'active' : '' ?>" href="all_receipts.php">All Receipts Report</a>
                 <a class="btn-tabs" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
@@ -89,7 +108,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
-                <a class="btn-tabs" href="view_reports.php">Reports</a>
+                <a class="btn-tabs <?= $page === 'view_reports' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
                 <a class="bottom-btn" href="process/logout.php">Logout</a>

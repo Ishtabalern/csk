@@ -110,24 +110,24 @@ $payment_methods = $conn->query("SELECT DISTINCT payment_method FROM receipts");
             $where = [];
             if (!empty($_GET['client_id'])) {
                 $client_id = intval($_GET['client_id']);
-                $where[] = "client_id = $client_id";
+                $where[] = "r.client_id = $client_id";
             }
             if (!empty($_GET['vendor'])) {
                 $vendor = $conn->real_escape_string($_GET['vendor']);
-                $where[] = "vendor = '$vendor'";
+                $where[] = "r.vendor = '$vendor'";
             }
             if (!empty($_GET['category'])) {
                 $category = $conn->real_escape_string($_GET['category']);
-                $where[] = "category = '$category'";
+                $where[] = "r.category = '$category'";
             }
             if (!empty($_GET['payment_method'])) {
                 $pm = $conn->real_escape_string($_GET['payment_method']);
-                $where[] = "payment_method = '$pm'";
+                $where[] = "r.payment_method = '$pm'";
             }
             if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
                 $from = $_GET['from_date'];
                 $to = $_GET['to_date'];
-                $where[] = "receipt_date BETWEEN '$from' AND '$to'";
+                $where[] = "r.receipt_date BETWEEN '$from' AND '$to'";
             }
 
             $filterQuery = "SELECT r.*, c.name AS client_name, u.username 

@@ -16,31 +16,39 @@ $totals = [
 if ($client_id) {
     $stmt = $conn->prepare("
         SELECT 
-            a.id, a.name, a.type, a.subtype,
-            SUM(CASE WHEN jl.debit IS NOT NULL THEN jl.debit ELSE 0 END) as total_debit,
-            SUM(CASE WHEN jl.credit IS NOT NULL THEN jl.credit ELSE 0 END) as total_credit
-        FROM accounts a
-        LEFT JOIN journal_lines jl ON jl.account_id = a.id
-        LEFT JOIN journal_entries je ON jl.entry_id = je.id
+            a.id AS account_id,
+            a.name AS account_name,
+            a.type AS account_type,
+            a.subtype,
+            SUM(jl.debit) AS total_debit,
+            SUM(jl.credit) AS total_credit
+        FROM journal_entries je
+        JOIN journal_lines jl ON je.id = jl.entry_id
+        JOIN accounts a ON jl.account_id = a.id
         WHERE je.client_id = ? AND je.entry_date <= ?
-        GROUP BY a.id
+        GROUP BY a.id, a.name, a.type, a.subtype
+
     ");
     $stmt->bind_param("is", $client_id, $end_date);
     $stmt->execute();
     $result = $stmt->get_result();
 
     while ($row = $result->fetch_assoc()) {
+        $type = strtolower($row['account_type']);
         $balance = $row['total_debit'] - $row['total_credit'];
-        if ($row['type'] === 'liability' || $row['type'] === 'equity') {
+        if ($row['account_type'] === 'Liability' || $row['account_type'] === 'Equity') {
             $balance = $row['total_credit'] - $row['total_debit'];
         }
-        $accounts_data[$row['type']][] = [
-            'name' => $row['name'],
+        $type = strtolower($row['account_type']);
+        $accounts_data[$type][] = [        
+            'name' => $row['account_name'],
             'subtype' => $row['subtype'],
             'balance' => $balance
         ];
-        $totals[$row['type']] += $balance;
-    }
+        if (array_key_exists($type, $totals)) {
+            $totals[$type] += $balance;
+        }
+    }    
 }
 ?>
 
