@@ -31,8 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $category_type = (stripos($category_name, 'sale') !== false || stripos($category_name, 'revenue') !== false) ? 'income' : 'expense';
 
         // Default account IDs
-        $default_debit_account_id = 2;  // Expense account
-        $default_credit_account_id = 1; // Cash account
+        if ($category_type === 'income') {
+            $default_debit_account_id = 1;  // Cash (Asset)
+            $default_credit_account_id = 3; // Sales Revenue
+        } else {
+            $default_debit_account_id = 4;  // Utilities Expense (Expense)
+            $default_credit_account_id = 1; // Cash (Asset)
+        }
+        
 
         $insert_cat = $conn->prepare("INSERT INTO categories (client_id, name, type, debit_account_id, credit_account_id, created_at)
                                     VALUES (?, ?, ?, ?, ?, NOW())");
@@ -56,13 +62,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->execute()) {
             $success = "Receipt uploaded successfully.";
         
-            // STEP 1: Fetch category info to get type, debit_account_id, credit_account_id
+            // STEP 1: Fetch or create category
             $category_stmt = $conn->prepare("SELECT * FROM categories WHERE name = ? AND client_id = ?");
-            $category_stmt->bind_param("si", $category, $client_id);
+            $category_stmt->bind_param("si", $category_name, $client_id);
             $category_stmt->execute();
             $category_result = $category_stmt->get_result();
             $category_data = $category_result->fetch_assoc();
-        
+
+            if (!$category_data) {
+                // Determine type
+                $category_type = (stripos($category_name, 'sale') !== false || stripos($category_name, 'revenue') !== false) ? 'income' : 'expense';
+
+                // Assign proper default accounts
+                if ($category_type === 'income') {
+                    $debit_account_id = 1;  // Cash
+                    $credit_account_id = 3; // Sales Revenue
+                } else {
+                    $debit_account_id = 4;  // Utilities Expense
+                    $credit_account_id = 1; // Cash
+                }
+
+                $insert_cat = $conn->prepare("INSERT INTO categories (client_id, name, type, debit_account_id, credit_account_id, created_at)
+                                            VALUES (?, ?, ?, ?, ?, NOW())");
+                $insert_cat->bind_param("issii", $client_id, $category_name, $category_type, $debit_account_id, $credit_account_id);
+                $insert_cat->execute();
+            } else {
+                // Use existing category account assignments
+                $category_type = $category_data['type'];
+                $debit_account_id = $category_data['debit_account_id'];
+                $credit_account_id = $category_data['credit_account_id'];
+            }
+    
             if ($category_data) {
                 $category_type = $category_data['type'];
                 $debit_account_id = $category_data['debit_account_id'];
