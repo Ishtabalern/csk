@@ -1,0 +1,147 @@
+
+* {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   text-decoration: none;
+   box-sizing: border-box;
+   scroll-behavior: smooth;
+   font-family: Arial, sans-serif;
+  
+}
+
+body {
+   font-family: Arial, sans-serif;
+   background-color: #dce3e9;
+}
+.dashboard {
+   /* 
+      width: 400px;
+      margin: 100px auto;
+      text-align: center;
+   */
+   margin-left: 250px;
+   padding: 20px;
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+.dashboard .dashboard-header {
+   margin-bottom: 30px;
+}
+
+.client-dropdown{
+   display: flex;
+   align-items: center;
+   gap: 20px;
+ }
+
+ .client-dropdown label{
+   font-size: 1rem;
+   font-weight: bolder;
+ }
+
+ .client-dropdown select {
+   width: 200px;
+   padding: 10px;
+   font-size: 1rem;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   background-color: white;
+   cursor: pointer;
+   border-radius: 6px;
+ }
+
+
+.dashboard .container {
+   display: flex;
+   gap: 20px;
+   margin-top: 10px;
+}
+
+.container .section{
+   background-color: #fff;
+   padding: 20px;
+   max-width: 800px;
+   width: 100%; /* full width of container */
+   border: 1px solid rgb(178, 178, 178);
+   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+   border-radius: 6px;
+}
+
+
+.section h2{
+   margin-bottom: 20px;
+   font-size: 30px;
+}
+
+.section .shortcut-container{
+   display: flex;
+   align-items: center;
+   flex-direction: row;
+   justify-content: center;
+   flex-wrap: wrap;
+   gap: 20px;
+}
+
+.shortcut-container a {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+   gap: 10px;
+   background-color: #efefef;
+   width: 150px;
+   height: 150px;
+   text-align: center;
+   padding: 4px;
+   border-radius: 4px;
+   transition: background-color 0.3s ease; /* duration added */
+}
+
+.shortcut-container a:hover {
+   background-color: #e5e5e5; /* uncommented and now active */
+}
+
+.shortcut-container a span{
+   font-size: 4rem;
+}
+
+.shortcut-container a label{ 
+   font-weight: bold;
+   color: #4e4e4e;
+}
+
+/*box container */
+
+.box-container{
+   display: flex;
+   align-items: center;
+   gap: 20px;
+   width: 100%;
+}
+
+
+.box-container .box{
+   background-color: #fff;
+   width: 100%; /* full width of container */
+   max-width: 400px;
+   height: 150px;
+   border-radius: 6px;
+   border: 1px solid rgb(178, 178, 178);
+   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 20px 0px;
+   gap: 20px;
+
+}
+
+.box h1{
+   font-size: 30px;
+}
+
+.box span{
+   font-size: 20px;
+   color: #1ABC9C;
+}

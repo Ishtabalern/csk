@@ -31,34 +31,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add New Client</title>
+    <link rel="stylesheet" href="../../styles/clients/add.css">
+</head>
+<body>
 
-<h2>Add New Client</h2>
+    <div class="container">
+        <h2>Add New Client</h2>
+       
+        <?php if ($success): ?>
+        <p style="color: green;"><?= $success ?></p>
+        <?php elseif ($error): ?>
+            <p style="color: red;"><?= $error ?></p>
+        <?php endif; ?>
 
-<?php if ($success): ?>
-    <p style="color: green;"><?= $success ?></p>
-<?php elseif ($error): ?>
-    <p style="color: red;"><?= $error ?></p>
-<?php endif; ?>
+        <div class="forms-container">
+            <form method="POST">
+                <div class="input">
+                    <label>Client Name*</label><br>
+                    <input type="text" name="name" value="<?= htmlspecialchars($name) ?>" required>
+                </div>
+                
+                <div class="input">
+                    <label>Contact Person</label><br>
+                    <input type="text" name="contact_person" value="<?= htmlspecialchars($contact_person) ?>">
+                </div>
 
-<form method="POST">
-    <label>Client Name*</label><br>
-    <input type="text" name="name" value="<?= htmlspecialchars($name) ?>" required><br><br>
+                <div class="input">
+                    <label>Email</label><br>
+                    <input type="email" name="email" value="<?= htmlspecialchars($email) ?>">
+                </div>
 
-    <label>Contact Person</label><br>
-    <input type="text" name="contact_person" value="<?= htmlspecialchars($contact_person) ?>"><br><br>
+                <div class="input">
+                    <label>Phone</label><br>
+                    <input type="text" name="phone" value="<?= htmlspecialchars($phone) ?>">
+                </div>
 
-    <label>Email</label><br>
-    <input type="email" name="email" value="<?= htmlspecialchars($email) ?>"><br><br>
+                <div class="input full-width">
+                    <label>Address</label><br>
+                    <textarea name="address"><?= htmlspecialchars($address) ?></textarea>
+                </div>
 
-    <label>Phone</label><br>
-    <input type="text" name="phone" value="<?= htmlspecialchars($phone) ?>"><br><br>
+                
+                <button type="submit">➕ Add Client</button>
+            </form>
+        </div>
 
-    <label>Address</label><br>
-    <textarea name="address"><?= htmlspecialchars($address) ?></textarea><br><br>
+        <div class="btns">
+            <a href="list.php">← Back to Client List</a>
+            <a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
+        </div>
+       
+    </div>
 
-    <button type="submit">➕ Add Client</button>
-</form>
 
-<br>
-<a href="list.php">← Back to Client List</a>
-<a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
+
+</body>
+</html>
