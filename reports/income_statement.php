@@ -94,5 +94,6 @@ if ($client_id) {
             <?= number_format($total_income - $total_expenses, 2) ?>
         </h3>
     <?php endif; ?>
+    <a href="view_reports.php">← Back to Reports</a>
 </body>
 </html>

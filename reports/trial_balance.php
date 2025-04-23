@@ -30,16 +30,20 @@ $where_sql = !empty($conditions) ? "WHERE " . implode(" AND ", $conditions) : ""
 // Fetch accounts and calculate balances
 $sql = "
     SELECT 
-        a.code, a.name,
-        SUM(COALESCE(jl.debit, 0)) AS total_debit,
-        SUM(COALESCE(jl.credit, 0)) AS total_credit
-    FROM accounts a
-    LEFT JOIN journal_lines jl ON jl.account_id = a.id
-    LEFT JOIN journal_entries je ON je.id = jl.entry_id
+        a.id AS account_id,
+        a.name AS account_name,
+        a.code AS account_code,
+        a.type AS account_type,
+        SUM(CASE WHEN jl.debit > 0 THEN jl.debit ELSE 0 END) AS total_debit,
+        SUM(CASE WHEN jl.credit > 0 THEN jl.credit ELSE 0 END) AS total_credit
+    FROM journal_lines jl
+    JOIN journal_entries je ON jl.entry_id = je.id
+    JOIN accounts a ON jl.account_id = a.id
     $where_sql
     GROUP BY a.id
     ORDER BY a.code
 ";
+
 
 $result = $conn->query($sql);
 $rows = [];
@@ -103,23 +107,36 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
         <tr>
             <th class="left">Account Code</th>
             <th class="left">Account Name</th>
+            <th class="left">Type</th>
             <th>Debit (₱)</th>
             <th>Credit (₱)</th>
+            <th>Running Debit</th>
+            <th>Running Credit</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($rows as $r): ?>
+        <?php 
+        $running_debit = 0;
+        $running_credit = 0;
+        foreach ($rows as $r): 
+            $running_debit += $r['total_debit'];
+            $running_credit += $r['total_credit'];
+        ?>
             <tr>
-                <td class="left"><?= htmlspecialchars($r['code']) ?></td>
-                <td class="left"><?= htmlspecialchars($r['name']) ?></td>
+                <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
+                <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
+                <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
                 <td><?= number_format($r['total_debit'], 2) ?></td>
                 <td><?= number_format($r['total_credit'], 2) ?></td>
+                <td><?= number_format($running_debit, 2) ?></td>
+                <td><?= number_format($running_credit, 2) ?></td>
             </tr>
         <?php endforeach; ?>
         <tr>
-            <th colspan="2">TOTAL</th>
+            <th colspan="3">TOTAL</th>
             <th><?= number_format($total_debit, 2) ?></th>
             <th><?= number_format($total_credit, 2) ?></th>
+            <th colspan="2"></th>
         </tr>
     </tbody>
 </table>

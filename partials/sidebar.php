@@ -55,11 +55,11 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../../admin_dashboard.php">Home</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
-                <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs" href="../receipts/receipts.php">All Receipts Report</a>
                 <a class="btn-tabs <?= $page === 'view_reports_admin' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
-                <a class="bottom-btn" href="process/logout.php">Logout</a>
+                <a class="bottom-btn" href="../../process/logout.php">Logout</a>
             </div> 
         <?php endif; ?>
 
@@ -98,7 +98,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
-                <a class="bottom-btn" href="process/logout.php">Logout</a>
+                <a class="bottom-btn" href="../process/logout.php">Logout</a>
             </div> 
         <?php endif; ?>   
 
@@ -111,7 +111,7 @@ if (!isset($page)) {
                 <a class="btn-tabs <?= $page === 'view_reports' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
-                <a class="bottom-btn" href="process/logout.php">Logout</a>
+                <a class="bottom-btn" href="../process/logout.php">Logout</a>
             </div> 
         <?php endif; ?>
 </div>
