@@ -47,26 +47,41 @@ if ($client_id) {
 <head>
     <title>Income Statement</title>
     <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../styles/reports/income_statement.css">
 </head>
 <body>
-    <h2>Income Statement</h2>
+    <h1>Income Statement</h1>
 
-    <form method="get">
-        <label>Client:</label>
-        <select name="client_id" required>
-            <option value="">Select Client</option>
-            <?php while ($c = $clients->fetch_assoc()): ?>
-                <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
-            <?php endwhile; ?>
-        </select>
+    <div class="client-container">
+        <form class="client" method="get">
+            <div class="section">
+                
+                <div class="input">
+                    <label>Client:</label>
+                    <select name="client_id" required>
+                        <option value="">Select Client</option>
+                        <?php while ($c = $clients->fetch_assoc()): ?>
+                            <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-        <label>From:</label>
-        <input type="date" name="start_date" value="<?= $start_date ?>" required>
-        <label>To:</label>
-        <input type="date" name="end_date" value="<?= $end_date ?>" required>
+                <div class="input">             
+                    <label>From:</label>
+                    <input type="date" name="start_date" value="<?= $start_date ?>" required>
+                </div>
 
-        <button type="submit">Generate</button>
-    </form>
+                <div class="input">              
+                    <label>To:</label>
+                    <input type="date" name="end_date" value="<?= $end_date ?>" required>
+                </div>
+
+            </div>
+        
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+ 
 
     <?php if ($client_id): ?>
         <h3>From <?= $start_date ?> to <?= $end_date ?></h3>
@@ -94,6 +109,89 @@ if ($client_id) {
             <?= number_format($total_income - $total_expenses, 2) ?>
         </h3>
     <?php endif; ?>
-    <a href="view_reports.php">← Back to Reports</a>
+
+    <div class="incomeStatement-container">
+        <div class="customer-name"> 
+            <p>Customer Name</p>
+            <h3 id="tab-content">Income Statement</h3>
+        </div>
+                        
+        <div class="table">
+            <table>
+                <tr>
+                    <td class="left bold top"></td>
+                    <td class="top"></td>
+                </tr>
+                <tr>
+                    <td class="left bold">Income</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="middle">Net Income</td>
+                    <td class="right bold">20</td>
+                </tr>
+                <tr>
+                    <td class="middle">Deferred Tax</td>
+                    <td class="right bold">₱ 1,000</td>
+                </tr>
+                <tr>
+                    <td class="middle">Depredation</td>
+                    <td class="right">(₱ 119,000)</td>
+                </tr>
+                <tr>
+                    <td class="middle" style="text-indent: 40px;">Cash from Accounts Receivable</td>
+                    <td class="right">(₱ 119,000)</td>
+                </tr>
+                <tr>
+                    <td class="middle" style="text-indent: 40px;">Cash from Inventory</td>
+                    <td class="right">326,414</td>
+                </tr>
+                <tr>
+                    <td class="middle" style="text-indent: 40px;">Cash from Accounts Payable</td>
+                    <td class="right">123123123</td>
+                </tr>
+                <tr>
+                    <td class="middle bottom">Total Income</td>
+                    <td class="right bottom">123123123</td>
+                </tr>
+                <tr>
+                    <td class="left bold">Expenses</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="middle">Andoks manoy</td>
+                    <td class="right">69</td>
+                </tr>
+                <tr>
+                    <td class="middle bottom">Total expenses</td>
+                    <td class="right bottom">69</td>
+                </tr>
+                <tr>
+                    <td class="middle bottom">Income before taxes</td>
+                    <td class="right bottom">69</td>
+                </tr>
+                <tr>
+                    <td class="middle bottom">Income tax expense</td>
+                    <td class="right bottom">69</td>
+                </tr>
+                <tr>
+                    <td class="middle bottom">Net income</td>
+                    <td class="right bottom">69</td>
+                </tr>
+          
+
+                
+            </table>
+        </div>
+        
+        <div class="btn">
+            <a href="view_reports.php">← Back to Reports</a>
+        </div>
+       
+    </div>
+    
+    
+    
+    
 </body>
 </html>
