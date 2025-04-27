@@ -126,44 +126,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h2>Upload Receipt</h2>
 
-<?php if (isset($success)) echo "<p style='color:green;'>$success</p>"; ?>
-<?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
-<form method="POST" enctype="multipart/form-data">
-    <label>Client:</label><br>
-    <select name="client_id" required>
-        <option value="">Select Client</option>
-        <?php while ($row = $clients->fetch_assoc()): ?>
-            <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
-        <?php endwhile; ?>
-    </select><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Receipt</title>
+    <link rel="stylesheet" href="add.css">
+</head>
+<body>
 
-    <label>Receipt Date:</label><br>
-    <input type="date" name="receipt_date" required><br><br>
+    <h1>Upload Receipt</h1>
+    <?php if (isset($success)) echo "<p style='color:green;'>$success</p>"; ?>
+    <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
-    <label>Vendor:</label><br>
-    <input type="text" name="vendor" required><br><br>
+    <div class="forms-container"> 
+        <form method="POST" enctype="multipart/form-data">
 
-    <label>Category:</label><br>
-    <input type="text" name="category" required><br><br>
+            <div class="input full-width">
+                <label>Client:</label>
+                <select name="client_id" required>
+                    <option value="">Select Client</option>
+                    <?php while ($row = $clients->fetch_assoc()): ?>
+                        <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 
-    <label>Amount:</label><br>
-    <input type="number" step="0.01" name="amount" required><br><br>
+            <div class="input">
+                <label>Receipt Date:</label>
+                <input type="date" name="receipt_date" required>
+            </div>
 
-    <label>Payment Method:</label><br>
-    <select name="payment_method" required>
-        <option value="">Select Method</option>
-        <option value="Cash">Cash</option>
-        <option value="Bank Transfer">Bank Transfer</option>
-        <option value="GCash">GCash</option>
-    </select><br><br>
+            <div class="input">
+                <label>Vendor:</label>
+                <input type="text" name="vendor" required>
+            </div>
 
-    <label>Receipt Image:</label><br>
-    <input type="file" name="image" accept="image/*" required><br><br>
+            <div class="input">
+                <label>Category:</label>
+                <input type="text" name="category" required>
+            </div>
 
-    <button type="submit">Upload</button>
-</form>
+            <div class="input">
+                <label>Amount:</label>
+                <input type="number" step="0.01" name="amount" required>
+            </div>
 
-<a href="../employee_dashboard.php">← Back to Dashboard</a>
+            <div class="input">
+                <label>Payment Method:</label>
+                <select name="payment_method" required>
+                    <option value="">Select Method</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="GCash">GCash</option>
+                </select>
+            </div>
+
+            <div class="input full-width">
+                <label>Receipt Image:</label>
+                <input type="file" name="image" accept="image/*" required>
+            </div>
+
+            <button type="submit">Upload</button>
+        </form>
+
+        <a href="../employee_dashboard.php">← Back to Dashboard</a>
+    </div>
+    
+</body>
+</html>
+
+
+
+
+
+
