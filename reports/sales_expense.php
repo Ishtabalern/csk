@@ -19,7 +19,7 @@ $monthly_expenses = array_fill(1, 12, 0);
 $whereParts = [];
 
 if (!empty($client_id)) {
-    $whereParts[] = "client_id = " . intval($client_id);
+    $whereParts[] = "receipts.client_id = " . intval($client_id);
 }
 
 if (!empty($startDate)) {
@@ -35,22 +35,29 @@ if (!empty($whereParts)) {
     $whereClause = "WHERE " . implode(" AND ", $whereParts);
 }
 
-$sql = "SELECT MONTH(receipt_date) AS month, category, SUM(amount) AS total
+// Updated SQL to JOIN categories table
+$sql = "SELECT 
+            MONTH(receipt_date) AS month, 
+            categories.type AS category_type, 
+            SUM(amount) AS total
         FROM receipts
+        LEFT JOIN categories 
+            ON receipts.category = categories.name 
+            AND receipts.client_id = categories.client_id
         $whereClause
-        GROUP BY MONTH(receipt_date), category";
+        GROUP BY MONTH(receipt_date), categories.type";
 
 
 $result = $conn->query($sql);
 
 while ($row = $result->fetch_assoc()) {
     $month = (int)$row['month'];
-    $category = strtolower($row['category']);
+    $category_type = strtolower($row['category_type']);
     $amount = (float)$row['total'];
 
-    if (strpos($category, 'sale') !== false) {
+    if ($category_type === 'income') {
         $monthly_sales[$month] += $amount;
-    } elseif (strpos($category, 'expense') !== false || strpos($category, 'purchase') !== false) {
+    } elseif ($category_type === 'expense') {
         $monthly_expenses[$month] += $amount;
     }
 }
