@@ -145,3 +145,38 @@ body {
    font-size: 20px;
    color: #1ABC9C;
 }
+
+.card {
+   background: #fff;
+   padding: 25px;
+   border-radius: 12px;
+   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.card h3 {
+   margin-top: 0;
+   font-size: 18px;
+   color: #333;
+}
+.amount {
+   font-size: 28px;
+   margin: 15px 0;
+   font-weight: bold;
+   color: #2e7d32;
+}
+.expense {
+   color: #c62828;
+}
+.bar {
+   height: 8px;
+   border-radius: 5px;
+   background: #d1e7dd;
+   overflow: hidden;
+   margin-top: 10px;
+}
+.bar-fill {
+   height: 100%;
+   background: #2e7d32;
+}
+canvas {
+   max-width: 100%;
+}
