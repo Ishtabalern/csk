@@ -16,30 +16,37 @@ $total_expenses = 0;
 
 if ($client_id) {
     $stmt = $conn->prepare("
-        SELECT a.name, a.type, SUM(jl.debit) AS total_debit, SUM(jl.credit) AS total_credit
-        FROM journal_entries je
-        JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN accounts a ON jl.account_id = a.id
-        WHERE je.client_id = ? AND je.entry_date BETWEEN ? AND ?
-        AND a.type IN ('Income', 'Expense', 'Revenue')
-        GROUP BY a.id
+        SELECT c.name AS category_name, c.type, SUM(r.amount) AS total_amount
+        FROM receipts r
+        JOIN categories c ON r.category = c.name AND c.client_id = r.client_id
+        WHERE r.client_id = ? 
+          AND r.receipt_date BETWEEN ? AND ?
+          AND c.type IN ('income', 'expense')
+        GROUP BY c.name, c.type
+        ORDER BY FIELD(c.type, 'income', 'expense')
     ");
     $stmt->bind_param("iss", $client_id, $start_date, $end_date);
     $stmt->execute();
     $result = $stmt->get_result();
 
+    $income = [];
+    $expenses = [];
+    $total_income = 0;
+    $total_expenses = 0;
+
     while ($row = $result->fetch_assoc()) {
-        $balance = $row['total_credit'] - $row['total_debit']; // income is credit > debit
-        if (strtolower($row['type']) === 'income' || strtolower($row['type']) === 'revenue') {
-            $income[] = ['name' => $row['name'], 'amount' => $balance];
-            $total_income += $balance;
-        } elseif (strtolower($row['type']) === 'expense') {
-            $balance = $row['total_debit'] - $row['total_credit']; // expenses are debit > credit
-            $expenses[] = ['name' => $row['name'], 'amount' => $balance];
-            $total_expenses += $balance;
+        $amount = $row['total_amount'];
+        if ($row['type'] === 'income') {
+            $income[] = ['name' => $row['category_name'], 'amount' => $amount];
+            $total_income += $amount;
+        } else {
+            $expenses[] = ['name' => $row['category_name'], 'amount' => $amount];
+            $total_expenses += $amount;
         }
     }
 }
+
+
 
 $client_name = '';
 if (!empty($client_id)) {
@@ -110,7 +117,6 @@ if (!empty($client_id)) {
                 </table>
             </div>
 
-            <h4>Expenses</h4>
             <div class="table">
                 <table border="1" cellpadding="5">
                     <tr><td class="left bold">Expense</td></tr>
@@ -123,8 +129,8 @@ if (!empty($client_id)) {
             </div>
 
             <h3>
-                <?= ($total_income - $total_expenses) >= 0 ? 'Net Profit' : 'Net Loss' ?>:
-                <?= number_format($total_income - $total_expenses, 2) ?>
+            <?= ($total_income - $total_expenses) >= 0 ? 'Net Profit' : 'Net Loss' ?>:
+            <?= number_format($total_income - $total_expenses, 2) ?>
             </h3>
 
             <div class="btn">

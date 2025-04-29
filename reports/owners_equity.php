@@ -39,7 +39,7 @@ if (!empty($end_date)) {
 $where_sql = !empty($conditions) ? "WHERE " . implode(" AND ", $conditions) : "";
 
 // Get Capital Account (first account with 'capital' in name)
-$capital_account = $conn->query("SELECT id FROM accounts WHERE name LIKE '%capital%' LIMIT 1")->fetch_assoc();
+$capital_account = $conn->query("SELECT id FROM accounts WHERE type = 'Equity' AND name LIKE '%capital%' LIMIT 1")->fetch_assoc();
 $capital_account_id = $capital_account['id'] ?? null;
 
 // Beginning Capital (before start date)
@@ -78,8 +78,8 @@ if (!empty($client_id) && !empty($start_date)) {
 // Net Income (same logic as income statement)
 $income_sql = "
     SELECT 
-        SUM(CASE WHEN a.type = 'income' THEN jl.credit - jl.debit ELSE 0 END) -
-        SUM(CASE WHEN a.type = 'expense' THEN jl.debit - jl.credit ELSE 0 END) AS net_income
+        SUM(CASE WHEN a.type = 'Revenue' THEN jl.credit - jl.debit ELSE 0 END) -
+        SUM(CASE WHEN a.type = 'Expense' THEN jl.debit - jl.credit ELSE 0 END) AS net_income
     FROM journal_lines jl
     JOIN journal_entries je ON jl.entry_id = je.id
     JOIN accounts a ON jl.account_id = a.id
@@ -94,7 +94,7 @@ $withdrawal_sql = "
     FROM journal_lines jl
     JOIN journal_entries je ON jl.entry_id = je.id
     JOIN accounts a ON jl.account_id = a.id
-    $where_sql AND a.name LIKE '%withdrawal%'
+    $where_sql AND (a.name LIKE '%withdraw%' OR a.name LIKE '%drawing%')
 ";
 $withdrawals_result = $conn->query($withdrawal_sql)->fetch_assoc();
 $total_withdrawals = $withdrawals_result['total_withdrawals'] ?? 0;

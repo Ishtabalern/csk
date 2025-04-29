@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vendor = $_POST['vendor'];
     $category_name = trim($_POST['category']);
     $amount = (float)$_POST['amount'];
-    $payment_method = $_POST['payment_method'];
+    $payment_method = $_POST['payment_method']; 
     $uploaded_by = $_SESSION['user_id'];
 
     // Handle image upload
@@ -44,19 +44,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!$category_data) {
                 // Determine type
-                if (stripos($category_name, 'sale') !== false || stripos($category_name, 'revenue') !== false) {
+                $category_words = explode(' ', strtolower($category_name));
+                $category_type = 'expense'; // default
+                $debit_account_id = 4;  // Utilities Expense
+                $credit_account_id = 1; // Cash
+
+                if (in_array('income', $category_words) || 
+                    (isset($category_words[1]) && $category_words[1] === 'income') || 
+                    stripos($category_name, 'sale') !== false || 
+                    stripos($category_name, 'revenue') !== false) {
+
                     $category_type = 'income';
                     $debit_account_id = 1;  // Cash
                     $credit_account_id = 3; // Sales Revenue
+
                 } elseif (stripos($category_name, 'withdraw') !== false) {
                     $category_type = 'withdrawal';
                     $debit_account_id = 5;  // Owner's Withdrawals
                     $credit_account_id = 1; // Cash
-                } else {
-                    $category_type = 'expense';
-                    $debit_account_id = 4;  // Utilities Expense
-                    $credit_account_id = 1; // Cash
                 }
+
 
                 $insert_cat = $conn->prepare("INSERT INTO categories (client_id, name, type, debit_account_id, credit_account_id, created_at)
                                               VALUES (?, ?, ?, ?, ?, NOW())");
