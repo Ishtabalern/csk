@@ -11,6 +11,19 @@ $client_id = $_GET['client_id'] ?? '';
 $start_date = $_GET['start_date'] ?? '';
 $end_date = $_GET['end_date'] ?? '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['set_capital'])) {
+    $amount = floatval($_POST['capital_amount']);
+    $effective_date = $_POST['effective_date'];
+    $client_id = intval($_POST['client_id']);
+
+    $stmt = $conn->prepare("INSERT INTO beginning_capital (client_id, amount, effective_date) VALUES (?, ?, ?)");
+    $stmt->bind_param("ids", $client_id, $amount, $effective_date);
+    $stmt->execute();
+
+    echo "<p style='color:green;'>✅ Beginning capital saved for client ID $client_id.</p>";
+}
+
+
 $clients = $conn->query("SELECT id, name FROM clients ORDER BY name");
 
 $conditions = [];
@@ -31,19 +44,34 @@ $capital_account_id = $capital_account['id'] ?? null;
 
 // Beginning Capital (before start date)
 $beginning_capital = 0;
-if (!empty($client_id) && !empty($start_date) && $capital_account_id) {
-    $begin_capital_sql = "
-        SELECT 
-            SUM(jl.debit) AS total_debit, 
-            SUM(jl.credit) AS total_credit
-        FROM journal_lines jl
-        JOIN journal_entries je ON jl.entry_id = je.id
-        WHERE jl.account_id = $capital_account_id
-          AND je.client_id = $client_id
-          AND je.entry_date < '$start_date'
-    ";
-    $begin_result = $conn->query($begin_capital_sql)->fetch_assoc();
-    $beginning_capital = ($begin_result['total_credit'] ?? 0) - ($begin_result['total_debit'] ?? 0);
+
+if (!empty($client_id) && !empty($start_date)) {
+    // Try manually declared capital first
+    $manual_res = $conn->query("
+        SELECT amount 
+        FROM beginning_capital 
+        WHERE client_id = $client_id AND effective_date <= '$start_date'
+        ORDER BY effective_date DESC 
+        LIMIT 1
+    ");
+
+    if ($manual_res && $manual = $manual_res->fetch_assoc()) {
+        $beginning_capital = $manual['amount'];
+    } elseif ($capital_account_id) {
+        // Fallback to auto
+        $begin_capital_sql = "
+            SELECT 
+                SUM(jl.debit) AS total_debit, 
+                SUM(jl.credit) AS total_credit
+            FROM journal_lines jl
+            JOIN journal_entries je ON jl.entry_id = je.id
+            WHERE jl.account_id = $capital_account_id
+              AND je.client_id = $client_id
+              AND je.entry_date < '$start_date'
+        ";
+        $begin_result = $conn->query($begin_capital_sql)->fetch_assoc();
+        $beginning_capital = ($begin_result['total_credit'] ?? 0) - ($begin_result['total_debit'] ?? 0);
+    }
 }
 
 
@@ -109,13 +137,34 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     <button type="submit">View</button>
 </form>
 
-<table>
+<?php if ($_SESSION['role'] === 'admin' && !empty($client_id)): ?>
+    <form method="POST" style="margin-top:30px;">
+        <h3>💼 Declare Beginning Capital</h3>
+        <label>Amount (₱):</label>
+        <input type="number" name="capital_amount" step="0.01" required>
+        <label>Effective Date:</label>
+        <input type="date" name="effective_date" value="<?= $start_date ?>" required>
+        <input type="hidden" name="client_id" value="<?= $client_id ?>">
+        <button type="submit" name="set_capital">💾 Save</button>
+    </form>
+<?php endif; ?>
+
+
+
+<table style="margin-bottom: 10px;">
     <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
     <tr><td class="left">Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
     <tr><td class="left">Add: Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
     <tr><td class="left">Less: Withdrawals</td><td><?= number_format($total_withdrawals, 2) ?></td></tr>
     <tr><th class="left">Ending Capital</th><th><?= number_format($ending_capital, 2) ?></th></tr>
 </table>
+
+<?php
+$dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+?>
+<a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px; margin-top:20px;">
+    ⬅️ Back to Dashboard
+</a>
 
 </body>
 </html>

@@ -54,6 +54,8 @@ if (!isset($_SESSION['user_id'])) {
         <a href="../../reports/payment_methods.php">Payment Methods</a>
         <a href="sales_expense.php">Sales Vs Expense</a>
         <a href="../../reports/trial_balance.php">Trial Balance</a>
+        <a href="../../reports/income_statement.php">Income Statement</a>
+        <a href="../../reports/owners_equity.php">Owner's Equity</a>
     </div>
 </body>
 </html>

@@ -40,6 +40,14 @@ if ($client_id) {
         }
     }
 }
+
+$client_name = '';
+if (!empty($client_id)) {
+    $result = $conn->query("SELECT name FROM clients WHERE id = " . (int)$client_id);
+    if ($row = $result->fetch_assoc()) {
+        $client_name = $row['name'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +58,7 @@ if ($client_id) {
     <link rel="stylesheet" href="../styles/reports/income_statement.css">
 </head>
 <body>
-    <h1>Income Statement</h1>
+    <h1 style="justify-self:center">Income Statement</h1>
 
     <div class="client-container">
         <form class="client" method="get">
@@ -82,116 +90,55 @@ if ($client_id) {
         </form>
     </div>
  
-
     <?php if ($client_id): ?>
-        <h3>From <?= $start_date ?> to <?= $end_date ?></h3>
-
-        <h4>Income</h4>
-        <table border="1" cellpadding="5">
-            <tr><th>Account</th><th>Amount</th></tr>
-            <?php foreach ($income as $i): ?>
-                <tr><td><?= $i['name'] ?></td><td><?= number_format($i['amount'], 2) ?></td></tr>
-            <?php endforeach; ?>
-            <tr><td><strong>Total Income</strong></td><td><strong><?= number_format($total_income, 2) ?></strong></td></tr>
-        </table>
-
-        <h4>Expenses</h4>
-        <table border="1" cellpadding="5">
-            <tr><th>Account</th><th>Amount</th></tr>
-            <?php foreach ($expenses as $e): ?>
-                <tr><td><?= $e['name'] ?></td><td><?= number_format($e['amount'], 2) ?></td></tr>
-            <?php endforeach; ?>
-            <tr><td><strong>Total Expenses</strong></td><td><strong><?= number_format($total_expenses, 2) ?></strong></td></tr>
-        </table>
-
-        <h3>
-            <?= ($total_income - $total_expenses) >= 0 ? 'Net Profit' : 'Net Loss' ?>:
-            <?= number_format($total_income - $total_expenses, 2) ?>
-        </h3>
-    <?php endif; ?>
-
-    <div class="incomeStatement-container">
-        <div class="customer-name"> 
-            <p>Customer Name</p>
-            <h3 id="tab-content">Income Statement</h3>
-        </div>
-                        
-        <div class="table">
-            <table>
-                <tr>
-                    <td class="left bold top"></td>
-                    <td class="top"></td>
-                </tr>
-                <tr>
-                    <td class="left bold">Income</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="middle">Net Income</td>
-                    <td class="right bold">20</td>
-                </tr>
-                <tr>
-                    <td class="middle">Deferred Tax</td>
-                    <td class="right bold">₱ 1,000</td>
-                </tr>
-                <tr>
-                    <td class="middle">Depredation</td>
-                    <td class="right">(₱ 119,000)</td>
-                </tr>
-                <tr>
-                    <td class="middle" style="text-indent: 40px;">Cash from Accounts Receivable</td>
-                    <td class="right">(₱ 119,000)</td>
-                </tr>
-                <tr>
-                    <td class="middle" style="text-indent: 40px;">Cash from Inventory</td>
-                    <td class="right">326,414</td>
-                </tr>
-                <tr>
-                    <td class="middle" style="text-indent: 40px;">Cash from Accounts Payable</td>
-                    <td class="right">123123123</td>
-                </tr>
-                <tr>
-                    <td class="middle bottom">Total Income</td>
-                    <td class="right bottom">123123123</td>
-                </tr>
-                <tr>
-                    <td class="left bold">Expenses</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="middle">Andoks manoy</td>
-                    <td class="right">69</td>
-                </tr>
-                <tr>
-                    <td class="middle bottom">Total expenses</td>
-                    <td class="right bottom">69</td>
-                </tr>
-                <tr>
-                    <td class="middle bottom">Income before taxes</td>
-                    <td class="right bottom">69</td>
-                </tr>
-                <tr>
-                    <td class="middle bottom">Income tax expense</td>
-                    <td class="right bottom">69</td>
-                </tr>
-                <tr>
-                    <td class="middle bottom">Net income</td>
-                    <td class="right bottom">69</td>
-                </tr>
-          
-
+        <div class="incomeStatement-container">
+            <h3>From <?= $start_date ?> to <?= $end_date ?></h3>
+            <div class="customer-name"> 
                 
-            </table>
+                <p><?= htmlspecialchars($client_name) ?></p>
+                <h3 id="tab-content">Income Statement</h3>
+            </div>
+
+            <div class="table">
+                <table border="1" cellpadding="5">
+                    <tr><td class="left bold">Income</td></tr>
+                    <tr><th>Account</th><th>Amount</th></tr>
+                    <?php foreach ($income as $i): ?>
+                        <tr><td><?= $i['name'] ?></td><td><?= number_format($i['amount'], 2) ?></td></tr>
+                    <?php endforeach; ?>
+                    <tr><td><strong>Total Income</strong></td><td><strong><?= number_format($total_income, 2) ?></strong></td></tr>
+                </table>
+            </div>
+
+            <h4>Expenses</h4>
+            <div class="table">
+                <table border="1" cellpadding="5">
+                    <tr><td class="left bold">Expense</td></tr>
+                    <tr><th>Account</th><th>Amount</th></tr>
+                    <?php foreach ($expenses as $e): ?>
+                        <tr><td><?= $e['name'] ?></td><td><?= number_format($e['amount'], 2) ?></td></tr>
+                    <?php endforeach; ?>
+                    <tr><td><strong>Total Expenses</strong></td><td><strong><?= number_format($total_expenses, 2) ?></strong></td></tr>
+                </table>
+            </div>
+
+            <h3>
+                <?= ($total_income - $total_expenses) >= 0 ? 'Net Profit' : 'Net Loss' ?>:
+                <?= number_format($total_income - $total_expenses, 2) ?>
+            </h3>
+
+            <div class="btn">
+                <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+                ?>
+                <a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px; margin-top:20px;">
+                    ⬅️ Back to Dashboard
+                </a>
+            </div>
         </div>
+    <?php endif; ?>
+    
         
-        <div class="btn">
-            <a href="view_reports.php">← Back to Reports</a>
-        </div>
-       
-    </div>
-    
-    
-    
-    
+      
 </body>
 </html>

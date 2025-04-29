@@ -14,38 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $client_id = $_POST['client_id'];
     $receipt_date = $_POST['receipt_date'];
     $vendor = $_POST['vendor'];
-    $category = $_POST['category'];
-    $amount = $_POST['amount'];
+    $category_name = trim($_POST['category']);
+    $amount = (float)$_POST['amount'];
     $payment_method = $_POST['payment_method'];
     $uploaded_by = $_SESSION['user_id'];
-
-    // --- Auto-create category if not existing ---
-    $category_name = trim($category);
-    $check_cat = $conn->prepare("SELECT id FROM categories WHERE client_id = ? AND name = ?");
-    $check_cat->bind_param("is", $client_id, $category_name);
-    $check_cat->execute();
-    $check_cat->store_result();
-
-    if ($check_cat->num_rows === 0) {
-        // Determine type based on name
-        $category_type = (stripos($category_name, 'sale') !== false || stripos($category_name, 'revenue') !== false) ? 'income' : 'expense';
-
-        // Default account IDs
-        if ($category_type === 'income') {
-            $default_debit_account_id = 1;  // Cash (Asset)
-            $default_credit_account_id = 3; // Sales Revenue
-        } else {
-            $default_debit_account_id = 4;  // Utilities Expense (Expense)
-            $default_credit_account_id = 1; // Cash (Asset)
-        }
-        
-
-        $insert_cat = $conn->prepare("INSERT INTO categories (client_id, name, type, debit_account_id, credit_account_id, created_at)
-                                    VALUES (?, ?, ?, ?, ?, NOW())");
-        $insert_cat->bind_param("issii", $client_id, $category_name, $category_type, $default_debit_account_id, $default_credit_account_id);
-        $insert_cat->execute();
-    }
-
 
     // Handle image upload
     $target_dir = "../uploads/receipts/";
@@ -55,14 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image_path = $target_dir . time() . "_" . $image_name;
 
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $image_path)) {
+        // Insert into receipts table
         $stmt = $conn->prepare("INSERT INTO receipts (client_id, receipt_date, vendor, category, amount, payment_method, uploaded_by, image_path, created_at)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->bind_param("isssssss", $client_id, $receipt_date, $vendor, $category, $amount, $payment_method, $uploaded_by, $image_path);
-    
+        $stmt->bind_param("isssdsss", $client_id, $receipt_date, $vendor, $category_name, $amount, $payment_method, $uploaded_by, $image_path);
+
         if ($stmt->execute()) {
             $success = "Receipt uploaded successfully.";
-        
-            // STEP 1: Fetch or create category
+
+            // Fetch or create category
             $category_stmt = $conn->prepare("SELECT * FROM categories WHERE name = ? AND client_id = ?");
             $category_stmt->bind_param("si", $category_name, $client_id);
             $category_stmt->execute();
@@ -71,60 +44,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!$category_data) {
                 // Determine type
-                $category_type = (stripos($category_name, 'sale') !== false || stripos($category_name, 'revenue') !== false) ? 'income' : 'expense';
-
-                // Assign proper default accounts
-                if ($category_type === 'income') {
+                if (stripos($category_name, 'sale') !== false || stripos($category_name, 'revenue') !== false) {
+                    $category_type = 'income';
                     $debit_account_id = 1;  // Cash
                     $credit_account_id = 3; // Sales Revenue
+                } elseif (stripos($category_name, 'withdraw') !== false) {
+                    $category_type = 'withdrawal';
+                    $debit_account_id = 5;  // Owner's Withdrawals
+                    $credit_account_id = 1; // Cash
                 } else {
+                    $category_type = 'expense';
                     $debit_account_id = 4;  // Utilities Expense
                     $credit_account_id = 1; // Cash
                 }
 
                 $insert_cat = $conn->prepare("INSERT INTO categories (client_id, name, type, debit_account_id, credit_account_id, created_at)
-                                            VALUES (?, ?, ?, ?, ?, NOW())");
+                                              VALUES (?, ?, ?, ?, ?, NOW())");
                 $insert_cat->bind_param("issii", $client_id, $category_name, $category_type, $debit_account_id, $credit_account_id);
                 $insert_cat->execute();
-            } else {
-                // Use existing category account assignments
-                $category_type = $category_data['type'];
-                $debit_account_id = $category_data['debit_account_id'];
-                $credit_account_id = $category_data['credit_account_id'];
+
+                // Use inserted values
+                $category_data = [
+                    'type' => $category_type,
+                    'debit_account_id' => $debit_account_id,
+                    'credit_account_id' => $credit_account_id
+                ];
             }
-    
-            if ($category_data) {
-                $category_type = $category_data['type'];
-                $debit_account_id = $category_data['debit_account_id'];
-                $credit_account_id = $category_data['credit_account_id'];
-        
-                // STEP 2: Insert journal entry
-                $journal_stmt = $conn->prepare("INSERT INTO journal_entries (client_id, entry_date, description, created_at) VALUES (?, ?, ?, NOW())");
-                $desc = "Auto entry for receipt - " . $vendor;
-                $journal_stmt->bind_param("iss", $client_id, $receipt_date, $desc); 
-                $journal_stmt->execute();
-                $entry_id = $journal_stmt->insert_id;
-        
-                // STEP 3: Insert debit line
-                $line_stmt = $conn->prepare("INSERT INTO journal_lines (entry_id, account_id, debit, credit) VALUES (?, ?, ?, ?)");
-                $zero = 0.00;
-                $line_stmt->bind_param("iidd", $entry_id, $debit_account_id, $amount, $zero);
-                $line_stmt->execute();
-        
-                // STEP 4: Insert credit line
-                $line_stmt->bind_param("iidd", $entry_id, $credit_account_id, $zero, $amount);
-                $line_stmt->execute();
-            }
-        
+
+            // Insert into journal_entries
+            $desc = "Auto entry for receipt - " . $vendor;
+            $journal_stmt = $conn->prepare("INSERT INTO journal_entries (client_id, entry_date, description, created_at)
+                                            VALUES (?, ?, ?, NOW())");
+            $journal_stmt->bind_param("iss", $client_id, $receipt_date, $desc);
+            $journal_stmt->execute();
+            $entry_id = $journal_stmt->insert_id;
+
+            // Insert journal_lines (debit)
+            $line_stmt = $conn->prepare("INSERT INTO journal_lines (entry_id, account_id, debit, credit) VALUES (?, ?, ?, ?)");
+            $zero = 0.00;
+            $line_stmt->bind_param("iidd", $entry_id, $category_data['debit_account_id'], $amount, $zero);
+            $line_stmt->execute();
+
+            // Insert journal_lines (credit)
+            $line_stmt->bind_param("iidd", $entry_id, $category_data['credit_account_id'], $zero, $amount);
+            $line_stmt->execute();
+
         } else {
             $error = "Database error: " . $stmt->error;
         }
-        
+
     } else {
         $error = "Failed to upload image.";
-    }    
+    }
 }
 ?>
+
 
 
 
