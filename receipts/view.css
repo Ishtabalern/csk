@@ -1,3 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: Arial, sans-serif;
+   
+  }
+
+h1{
+    color: #1ABC9C;
+    padding: 20px;
+}
+
+/*filter*/
+.filter-container {
+    display: flex;
+    justify-content: center; /* ➡ Center horizontally yung form */
+    margin-top: 20px; /* ➡ Small space above the form */
+ }
+ 
+ .filter {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid rgb(208, 208, 208);
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ➡ Center all content inside the form */
+    gap: 20px;
+    max-width: 100%;
+    width: 300px;
+ }
+ 
+ .filter .section {
+    display: flex;
+    flex-wrap: wrap; /* ➡ Para responsive, wrap if needed */
+    justify-content: center; /* ➡ Center the inputs */
+    gap: 30px;
+ }
+ 
+ .section .input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+ }
+ 
+ .input label {
+    font-size: 1rem;
+    font-weight: bolder;
+ }
+ 
+ .input select,
+ .input input[type="date"] {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    width: 250px; /* ➡ fixed width para same lahat ng input */
+ }
+
+
+/*
 table {
     width: 100%;
     border-collapse: collapse;
@@ -8,3 +75,69 @@ th {
 td, th {
     text-align: left;
 }
+
+TABLE 
+*/
+
+.receipts-container{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 100%;
+    width: 1200px;
+    margin: auto;
+  }
+  
+  .receipts-container table{ 
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  }
+  
+  .receipts-container th, .receipts-container td { 
+    padding: 15px !important;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+  }
+  
+  .receipts-container th{
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #434343;
+  }
+  
+  .receipts-container tbody tr:hover{
+    background-color: #f2f2f2;
+  }
+
+
+/*buttons*/
+
+ .btn{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+ 
+.btn a {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #fff;
+    color: #616161;
+    font-size: 16px;
+    border: 1px solid #1ABC9C;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+ 
+ }
+.btn a:active {
+    transform: scale(0.9);
+ }

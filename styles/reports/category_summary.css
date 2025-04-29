@@ -11,38 +11,34 @@
 
  body{
    padding: 20px;
-
  }
 
-h1 {
+ h1{
    color: #1ABC9C;
    padding: 20px;
 }
 
-
-
-/* manage-container */
-
-.client-container {
+/* filter form */
+ .filter-container {
    display: flex;
    justify-content: center; /* ➡ Center horizontally yung form */
    margin-top: 20px; /* ➡ Small space above the form */
 }
 
-.client {
+.filter {
    background-color: #fff;
-   padding: 20px;
-   border: 1px solid rgb(164, 164, 164);
+   padding: 20px 0px;
+   border: 1px solid rgb(208, 208, 208);
    border-radius: 7px;
    display: flex;
    flex-direction: column;
    align-items: center; /* ➡ Center all content inside the form */
    gap: 20px;
    max-width: 100%;
-   width: 800px;
+   width: 700px;
 }
 
-.client .section {
+.filter .section {
    display: flex;
    flex-wrap: wrap; /* ➡ Para responsive, wrap if needed */
    justify-content: center; /* ➡ Center the inputs */
@@ -71,7 +67,7 @@ h1 {
    width: 250px; /* ➡ fixed width para same lahat ng input */
 }
 
-.client button {
+.btn button {
    width: 200px;
    padding: 15px 0;
    border-radius: 6px;
@@ -86,78 +82,60 @@ h1 {
    align-self: center; /* ➡ Button is centered inside form */
 }
 
-.client button:active {
+.btn button:active {
    transform: scale(0.9);
 }
 
-/* incomeStatement */
 
-.incomeStatement-container{
+
+/* table */
+ .category-container{
    background-color: white;
-   border-radius: 5px;
-   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-   max-width: 100%;
-   width: 800px;
-   margin: auto;
-   margin-top: 30px;
-   padding:20px 0px;
-   border: 1px solid #e2e2e2;
-}
-
-
-.incomeStatement-container .customer-name{
-   text-align: center;
-   margin-top: 15px;
-}
-
-.customer-name > *{
-   margin-top: 10px;
-}
-
-.table {
+   padding: 20px;
+   border-radius: 10px;
+   border: 1px solid #ddd;
    display: flex;
-   flex-direction: row;
-}
-
-.table table {
-   width: 90%;
-   margin: 20px auto;
+   flex-direction: column;
+   gap: 20px;
+   max-width: 100%;
+   width: 700px;
+   margin: auto;
+   margin-top: 20px;
  }
-.table table td {
-   padding: 8px 10px;
+ 
+ .category-container table{ 
+     width: 100%;
+     border-collapse: collapse;
+     margin-top: 20px;
  }
-
- .table table .left {
+ 
+ .category-container th, .category-container td { 
+   padding: 15px !important;
    text-align: left;
+   border: 1px solid #ddd;
+   font-size: 1rem;
  }
- .table table .middle {
-   text-align: left;
-   text-indent: 25px;
- }
-
-.table table .right {
-   text-align: right;
- }
- .table table .bold {
+ 
+ .category-container th{
+   background-color: #f2f2f2;
    font-weight: bold;
+   color: #434343;
  }
- .table table .top {
-   background-color: #00AF7E;
-   color: #fff;
- }
- .table table .bottom {
-   background-color: #dddddd;
-   font-weight: bold;
-
+ 
+ .category-container tbody tr:hover{
+   background-color: #f2f2f2;
  }
 
- .incomeStatement-container .btn{
+ /* btn */
+ .btn{
+   margin-top: 20px;
    display: flex;
    align-items: center;
    justify-content: center;
+   gap: 20px;
  }
 
- .incomeStatement-container .btn a {
+.btn a {
    margin-top: 10px;
    padding: 12px;
    background-color: #fff;
@@ -169,8 +147,6 @@ h1 {
    transition: background-color 0.3s ease, color 0.3s ease;
 
 }
-
-.incomeStatement-container .btn a:active {
+.btn a:active {
    transform: scale(0.9);
 }
-
