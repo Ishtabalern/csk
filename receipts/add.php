@@ -166,6 +166,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
             </div>
 
+            <div class="input">
+                <label>Credit Account:</label>
+                <select name="credit_account_id" required>
+                    <option value="">Select Credit Account</option>
+                    <?php
+                    $accounts = $conn->query("SELECT id, name FROM accounts WHERE type IN ('Liability', 'Equity', 'Revenue', 'Asset')");
+                    while ($acc = $accounts->fetch_assoc()):
+                    ?>
+                        <option value="<?= $acc['id'] ?>"><?= htmlspecialchars($acc['name']) ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+
             <div class="input full-width">
                 <label>Receipt Image:</label>
                 <input type="file" name="image" accept="image/*" required>

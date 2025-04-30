@@ -50,6 +50,58 @@ if ($client_id) {
         }
     }    
 }
+
+// Step 1: Get beginning capital
+$beginning_capital = 0;
+$cap_stmt = $conn->prepare("SELECT amount FROM beginning_capital WHERE client_id = ? ORDER BY effective_date DESC LIMIT 1");
+$cap_stmt->bind_param("i", $client_id);
+$cap_stmt->execute();
+$cap_stmt->bind_result($beginning_capital);
+$cap_stmt->fetch();
+$cap_stmt->close();
+
+// Step 2: Compute Net Income
+$income_stmt = $conn->prepare("
+    SELECT a.type, SUM(jl.debit) AS debit, SUM(jl.credit) AS credit
+    FROM journal_entries je
+    JOIN journal_lines jl ON je.id = jl.entry_id
+    JOIN accounts a ON jl.account_id = a.id
+    WHERE je.client_id = ? AND je.entry_date <= ?
+    AND a.type IN ('Revenue', 'Expense')
+    GROUP BY a.type
+");
+$income_stmt->bind_param("is", $client_id, $end_date);
+$income_stmt->execute();
+$income_result = $income_stmt->get_result();
+
+$net_income = 0;
+while ($row = $income_result->fetch_assoc()) {
+    if ($row['type'] === 'Revenue') {
+        $net_income += $row['credit'] - $row['debit'];
+    } elseif ($row['type'] === 'Expense') {
+        $net_income -= $row['debit'] - $row['credit'];
+    }
+}
+$income_stmt->close();
+
+// Step 3: Get total Owner’s Withdrawals
+$withdrawals = 0;
+$withdraw_stmt = $conn->prepare("
+    SELECT SUM(jl.debit - jl.credit) AS withdrawal_total
+    FROM journal_entries je
+    JOIN journal_lines jl ON je.id = jl.entry_id
+    JOIN accounts a ON jl.account_id = a.id
+    WHERE je.client_id = ? AND je.entry_date <= ? AND a.name = 'Owner’s Withdrawal'
+");
+$withdraw_stmt->bind_param("is", $client_id, $end_date);
+$withdraw_stmt->execute();
+$withdraw_stmt->bind_result($withdrawals);
+$withdraw_stmt->fetch();
+$withdraw_stmt->close();
+
+// Final Equity Calculation
+$total_equity = $beginning_capital + $net_income - $withdrawals;
+
 ?>
 
 <!DOCTYPE html>
@@ -118,23 +170,21 @@ if ($client_id) {
     <div class="section">
         <h4>Equity</h4>
         <table>
-            <tr><th>Account</th><th>Amount</th></tr>
-            <?php foreach ($accounts_data['equity'] ?? [] as $acc): ?>
-                <tr>
-                    <td><?= htmlspecialchars($acc['name']) ?></td>
-                    <td><?= number_format($acc['balance'], 2) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <tr class="total"><td>Total Equity</td><td><?= number_format($totals['equity'], 2) ?></td></tr>
+            <tr><th>Component</th><th>Amount</th></tr>
+            <tr><td>Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
+            <tr><td>Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
+            <tr><td>Withdrawals</td><td>(<?= number_format($withdrawals, 2) ?>)</td></tr>
+            <tr class="total"><td>Total Equity</td><td><?= number_format($total_equity, 2) ?></td></tr>
         </table>
     </div>
 
     <div class="section">
         <h4>Total Liabilities & Equity</h4>
         <table>
-            <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $totals['equity'], 2) ?></td></tr>
+            <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $total_equity, 2) ?></td></tr>
         </table>
     </div>
+
 <?php endif; ?>
 
 </body>
