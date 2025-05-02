@@ -108,14 +108,14 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     <title>Statement of Owner's Equity</title>
     <style>
         body { font-family: Arial; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px;}
         th, td { padding: 10px; border: 1px solid #ccc; text-align: right; }
         th.left, td.left { text-align: left; }
     </style>
 </head>
 <body>
-
-<h2>📗 Statement of Owner’s Equity</h2>
+<h1 style="color:#1ABC9C">📗 Statement of Owner’s Equity</h1>
 
 <form method="GET">
     <label>Client:</label>
@@ -158,7 +158,7 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     <tr><td class="left">Less: Withdrawals</td><td><?= number_format($total_withdrawals, 2) ?></td></tr>
     <tr><th class="left">Ending Capital</th><th><?= number_format($ending_capital, 2) ?></th></tr>
 </table>
-
+<br>
 <?php
 $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
 ?>

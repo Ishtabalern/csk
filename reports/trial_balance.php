@@ -75,12 +75,9 @@ while ($row = $result->fetch_assoc()) {
 <?php
 $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_reports.php' : 'view_reports.php';
 ?>
-<a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
-    ⬅️ Back to Reports
-</a>
-<br><br>
 
-<h2>📘 Trial Balance Report</h2>
+
+<h1 style="color:#1ABC9C">📘 Trial Balance Report</h1>
 
 <form method="GET">
     <label>Client:</label>
@@ -144,6 +141,12 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
 <?php if ($total_debit !== $total_credit): ?>
     <p class="warning">⚠️ Trial Balance is not balanced!</p>
 <?php endif; ?>
+
+<br>
+<a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
+    ⬅️ Back to Reports
+</a>
+
 
 </body>
 </html>
