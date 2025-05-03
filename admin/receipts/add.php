@@ -46,45 +46,188 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+            * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+        }
 
-<h2>Add New Receipt</h2>
+        h1{
+            color: #1ABC9C;
+            padding: 20px;
+        }
 
-<?php if ($success): ?>
-    <p style="color: green;"><?= $success ?></p>
-<?php elseif ($error): ?>
-    <p style="color: red;"><?= $error ?></p>
-<?php endif; ?>
+        .forms-container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin-top: 20px;
+            margin:auto;
+        }
 
-<form method="POST" enctype="multipart/form-data">
-    <label>Client*</label><br>
-    <select name="client_id" required>
-        <option value="">Select Client</option>
-        <?php while ($row = $clients->fetch_assoc()): ?>
-            <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
-        <?php endwhile; ?>
-    </select><br><br>
+        .forms-container form {
+            
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 600px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background-color: #f9f9f9;
+            margin: auto;
+        }
 
-    <label>Receipt Date*</label><br>
-    <input type="date" name="receipt_date" required><br><br>
+        form .input {
+            flex: 1 1 calc(50% - 10px);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
-    <label>Vendor</label><br>
-    <input type="text" name="vendor"><br><br>
+        .input.full-width {
+            flex: 1 1 100%;
+        }
 
-    <label>Category</label><br>
-    <input type="text" name="category"><br><br>
+        .input label {
+            font-weight: bold;
+            color: #5d5d5d;
+            margin-bottom: 5px;
+        }
 
-    <label>Amount*</label><br>
-    <input type="number" name="amount" step="0.01" required><br><br>
+        .input input[type="text"],
+        .input input[type="email"],
+        .input input[type="number"],
+        .input input[type="date"],
+        .input input[type="file"],
+        .input select,
+        .input textarea {
+            width: 100%;
+            border-radius: 4px;
+            padding: 12px 10px;
+            border: 1px solid #B1B1B1;
+            outline: none;
+            font-size: 14px;
+        }
 
-    <label>Payment Method</label><br>
-    <input type="text" name="payment_method"><br><br>
 
-    <label>Receipt Image*</label><br>
-    <input type="file" name="receipt_image" accept="image/*" required><br><br>
+        button[type="submit"] {
+            flex: 1 1 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background-color: #fff;
+            color: #616161;
+            font-size: 16px;
+            border: 1px solid #1ABC9C;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-    <button type="submit">💾 Add Receipt</button>
-</form>
+        button[type="submit"]:hover {
+            background-color: #1ABC9C;
+            color: #fff;
+        }
 
-<br>
-<a href="list.php">← Back to Receipt List</a>
-<a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
+        
+        .btns{
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            width: 100%;
+            max-width: 700px;
+            margin:auto;
+            flex-wrap:wrap;
+        }
+        
+        a {
+            color: #1ABC9C;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 20px auto;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+ 
+    </style>
+</head>
+<body>
+    <h1>Add New Receipt</h1>
+
+    <?php if ($success): ?>
+        <p style="color: green;"><?= $success ?></p>
+    <?php elseif ($error): ?>
+        <p style="color: red;"><?= $error ?></p>
+    <?php endif; ?>
+
+    <div class="forms-container">
+        <form method="POST" enctype="multipart/form-data">
+            
+            <div class="input full-width">
+                <label>Client*</label>
+                <select name="client_id" required>
+                    <option value="">Select Client</option>
+                    <?php while ($row = $clients->fetch_assoc()): ?>
+                        <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="input">
+                <label>Receipt Date*</label>
+                <input type="date" name="receipt_date" required>
+            </div>
+
+            <div class="input">
+                <label>Vendor</label>
+                <input type="text" name="vendor">
+            </div>
+
+            <div class="input">
+                <label>Category</label>
+                <input type="text" name="category">
+            </div>
+
+            <div class="input">
+                <label>Amount*</label>
+                <input type="number" name="amount" step="0.01" required>
+            </div>
+
+            <div class="input">
+                <label>Payment Method</label>
+                <input type="text" name="payment_method">
+            </div>
+
+            <div class="input">
+                <label>Receipt Image*</label>
+                <input type="file" name="receipt_image" accept="image/*" required>
+            </div>
+
+            <button type="submit">💾 Add Receipt</button>
+        </form>
+
+        <div class="btns">
+            <a href="list.php">← Back to Receipt List</a>
+            <a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
+        </div>
+        
+    </div>
+
+</body>
+</html>
+
