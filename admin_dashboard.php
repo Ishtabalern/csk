@@ -45,6 +45,7 @@ if ($_SESSION['role'] !== 'admin') {
     <div class="dashboard">
         <h2>Admin Dashboard</h2>
         <a href="admin/clients/add.php">➕ Add New Client</a>
+        <a href="admin/categories.php">Categories</a>
         <a href="admin/clients/list.php">📋 View Clients</a>
         <a href="employees/manage.php">👥 Manage Employees</a>
         <a href="admin/receipts/add.php">🧾 Add Receipt</a>

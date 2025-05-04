@@ -184,8 +184,16 @@ $total_equity = $beginning_capital + $net_income - $withdrawals;
             <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $total_equity, 2) ?></td></tr>
         </table>
     </div>
+    
 
 <?php endif; ?>
+
+    <?php
+    $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+    ?>
+    <a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
+            ⬅️ Back to Dashboard
+        </a>
 
 </body>
 </html>
