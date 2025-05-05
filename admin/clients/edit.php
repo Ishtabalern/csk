@@ -58,32 +58,188 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h2>Edit Client</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        text-decoration: none;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        font-family: Arial, sans-serif;
+        }
 
-<?php if ($success): ?>
-    <p style="color: green;"><?= $success ?></p>
-<?php elseif ($error): ?>
-    <p style="color: red;"><?= $error ?></p>
-<?php endif; ?>
+        body {   
+        background-color: #dce3e9;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
 
-<form method="POST">
-    <label>Client Name*</label><br>
-    <input type="text" name="name" value="<?= htmlspecialchars($client['name']) ?>" required><br><br>
+        .container {
+        max-width: 740px;
+        width: 90%;
+        margin: auto;
+        border-radius: 5px;
+        padding: 30px;
+        min-height: 100px;
+        text-align: center; /* center text inside container */
+        background-color: #fff;
+        }
 
-    <label>Contact Person</label><br>
-    <input type="text" name="contact_person" value="<?= htmlspecialchars($client['contact_person']) ?>"><br><br>
+        .container h2 {
+        color: #1ABC9C;
+        margin-bottom: 20px;
+        }
 
-    <label>Email</label><br>
-    <input type="email" name="email" value="<?= htmlspecialchars($client['email']) ?>"><br><br>
+        .container .forms-container {
+        display: flex;
+        justify-content: center;
+        }
 
-    <label>Phone</label><br>
-    <input type="text" name="phone" value="<?= htmlspecialchars($client['phone']) ?>"><br><br>
+        .forms-container form {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        }
 
-    <label>Address</label><br>
-    <textarea name="address"><?= htmlspecialchars($client['address']) ?></textarea><br><br>
+        form .input {
+        flex: 1 1 calc(50% - 10px);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        }
 
-    <button type="submit">💾 Save Changes</button>
-</form>
+        .input label {
+        font-weight: bold;
+        color: #5d5d5d;
+        }
 
-<br>
-<a href="list.php">← Back to Client List</a>
+        .input input[type="text"],
+        .input input[type="email"],
+        .input textarea {
+        width: 100%;
+        border-radius: 4px;
+        padding: 15px 8px;
+        border: 1px solid #B1B1B1;
+        outline: none;
+        font-size: 14px;
+        }
+
+        .input textarea {
+        height: 100px;
+        resize: vertical;
+        }
+
+        .input.full-width {
+        flex: 1 1 100%;
+        }
+
+        button[type="submit"] {
+        flex: 1 1 100%;
+        margin-top: 10px;
+        padding: 12px;
+        background-color: #fff;
+        color: #616161;
+        font-size: 16px;
+        border: 1px solid #1ABC9C;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+        background-color: #1ABC9C;
+        color: #fff;
+        }
+
+
+
+        /* Responsive: Stack inputs if screen is small */
+        @media (max-width: 600px) {
+        form .input {
+            flex: 1 1 100%;
+            align-items: center;
+        }
+        }
+
+
+         a{
+        padding: 12px;
+        background-color: #fff;
+        color: #616161;
+        font-size: 16px;
+        border: 1px solid #1ABC9C;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        display:block;
+        }
+
+         a:hover {
+        background-color: #1ABC9C;
+        color: #fff;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h2>Edit Client</h2>
+
+        <?php if ($success): ?>
+            <p style="color: green;"><?= $success ?></p>
+        <?php elseif ($error): ?>
+            <p style="color: red;"><?= $error ?></p>
+        <?php endif; ?>
+
+        <div class="forms-container">
+            <form method="POST">
+                <div class="input">
+                    <label>Client Name*</label>
+                    <input type="text" name="name" value="<?= htmlspecialchars($client['name']) ?>" required>
+                </div>
+
+                <div class="input">
+                    <label>Contact Person</label>
+                    <input type="text" name="contact_person" value="<?= htmlspecialchars($client['contact_person']) ?>">
+                </div>
+
+                <div class="input">
+                    <label>Email</label>
+                    <input type="email" name="email" value="<?= htmlspecialchars($client['email']) ?>">
+                </div>
+
+                <div class="input">
+                    <label>Phone</label>
+                    <input type="text" name="phone" value="<?= htmlspecialchars($client['phone']) ?>">
+                </div>
+
+                <div class="input full-width">
+                    <label>Address</label>
+                    <textarea name="address"><?= htmlspecialchars($client['address']) ?></textarea>
+                </div>
+
+
+                <button type="submit">💾 Save Changes</button>
+            </form>
+        </div>
+
+        <br>
+        <div class="btn">
+            <a href="list.php">← Back to Client List</a>
+        </div>
+        
+    </div>
+
+</body>
+</html>

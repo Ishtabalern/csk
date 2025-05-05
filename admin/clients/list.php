@@ -71,9 +71,9 @@ $result = $conn->query("SELECT * FROM clients ORDER BY created_at DESC");
                         <td><?= htmlspecialchars($row['phone']) ?></td>
                         <td><?= htmlspecialchars($row['address']) ?></td>
                         <td><?= date("M d, Y", strtotime($row['created_at'])) ?></td>
-                        <td>
-                            <a href="edit.php?id=<?= $row['id'] ?>">✏️ Edit</a> |
-                            <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this client?')">❌ Delete</a>
+                        <td style="display: flex; align-items: center; justify-content: space-evenly;">
+                            <a href="edit.php?id=<?= $row['id'] ?>" style="background-color: #00AF7E; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">✏️ Edit</a> |
+                            <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this client?')" style="background-color: rgb(169, 40, 1); color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">❌ Delete</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>

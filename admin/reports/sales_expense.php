@@ -65,6 +65,8 @@ while ($row = $result->fetch_assoc()) {
         body { font-family: Arial; padding: 20px; }
         canvas { max-width: 100%; }
         select, button { padding: 5px 10px; margin-right: 10px; }
+        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
+        form {display:flex; margin-bottom:20px;}
         table { margin-top: 30px; border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
         th { background-color: #f2f2f2; }
