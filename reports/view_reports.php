@@ -64,6 +64,7 @@ if (!isset($_SESSION['user_id'])) {
         <a href="trial_balance.php">Trial Balance</a>
         <a href="income_statement.php">Income Statement</a>
         <a href="owners_equity.php">Owner's Equity</a>
+        <a href="cash_flow.php">Statement of Cash Flow</a>
     </div>
 </body>
 </html>
