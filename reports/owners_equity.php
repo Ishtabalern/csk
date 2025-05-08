@@ -106,8 +106,18 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
 <html>
 <head>
     <title>Statement of Owner's Equity</title>
+    <link rel="stylesheet" href="../partials/topbar.css">
     <style>
-        body { font-family: Arial; padding: 20px; }
+        * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        text-decoration: none;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        font-family: Arial, sans-serif;
+        }
+        .container{padding: 20px;}
         select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px;}
         th, td { padding: 10px; border: 1px solid #ccc; text-align: right; }
@@ -115,56 +125,66 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     </style>
 </head>
 <body>
-<h1 style="color:#1ABC9C">📗 Statement of Owner’s Equity</h1>
 
-<form method="GET">
-    <label>Client:</label>
-    <select name="client_id">
-        <option value="">All Clients</option>
-        <?php while ($row = $clients->fetch_assoc()): ?>
-            <option value="<?= $row['id'] ?>" <?= ($row['id'] == $client_id) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($row['name']) ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
 
-    <label>Start Date:</label>
-    <input type="date" name="start_date" value="<?= $start_date ?>">
+<div class="topbar-container">
+    <div class="header">
+        <img src="../imgs/csk_logo.png" alt="">
+        <h1 style="color: #1ABC9C">Statement of Owner’s Equity</h1>
+    </div>
+    
+    <div class="btn">
+        <?php
+        $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+        ?>
+        <a href="<?= $dashboard_link ?>">
+                Back to Dashboard
+        </a>
+    </div>
+</div>
 
-    <label>End Date:</label>
-    <input type="date" name="end_date" value="<?= $end_date ?>">
+<div class="container">
 
-    <button type="submit">View</button>
-</form>
+    <form method="GET">
+        <label>Client:</label>
+        <select name="client_id">
+            <option value="">All Clients</option>
+            <?php while ($row = $clients->fetch_assoc()): ?>
+                <option value="<?= $row['id'] ?>" <?= ($row['id'] == $client_id) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($row['name']) ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
 
-<?php if ($_SESSION['role'] === 'admin' && !empty($client_id)): ?>
-    <form method="POST" style="margin-top:30px;">
-        <h3>💼 Declare Beginning Capital</h3>
-        <label>Amount (₱):</label>
-        <input type="number" name="capital_amount" step="0.01" required>
-        <label>Effective Date:</label>
-        <input type="date" name="effective_date" value="<?= $start_date ?>" required>
-        <input type="hidden" name="client_id" value="<?= $client_id ?>">
-        <button type="submit" name="set_capital">💾 Save</button>
+        <label>Start Date:</label>
+        <input type="date" name="start_date" value="<?= $start_date ?>">
+
+        <label>End Date:</label>
+        <input type="date" name="end_date" value="<?= $end_date ?>">
+
+        <button type="submit">View</button>
     </form>
-<?php endif; ?>
 
+    <?php if ($_SESSION['role'] === 'admin' && !empty($client_id)): ?>
+        <form method="POST" style="margin-top:30px;">
+            <h3>💼 Declare Beginning Capital</h3>
+            <label>Amount (₱):</label>
+            <input type="number" name="capital_amount" step="0.01" required>
+            <label>Effective Date:</label>
+            <input type="date" name="effective_date" value="<?= $start_date ?>" required>
+            <input type="hidden" name="client_id" value="<?= $client_id ?>">
+            <button type="submit" name="set_capital">💾 Save</button>
+        </form>
+    <?php endif; ?>
 
+    <table>
+        <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
+        <tr><td class="left">Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
+        <tr><td class="left">Add: Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
+        <tr><td class="left">Less: Withdrawals</td><td><?= number_format($total_withdrawals, 2) ?></td></tr>
+        <tr><th class="left">Ending Capital</th><th><?= number_format($ending_capital, 2) ?></th></tr>
+    </table>
 
-<table style="margin-bottom: 10px;">
-    <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
-    <tr><td class="left">Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
-    <tr><td class="left">Add: Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
-    <tr><td class="left">Less: Withdrawals</td><td><?= number_format($total_withdrawals, 2) ?></td></tr>
-    <tr><th class="left">Ending Capital</th><th><?= number_format($ending_capital, 2) ?></th></tr>
-</table>
-<br>
-<?php
-$dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
-?>
-<a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px; margin-top:20px;">
-    ⬅️ Back to Dashboard
-</a>
-
+</div>
 </body>
 </html>

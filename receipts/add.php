@@ -118,10 +118,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Receipt</title>
     <link rel="stylesheet" href="add.css">
+    <link rel="stylesheet" href="../partials/topbar.css">
 </head>
 <body>
 
-    <h1>Upload Receipt</h1>
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../imgs/csk_logo.png" alt="">
+            <h1>Upload Receipt</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="../employee_dashboard.php">← Back to Dashboard</a>
+        </div>
+    </div>
+
     <?php if (isset($success)) echo "<p style='color:green;'>$success</p>"; ?>
     <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
@@ -190,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Upload</button>
         </form>
 
-        <a href="../employee_dashboard.php">← Back to Dashboard</a>
+       
     </div>
     
 </body>

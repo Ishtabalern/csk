@@ -10,7 +10,7 @@
  }
 
  body{
-   padding: 20px;
+
  }
 
  h1{
@@ -101,6 +101,7 @@
    width: 700px;
    margin: auto;
    margin-top: 20px;
+   margin-bottom: 20px;
  }
  
  .category-container table{ 
@@ -127,26 +128,4 @@
  }
 
  /* btn */
- .btn{
-   margin-top: 20px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   gap: 20px;
- }
 
-.btn a {
-   margin-top: 10px;
-   padding: 12px;
-   background-color: #fff;
-   color: #616161;
-   font-size: 16px;
-   border: 1px solid #1ABC9C;
-   border-radius: 5px;
-   cursor: pointer;
-   transition: background-color 0.3s ease, color 0.3s ease;
-
-}
-.btn a:active {
-   transform: scale(0.9);
-}

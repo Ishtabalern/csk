@@ -9,15 +9,6 @@
   
  }
 
- body{
-   padding: 20px;
-
- }
-
-h1 {
-   color: #1ABC9C;
-   padding: 20px;
-}
 
 
 
@@ -98,8 +89,7 @@ h1 {
    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
    max-width: 100%;
    width: 800px;
-   margin: auto;
-   margin-top: 30px;
+   margin: 30px auto;
    padding:20px 0px;
    border: 1px solid #e2e2e2;
 }
@@ -114,6 +104,10 @@ h1 {
    margin-top: 10px;
 }
 
+.customer-name p{
+    font-size: 1.2rem;
+}
+
 .table {
    display: flex;
    flex-direction: row;
@@ -122,9 +116,11 @@ h1 {
 .table table {
    width: 90%;
    margin: 20px auto;
+   border-collapse: collapse;
  }
-.table table td {
+.table table td, table th {
    padding: 8px 10px;
+   border: 1px solid #ddd;
  }
 
  .table table .left {
@@ -151,26 +147,5 @@ h1 {
 
  }
 
- .incomeStatement-container .btn{
-   display: flex;
-   align-items: center;
-   justify-content: center;
- }
 
- .incomeStatement-container .btn a {
-   margin-top: 10px;
-   padding: 12px;
-   background-color: #fff;
-   color: #616161;
-   font-size: 16px;
-   border: 1px solid #1ABC9C;
-   border-radius: 5px;
-   cursor: pointer;
-   transition: background-color 0.3s ease, color 0.3s ease;
-
-}
-
-.incomeStatement-container .btn a:active {
-   transform: scale(0.9);
-}
 

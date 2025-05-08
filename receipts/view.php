@@ -40,10 +40,22 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="view.css">
+    <link rel="stylesheet" href="../partials/topbar.css">
 </head>
 <body>
    
-    <h1>My Uploaded Receipts</h1>
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../imgs/csk_logo.png" alt="">
+            <h1>My Uploaded Receipts</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="add.php">← Upload New Receipt</a>
+            <a href="../employee_dashboard.php">Back to Dashboard</a>
+        </div>
+    </div>
+   
 
     <!-- Filter Form -->
     <div class="filter-container">
@@ -108,10 +120,7 @@ $result = $stmt->get_result();
         </table>
     </div>
 
-    <div class="btn">
-        <a href="add.php">← Upload New Receipt</a>
-        <a href="../employee_dashboard.php">Back to Dashboard</a>
-    </div>
+ 
   
 
 </body>

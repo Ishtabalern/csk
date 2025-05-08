@@ -9,11 +9,6 @@
    
   }
 
-h1{
-    color: #1ABC9C;
-    padding: 20px;
-}
-
 /*filter*/
 .filter-container {
     display: flex;
@@ -90,12 +85,14 @@ TABLE
     max-width: 100%;
     width: 1200px;
     margin: auto;
+    margin-bottom: 20px;
   }
   
   .receipts-container table{ 
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+
   }
   
   .receipts-container th, .receipts-container td { 
@@ -116,28 +113,3 @@ TABLE
   }
 
 
-/*buttons*/
-
- .btn{
-    margin: 20px 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-  }
- 
-.btn a {
-    margin-top: 10px;
-    padding: 12px;
-    background-color: #fff;
-    color: #616161;
-    font-size: 16px;
-    border: 1px solid #1ABC9C;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
- 
- }
-.btn a:active {
-    transform: scale(0.9);
- }

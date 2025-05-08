@@ -17,13 +17,25 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
     <title>Document</title>
     <link rel="stylesheet" href="../partials/sidebar.css">
     <link rel="stylesheet" href="../styles/reports/category_summary.css">
+    <link rel="stylesheet" href="../partials/topbar.css">
 </head>
 <body>
  <!--   <?php include '../partials/sidebar.php'; ?> -->
 
 <div class="main-content p-4">
-    <h1 class="mb-4">Category Summary Report</h1>
     
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../imgs/csk_logo.png" alt="">
+            <h1 class="mb-4">Category Summary Report</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="../employee_dashboard.php">← Back to Employee Dashboard</a>
+        </div>
+    </div>
+
+  
     <div class="filter-container">
         <form class="filter mb-4 row g-3" method="GET">
             <div class="section">
@@ -107,17 +119,11 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
                     ?>
                 </tbody>
             </table>
-        </div>
-
-        
+        </div>     
     </div>
  
 </div>
 
-
-<div class="btn ol-md-2 d-flex align-items-end">
-    <a href="../employee_dashboard.php">← Back to Employee Dashboard</a>
-</div>
 
 <!-- DataTables JS -->
 <script>

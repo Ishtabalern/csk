@@ -62,10 +62,29 @@ if (!empty($client_id)) {
 <head>
     <title>Income Statement</title>
     <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../partials/topbar.css">
     <link rel="stylesheet" href="../styles/reports/income_statement.css">
 </head>
 <body>
-    <h1 style="justify-self:center">Income Statement</h1>
+
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../imgs/csk_logo.png" alt="">
+            <h1>Income Statement</h1>
+        </div>
+       
+       
+        <div class="btn">
+            <?php
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+            ?>
+            <a href="<?= $dashboard_link ?>">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+  
+
 
     <div class="client-container">
         <form class="client" method="get">
@@ -99,9 +118,9 @@ if (!empty($client_id)) {
  
     <?php if ($client_id): ?>
         <div class="incomeStatement-container">
-            <h3>From <?= $start_date ?> to <?= $end_date ?></h3>
-            <div class="customer-name"> 
-                
+            <h3 style="color: #00AF7E; padding:0px 35px;">From <?= $start_date ?> to <?= $end_date ?></h3>
+            
+            <div class="customer-name">              
                 <p><?= htmlspecialchars($client_name) ?></p>
                 <h3 id="tab-content">Income Statement</h3>
             </div>
@@ -128,19 +147,12 @@ if (!empty($client_id)) {
                 </table>
             </div>
 
-            <h3>
+            <h3 style="color:rgb(141, 38, 0); padding:0px 35px;">
             <?= ($total_income - $total_expenses) >= 0 ? 'Net Profit' : 'Net Loss' ?>:
             <?= number_format($total_income - $total_expenses, 2) ?>
             </h3>
 
-            <div class="btn">
-                <?php
-                $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
-                ?>
-                <a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px; margin-top:20px;">
-                    ⬅️ Back to Dashboard
-                </a>
-            </div>
+         
         </div>
     <?php endif; ?>
     

@@ -60,8 +60,18 @@ while ($row = $result->fetch_assoc()) {
 <html>
 <head>
     <title>Trial Balance</title>
+    <link rel="stylesheet" href="../partials/topbar.css">
     <style>
-        body { font-family: Arial; padding: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+        }
+        .container{padding: 20px;}
         select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
         table { border-collapse: collapse; width: 100%; margin-top: 20px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
@@ -76,76 +86,87 @@ while ($row = $result->fetch_assoc()) {
 $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_reports.php' : 'view_reports.php';
 ?>
 
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../imgs/csk_logo.png" alt="">
+            <h1 style="color:#1ABC9C">Trial Balance Report</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="<?= $dashboard_link ?>">
+                Back to Reports
+            </a>
+        </div>
+    </div>
 
-<h1 style="color:#1ABC9C">📘 Trial Balance Report</h1>
 
-<form method="GET">
-    <label>Client:</label>
-    <select name="client_id">
-        <option value="">All Clients</option>
-        <?php while ($row = $clients->fetch_assoc()): ?>
-            <option value="<?= $row['id'] ?>" <?= ($row['id'] == $client_id) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($row['name']) ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
+<div class="container">
 
-    <label>Start Date:</label>
-    <input type="date" name="start_date" value="<?= $start_date ?>">
+    <form method="GET">
+        <label>Client:</label>
+        <select name="client_id">
+            <option value="">All Clients</option>
+            <?php while ($row = $clients->fetch_assoc()): ?>
+                <option value="<?= $row['id'] ?>" <?= ($row['id'] == $client_id) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($row['name']) ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
 
-    <label>End Date:</label>
-    <input type="date" name="end_date" value="<?= $end_date ?>">
+        <label>Start Date:</label>
+        <input type="date" name="start_date" value="<?= $start_date ?>">
 
-    <button type="submit">🔍 Filter</button>
-</form>
+        <label>End Date:</label>
+        <input type="date" name="end_date" value="<?= $end_date ?>">
 
-<table>
-    <thead>
-        <tr>
-            <th class="left">Account Code</th>
-            <th class="left">Account Name</th>
-            <th class="left">Type</th>
-            <th>Debit (₱)</th>
-            <th>Credit (₱)</th>
-            <th>Running Debit</th>
-            <th>Running Credit</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php 
-        $running_debit = 0;
-        $running_credit = 0;
-        foreach ($rows as $r): 
-            $running_debit += $r['total_debit'];
-            $running_credit += $r['total_credit'];
-        ?>
+        <button type="submit">🔍 Filter</button>
+    </form>
+
+    <table>
+        <thead>
             <tr>
-                <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
-                <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
-                <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
-                <td><?= number_format($r['total_debit'], 2) ?></td>
-                <td><?= number_format($r['total_credit'], 2) ?></td>
-                <td><?= number_format($running_debit, 2) ?></td>
-                <td><?= number_format($running_credit, 2) ?></td>
+                <th class="left">Account Code</th>
+                <th class="left">Account Name</th>
+                <th class="left">Type</th>
+                <th>Debit (₱)</th>
+                <th>Credit (₱)</th>
+                <th>Running Debit</th>
+                <th>Running Credit</th>
             </tr>
-        <?php endforeach; ?>
-        <tr>
-            <th colspan="3">TOTAL</th>
-            <th><?= number_format($total_debit, 2) ?></th>
-            <th><?= number_format($total_credit, 2) ?></th>
-            <th colspan="2"></th>
-        </tr>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php 
+            $running_debit = 0;
+            $running_credit = 0;
+            foreach ($rows as $r): 
+                $running_debit += $r['total_debit'];
+                $running_credit += $r['total_credit'];
+            ?>
+                <tr>
+                    <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
+                    <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
+                    <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
+                    <td><?= number_format($r['total_debit'], 2) ?></td>
+                    <td><?= number_format($r['total_credit'], 2) ?></td>
+                    <td><?= number_format($running_debit, 2) ?></td>
+                    <td><?= number_format($running_credit, 2) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            <tr>
+                <th colspan="3">TOTAL</th>
+                <th><?= number_format($total_debit, 2) ?></th>
+                <th><?= number_format($total_credit, 2) ?></th>
+                <th colspan="2"></th>
+            </tr>
+        </tbody>
+    </table>
 
-<?php if ($total_debit !== $total_credit): ?>
-    <p class="warning">⚠️ Trial Balance is not balanced!</p>
-<?php endif; ?>
+    <?php if ($total_debit !== $total_credit): ?>
+        <p class="warning">⚠️ Trial Balance is not balanced!</p>
+    <?php endif; ?>
 
-<br>
-<a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
-    ⬅️ Back to Reports
-</a>
+</div>
+
 
 
 </body>
