@@ -36,11 +36,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <title>Add New Client</title>
     <link rel="stylesheet" href="../../styles/clients/add.css">
+    <link rel="stylesheet" href="../../partials/topbar.css">
 </head>
 <body>
 
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../../imgs/csk_logo.png" alt="">
+            <h1 style="color:#1ABC9C">Add New Client</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="list.php">← Back to Client List</a>
+            <a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
+        </div>
+    </div>
+
     <div class="container">
-        <h2>Add New Client</h2>
+        <h2>Enter New Client</h2>
        
         <?php if ($success): ?>
         <p style="color: green;"><?= $success ?></p>
@@ -80,10 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
 
-        <div class="btns">
-            <a href="list.php">← Back to Client List</a>
-            <a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
-        </div>
+    
        
     </div>
 

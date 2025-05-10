@@ -36,69 +36,77 @@ $employees = $conn->query("SELECT * FROM users WHERE role = 'employee'");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../styles/employee/manage_employee.css">
+        <link rel="stylesheet" href="../partials/topbar.css">
 </head>
 <body>
 
-    <h1 class="manage-header">Manage Employees</h1>
-    
-    <div class="manage-container">
-        <form class="manage-employee" method="POST">
-            <div class="section">
-
-                <div class="input">
-                    <label>Username</label>
-                    <input type="text" name="username" placeholder="Username" required />
-                </div>
-
-                <div class="input">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Password" required />
-                </div>
-
-                <div class="input">
-                    <label>Full name</label>
-                    <input type="text" name="full_name" placeholder="Full Name" />
-                </div>
-
-                <div class="input">
-                    <label>Email</label>
-                    <input type="email" name="email" placeholder="Email" />
-                </div>
-
-            </div>
-                      
-            <button type="submit">Add Employee</button>
-        </form>
-    </div>
-    
-    <hr style="margin: 40px;">
- 
-    <div class="manageTable-container">
-        <table border="1" cellpadding="8">
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Action</th>
-            </tr>
-            <?php while ($row = $employees->fetch_assoc()): ?>
-            <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= htmlspecialchars($row['username']) ?></td>
-                <td><?= htmlspecialchars($row['full_name']) ?></td>
-                <td><?= htmlspecialchars($row['email']) ?></td>
-                <td><a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Delete this employee?')">Delete</a></td>
-            </tr>
-            <?php endwhile; ?>
-        </table>
-    </div>
-    
-
-    <div class="back-dashboard-container">
-        <a href="../admin_dashboard.php" class="back-dashboard">Back to Dashboard</a>
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../../imgs/csk_logo.png" alt="">
+            <h1 style="color:#1ABC9C">Manage Employees</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="../admin_dashboard.php">Back to Dashboard</a>
+        </div>
     </div>
 
+    <div class="container">
+        
+        <div class="manage-container">
+            <form class="manage-employee" method="POST">
+                <div class="section">
+
+                    <div class="input">
+                        <label>Username</label>
+                        <input type="text" name="username" placeholder="Username" required />
+                    </div>
+
+                    <div class="input">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Password" required />
+                    </div>
+
+                    <div class="input">
+                        <label>Full name</label>
+                        <input type="text" name="full_name" placeholder="Full Name" />
+                    </div>
+
+                    <div class="input">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="Email" />
+                    </div>
+
+                </div>
+                        
+                <button type="submit">Add Employee</button>
+            </form>
+        </div>
+        
+        <hr style="margin: 40px;">
+    
+        <div class="manageTable-container">
+            <table border="1" cellpadding="8">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+                <?php while ($row = $employees->fetch_assoc()): ?>
+                <tr>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= htmlspecialchars($row['username']) ?></td>
+                    <td><?= htmlspecialchars($row['full_name']) ?></td>
+                    <td><?= htmlspecialchars($row['email']) ?></td>
+                    <td><a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Delete this employee?')">Delete</a></td>
+                </tr>
+                <?php endwhile; ?>
+            </table>
+        </div>
+    
+    </div>
 
 
 

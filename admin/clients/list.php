@@ -19,10 +19,20 @@ $result = $conn->query("SELECT * FROM clients ORDER BY created_at DESC");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List</title>
+    <link rel="stylesheet" href="../../partials/topbar.css">
     <style>
-        body { font-family: Arial; padding: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+        }
+         .container{padding: 20px; margin-top:20px}
         select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 30px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
         td.left { text-align: left; }
@@ -44,47 +54,56 @@ $result = $conn->query("SELECT * FROM clients ORDER BY created_at DESC");
         <p style="color: green;"><?= htmlspecialchars($_GET['msg']) ?></p>
     <?php endif; ?>
 
-    <h1 style="color:#1ABC9C">📁 Client List</h1>
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../../imgs/csk_logo.png" alt="">
+            <h1 style="color:#1ABC9C">Client List</h1>
+        </div>
+       
+        <div class="btn">
+                <a href="../../admin_dashboard.php">Back to Admin Dashboard</a>
+        </div>
+    </div>
 
-    <a class="add-client" href="add.php">➕ Add New Client</a>
-    <br><br>
+    <div class="container">
+        <a class="add-client" href="add.php">➕ Add New Client</a>
 
-    <table border="1" cellpadding="8" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Client Name</th>
-                <th>Contact Person</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Created</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($result->num_rows > 0): ?>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['name']) ?></td>
-                        <td><?= htmlspecialchars($row['contact_person']) ?></td>
-                        <td><?= htmlspecialchars($row['email']) ?></td>
-                        <td><?= htmlspecialchars($row['phone']) ?></td>
-                        <td><?= htmlspecialchars($row['address']) ?></td>
-                        <td><?= date("M d, Y", strtotime($row['created_at'])) ?></td>
-                        <td style="display: flex; align-items: center; justify-content: space-evenly;">
-                            <a href="edit.php?id=<?= $row['id'] ?>" style="background-color: #00AF7E; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">✏️ Edit</a> |
-                            <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this client?')" style="background-color: rgb(169, 40, 1); color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">❌ Delete</a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr><td colspan="7">No clients found.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+        <table border="1" cellpadding="8" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Client Name</th>
+                    <th>Contact Person</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td><?= htmlspecialchars($row['contact_person']) ?></td>
+                            <td><?= htmlspecialchars($row['email']) ?></td>
+                            <td><?= htmlspecialchars($row['phone']) ?></td>
+                            <td><?= htmlspecialchars($row['address']) ?></td>
+                            <td><?= date("M d, Y", strtotime($row['created_at'])) ?></td>
+                            <td style="display: flex; align-items: center; justify-content: space-evenly;">
+                                <a href="edit.php?id=<?= $row['id'] ?>" style="background-color: #00AF7E; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">✏️ Edit</a> |
+                                <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this client?')" style="background-color: rgb(169, 40, 1); color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">❌ Delete</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr><td colspan="7">No clients found.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 
-    <br>
-    <a href="../../admin_dashboard.php" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">⬅️ Back to Admin Dashboard</a>
+
 
 
 </body>

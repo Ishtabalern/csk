@@ -11,15 +11,13 @@
 body {   
    background-color: #dce3e9;
    min-height: 100vh;
-   display: flex;
-   justify-content: center;
-   align-items: center;
 }
 
 .container {
    max-width: 740px;
    width: 90%;
    margin: auto;
+   margin-top: 20px;
    border-radius: 5px;
    padding: 30px;
    min-height: 100px;
