@@ -149,17 +149,21 @@ $totals['equity'] = $total_equity;
     </div>
     <div class="btn">
         <?php
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+        ?>
+        <a href="<?= $dashboard_link ?>">
+             Reports
+        </a>
+        <?php
             $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
         ?>
         <a href="<?= $dashboard_link ?>">
-             Back to Dashboard
+             Dashboard
         </a>
     </div>
 </div>
 
-
 <div class="container">
-
     <form method="get">
         <label>Client:
             <select name="client_id" required>
@@ -176,13 +180,23 @@ $totals['equity'] = $total_equity;
     </form>
 
     <?php if ($client_id): ?>
+        <form method="post" action="../process/export_balance_sheet.php" style="margin-top: 10px;">
+            <input type="hidden" name="client_id" value="<?= $client_id ?>">
+            <input type="hidden" name="end_date" value="<?= $end_date ?>">
+            <button name="export_pdf" type="submit">Export PDF</button>
+            <button name="export_excel" type="submit">Export Excel</button>
+        </form>
+    <?php endif; ?>
+
+
+    <?php if ($client_id): ?>
         <h3 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h3>
 
         <div class="section">
             <h4>Assets</h4>
             <table>
                 <tr><th>Account</th><th>Amount</th></tr>
-                <?php foreach ($accounts_data['asset'] ?? [] as $acc): ?>
+                <?php foreach ($accounts_data['assets'] ?? [] as $acc): ?>
                     <tr>
                         <td><?= htmlspecialchars($acc['name']) ?></td>
                         <td><?= number_format($acc['balance'], 2) ?></td>
@@ -196,7 +210,7 @@ $totals['equity'] = $total_equity;
             <h4>Liabilities</h4>
             <table>
                 <tr><th>Account</th><th>Amount</th></tr>
-                <?php foreach ($accounts_data['liability'] ?? [] as $acc): ?>
+                <?php foreach ($accounts_data['liabilities'] ?? [] as $acc): ?>
                     <tr>
                         <td><?= htmlspecialchars($acc['name']) ?></td>
                         <td><?= number_format($acc['balance'], 2) ?></td>

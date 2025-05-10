@@ -51,8 +51,8 @@ $result = $stmt->get_result();
         </div>
        
         <div class="btn">
-            <a href="add.php">← Upload New Receipt</a>
-            <a href="../employee_dashboard.php">Back to Dashboard</a>
+            <a href="add.php">Upload New Receipt</a>
+            <a href="../employee_dashboard.php">← Back to Dashboard</a>
         </div>
     </div>
    

@@ -6,67 +6,76 @@ $clients = $conn->query("SELECT id, name FROM clients");
 $client_id = $_GET['client_id'] ?? null;
 $end_date = $_GET['end_date'] ?? date('Y-m-d');
 
-$operating_inflows = 0; // Sales
-$operating_outflows = 0; // Expenses
-$financing_inflows = 0; // Owner’s Capital
-$financing_outflows = 0; // Owner’s Withdrawals
+$operating_inflows = 0;
+$operating_outflows = 0;
+$financing_inflows = 0;
+$financing_outflows = 0;
 $ending_cash = 0;
 
 if ($client_id) {
-    // Operating Activities: Sales (Revenue)
+    // Operating Inflows (Sales / Income)
     $stmt = $conn->prepare("
-        SELECT SUM(jl.credit - jl.debit) AS total
+        SELECT SUM(jl.debit) AS total
         FROM journal_entries je
         JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN accounts a ON jl.account_id = a.id
-        WHERE je.client_id = ? AND je.entry_date <= ? AND a.type = 'Revenue'
+        JOIN categories c ON (
+            (c.credit_account_id = jl.account_id OR c.debit_account_id = jl.account_id)
+            AND c.type = 'income'
+            AND c.client_id = ?
+        )
+        WHERE je.client_id = ? AND je.entry_date <= ?
     ");
-    $stmt->bind_param("is", $client_id, $end_date);
+    $stmt->bind_param("iis", $client_id, $client_id, $end_date);
     $stmt->execute();
-    $stmt->bind_result($operating_inflows);
-    $stmt->fetch();
+    $operating_inflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
     $stmt->close();
 
-    // Operating Activities: Expenses
+    // Operating Outflows (Expenses)
     $stmt = $conn->prepare("
-        SELECT SUM(jl.debit - jl.credit) AS total
+        SELECT SUM(jl.credit) AS total
         FROM journal_entries je
         JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN accounts a ON jl.account_id = a.id
-        WHERE je.client_id = ? AND je.entry_date <= ? AND a.type = 'Expense'
+        JOIN categories c ON (
+            (c.credit_account_id = jl.account_id OR c.debit_account_id = jl.account_id)
+            AND c.type = 'expense'
+            AND c.client_id = ?
+        )
+        WHERE je.client_id = ? AND je.entry_date <= ?
     ");
-    $stmt->bind_param("is", $client_id, $end_date);
+    $stmt->bind_param("iis", $client_id, $client_id, $end_date);
     $stmt->execute();
-    $stmt->bind_result($operating_outflows);
-    $stmt->fetch();
+    $operating_outflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
     $stmt->close();
 
-    // Financing Activities: Owner’s Capital
+    // Financing Inflows (Owner’s Capital)
     $stmt = $conn->prepare("
-        SELECT SUM(jl.credit - jl.debit) AS total
+        SELECT SUM(jl.debit) AS total
         FROM journal_entries je
         JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN accounts a ON jl.account_id = a.id
-        WHERE je.client_id = ? AND je.entry_date <= ? AND a.name = 'Owner’s Capital'
+        WHERE jl.account_id = 1
+        AND jl.debit > 0
+        AND je.client_id = ? AND je.entry_date <= ?
     ");
     $stmt->bind_param("is", $client_id, $end_date);
     $stmt->execute();
-    $stmt->bind_result($financing_inflows);
-    $stmt->fetch();
+    $financing_inflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
     $stmt->close();
 
-    // Financing Activities: Owner’s Withdrawals
+    // Financing Outflows (Withdrawals)
     $stmt = $conn->prepare("
-        SELECT SUM(jl.debit - jl.credit) AS total
+        SELECT SUM(jl.credit) AS total
         FROM journal_entries je
         JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN accounts a ON jl.account_id = a.id
-        WHERE je.client_id = ? AND je.entry_date <= ? AND a.name = 'Owner’s Withdrawal'
+        JOIN categories c ON (
+            (c.credit_account_id = jl.account_id OR c.debit_account_id = jl.account_id)
+            AND c.type = 'withdrawal'
+            AND c.client_id = ?
+        )
+        WHERE je.client_id = ? AND je.entry_date <= ?
     ");
-    $stmt->bind_param("is", $client_id, $end_date);
+    $stmt->bind_param("iis", $client_id, $client_id, $end_date);
     $stmt->execute();
-    $stmt->bind_result($financing_outflows);
-    $stmt->fetch();
+    $financing_outflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
     $stmt->close();
 
     // Ending Cash Balance
@@ -84,61 +93,91 @@ if ($client_id) {
     $stmt->close();
 }
 
-$net_cash_flow = ($operating_inflows - $operating_outflows) + ($financing_inflows - $financing_outflows);
+$netOperating = $operating_inflows - $operating_outflows;
+$netFinancing = $financing_inflows - $financing_outflows;
+$net_cash_flow = $netOperating + $netFinancing;
+$reconciliation_difference = $ending_cash - $net_cash_flow;
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Statement of Cash Flows</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 60%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .total { font-weight: bold; background-color: #f0f0f0; }
+        .section { margin-bottom: 40px; }
+    </style>
 </head>
 <body>
+
+<h2>Statement of Cash Flows</h2>
 
 <form method="get">
     <label>Client:
         <select name="client_id" required>
             <option value="">Select client</option>
             <?php while ($row = $clients->fetch_assoc()): ?>
-                <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>><?= htmlspecialchars($row['name']) ?></option>
+                <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($row['name']) ?>
+                </option>
             <?php endwhile; ?>
         </select>
     </label>
+    &nbsp;
     <label>Date:
         <input type="date" name="end_date" value="<?= $end_date ?>">
     </label>
+    &nbsp;
     <button type="submit">Generate</button>
 </form>
 
 <?php if ($client_id): ?>
-<h3>Statement of Cash Flows (As of <?= htmlspecialchars($end_date) ?>)</h3>
+    <h3>Statement as of <?= htmlspecialchars($end_date) ?></h3>
 
-<div class="section">
-    <h4>Cash Flows from Operating Activities</h4>
-    <table>
-        <tr><td>Cash Inflows (Sales)</td><td><?= number_format($operating_inflows, 2) ?></td></tr>
-        <tr><td>Cash Outflows (Expenses)</td><td>(<?= number_format($operating_outflows, 2) ?>)</td></tr>
-        <tr class="total"><td>Net Operating Cash Flow</td><td><?= number_format($operating_inflows - $operating_outflows, 2) ?></td></tr>
-    </table>
-</div>
+    <div class="section">
+        <h4>Cash Flows from Operating Activities</h4>
+        <table>
+            <tr><td>Cash Inflows (Sales)</td><td><?= number_format($operating_inflows, 2) ?></td></tr>
+            <tr><td>Cash Outflows (Expenses)</td><td>(<?= number_format($operating_outflows, 2) ?>)</td></tr>
+            <tr class="total">
+                <td>Net Operating Cash Flow</td>
+                <td><?= number_format($netOperating, 2) ?></td>
+            </tr>
+        </table>
+    </div>
 
-<div class="section">
-    <h4>Cash Flows from Financing Activities</h4>
-    <table>
-        <tr><td>Owner’s Capital</td><td><?= number_format($financing_inflows, 2) ?></td></tr>
-        <tr><td>Owner’s Withdrawal</td><td>(<?= number_format($financing_outflows, 2) ?>)</td></tr>
-        <tr class="total"><td>Net Financing Cash Flow</td><td><?= number_format($financing_inflows - $financing_outflows, 2) ?></td></tr>
-    </table>
-</div>
+    <div class="section">
+        <h4>Cash Flows from Financing Activities</h4>
+        <table>
+            <tr><td>Owner’s Capital</td><td><?= number_format($financing_inflows, 2) ?></td></tr>
+            <tr><td>Owner’s Withdrawals</td><td>(<?= number_format($financing_outflows, 2) ?>)</td></tr>
+            <tr class="total">
+                <td>Net Financing Cash Flow</td>
+                <td><?= number_format($netFinancing, 2) ?></td>
+            </tr>
+        </table>
+    </div>
 
-<div class="section">
-    <h4>Net Cash Flow & Ending Balance</h4>
-    <table>
-        <tr><td>Net Cash Flow</td><td><?= number_format($net_cash_flow, 2) ?></td></tr>
-        <tr><td>Ending Cash Balance</td><td><?= number_format($ending_cash, 2) ?></td></tr>
-    </table>
-</div>
+    <div class="section">
+        <h4>Net Cash Flow & Ending Balance</h4>
+        <table>
+            <tr><td>Net Cash Flow (Operating + Financing)</td><td><?= number_format($net_cash_flow, 2) ?></td></tr>
+            <tr><td>Ending Cash Balance</td><td><?= number_format($ending_cash, 2) ?></td></tr>
+            <tr class="total">
+                <td>Reconciliation Adjustment</td>
+                <td><?= number_format($reconciliation_difference, 2) ?></td>
+            </tr>
+        </table>
+    </div>
 <?php endif; ?>
-    
+
 </body>
 </html>
+

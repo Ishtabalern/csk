@@ -50,8 +50,6 @@ if (!isset($_SESSION['user_id'])) {
         <h2>Reports</h2>
         <a href="../../reports/balance_sheet.php">Balance Sheet</a>
         <a href="category_summary.php">Category Summary</a>
-        <a href="../../reports/client_summary.php">Client Summary</a>
-        <a href="../../reports/payment_methods.php">Payment Methods</a>
         <a href="sales_expense.php">Sales Vs Expense</a>
         <a href="../../reports/trial_balance.php">Trial Balance</a>
         <a href="../../reports/income_statement.php">Income Statement</a>

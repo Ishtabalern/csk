@@ -129,7 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
        
         <div class="btn">
-            <a href="../employee_dashboard.php">← Back to Dashboard</a>
+            <a href="view.php">Receipts</a>
+            <a href="../employee_dashboard.php">Back to Dashboard</a>
         </div>
     </div>
 
