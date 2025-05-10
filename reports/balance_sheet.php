@@ -146,24 +146,24 @@ $totals['equity'] = $total_equity;
     <div class="header">
         <img src="../imgs/csk_logo.png" alt="">
         <h1>Balance Sheet</h1>
-<h2>Balance Sheet</h2>
+    <h2>Balance Sheet</h2>
 
-<form method="get">
-    <label>Client:
-        <select name="client_id" required>
-            <option value="">Select client</option>
-            <?php while ($row = $clients->fetch_assoc()): ?>
-                <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>><?= htmlspecialchars($row['name']) ?></option>
-            <?php endwhile; ?>
-        </select>
-    </label>
-    <label>Date:
-        <input type="date" name="end_date" value="<?= $end_date ?>">
-    </label>
-    <button type="submit">Generate</button>
-</form>
+    <form method="get">
+        <label>Client:
+            <select name="client_id" required>
+                <option value="">Select client</option>
+                <?php while ($row = $clients->fetch_assoc()): ?>
+                    <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>><?= htmlspecialchars($row['name']) ?></option>
+                <?php endwhile; ?>
+            </select>
+        </label>
+        <label>Date:
+            <input type="date" name="end_date" value="<?= $end_date ?>">
+        </label>
+        <button type="submit">Generate</button>
+    </form>
 
-<?php if ($client_id): ?>
+    <?php if ($client_id): ?>
     <h3>As of <?= htmlspecialchars($end_date) ?></h3>
 
     <div class="section">
@@ -220,6 +220,7 @@ $totals['equity'] = $total_equity;
              Back to Dashboard
         </a>
     </div>
+    <?php endif; ?>
 </div>
 
 
