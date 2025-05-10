@@ -146,72 +146,7 @@ $totals['equity'] = $total_equity;
     <div class="header">
         <img src="../imgs/csk_logo.png" alt="">
         <h1>Balance Sheet</h1>
-    <h2>Balance Sheet</h2>
-
-    <form method="get">
-        <label>Client:
-            <select name="client_id" required>
-                <option value="">Select client</option>
-                <?php while ($row = $clients->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>><?= htmlspecialchars($row['name']) ?></option>
-                <?php endwhile; ?>
-            </select>
-        </label>
-        <label>Date:
-            <input type="date" name="end_date" value="<?= $end_date ?>">
-        </label>
-        <button type="submit">Generate</button>
-    </form>
-
-    <?php if ($client_id): ?>
-    <h3>As of <?= htmlspecialchars($end_date) ?></h3>
-
-    <div class="section">
-        <h4>Assets</h4>
-        <table>
-            <tr><th>Account</th><th>Amount</th></tr>
-            <?php foreach ($accounts_data['assets'] ?? [] as $acc): ?>
-                <tr>
-                    <td><?= htmlspecialchars($acc['name']) ?></td>
-                    <td><?= number_format($acc['balance'], 2) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <tr class="total"><td>Total Assets</td><td><?= number_format($totals['assets'], 2) ?></td></tr>
-        </table>
     </div>
-
-    <div class="section">
-        <h4>Liabilities</h4>
-        <table>
-            <tr><th>Account</th><th>Amount</th></tr>
-            <?php foreach ($accounts_data['liabilities'] ?? [] as $acc): ?>
-                <tr>
-                    <td><?= htmlspecialchars($acc['name']) ?></td>
-                    <td><?= number_format($acc['balance'], 2) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <tr class="total"><td>Total Liabilities</td><td><?= number_format($totals['liabilities'], 2) ?></td></tr>
-        </table>
-    </div>
-
-    <div class="section">
-        <h4>Equity</h4>
-        <table>
-            <tr><th>Component</th><th>Amount</th></tr>
-            <tr><td>Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
-            <tr><td>Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
-            <tr><td>Withdrawals</td><td>(<?= number_format($withdrawals, 2) ?>)</td></tr>
-            <tr class="total"><td>Total Equity</td><td><?= number_format($total_equity, 2) ?></td></tr>
-        </table>
-    </div>
-
-    <div class="section">
-        <h4>Total Liabilities & Equity</h4>
-        <table>
-            <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $total_equity, 2) ?></td></tr>
-        </table>
-    </div>
-    
     <div class="btn">
         <?php
             $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
@@ -220,7 +155,6 @@ $totals['equity'] = $total_equity;
              Back to Dashboard
         </a>
     </div>
-    <?php endif; ?>
 </div>
 
 
