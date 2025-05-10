@@ -61,8 +61,18 @@ while ($row = $result->fetch_assoc()) {
 <head>
     <title>Sales vs Expenses</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../../partials/topbar.css">
     <style>
-        body { font-family: Arial; padding: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+        }
+        .container{padding: 20px;}
         canvas { max-width: 100%; }
         select, button { padding: 5px 10px; margin-right: 10px; }
         select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
@@ -77,111 +87,125 @@ while ($row = $result->fetch_assoc()) {
 <?php
 $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : '../employee_dashboard.php';
 ?>
-<a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
-    ⬅️ Back to Reports
-</a>
-<br><br>
 
-<h2>📊 Sales vs Expenses Report</h2>
+<div class="topbar-container">
+    <div class="header">
+        <img src="../../imgs/csk_logo.png" alt="">
+        <h1 style="color:#1ABC9C">Sales vs Expenses Report</h1>
+    </div>
+    
+    <div class="btn">
+        <a href="<?= $dashboard_link ?>">
+            Back to Reports
+        </a>
+    </div>
+</div>
+
 
 <?php
-$startDate = $_GET['start_date'] ?? '';
-$endDate = $_GET['end_date'] ?? '';
+    $startDate = $_GET['start_date'] ?? '';
+    $endDate = $_GET['end_date'] ?? '';
 
-$dateCondition = '';
-if (!empty($startDate)) {
-    $dateCondition .= " AND receipt_date >= '$startDate'";
-}
-if (!empty($endDate)) {
-    $dateCondition .= " AND receipt_date <= '$endDate'";
-}
+    $dateCondition = '';
+    if (!empty($startDate)) {
+        $dateCondition .= " AND receipt_date >= '$startDate'";
+    }
+    if (!empty($endDate)) {
+        $dateCondition .= " AND receipt_date <= '$endDate'";
+    }
 ?>
-<form method="GET" class="row g-3 mb-4">
 
-    <div class="col-md-3">
-        <label>Start Date</label>
-        <input type="date" name="start_date" value="<?= $startDate ?>" class="form-control">
-    </div>
-    <div class="col-md-3">
-        <label>End Date</label>
-        <input type="date" name="end_date" value="<?= $endDate ?>" class="form-control">
-    </div>
+<div class="container">
 
-    <div class="col-md-3">
-        <label>Client:</label>
-        <select name="client_id" class="form-control">
-            <option value="">All Clients</option>
-            <?php while ($row = $clients->fetch_assoc()): ?>
-                <option value="<?= $row['id'] ?>" <?= $client_id == $row['id'] ? 'selected' : '' ?>>
-                    <?= $row['name'] ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
-    </div>
+    <form method="GET" class="row g-3 mb-4">
 
-    <div class="col-md-3 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary w-100">🔍 Apply Filter</button>
-    </div>
-</form>
+        <div class="col-md-3">
+            <label>Start Date</label>
+            <input type="date" name="start_date" value="<?= $startDate ?>" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label>End Date</label>
+            <input type="date" name="end_date" value="<?= $endDate ?>" class="form-control">
+        </div>
+
+        <div class="col-md-3">
+            <label>Client:</label>
+            <select name="client_id" class="form-control">
+                <option value="">All Clients</option>
+                <?php while ($row = $clients->fetch_assoc()): ?>
+                    <option value="<?= $row['id'] ?>" <?= $client_id == $row['id'] ? 'selected' : '' ?>>
+                        <?= $row['name'] ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">🔍 Apply Filter</button>
+        </div>
+    </form>
 
 
-<canvas id="salesExpenseChart" height="100"></canvas>
+    <canvas id="salesExpenseChart" height="100"></canvas>
 
-<script>
-const ctx = document.getElementById('salesExpenseChart').getContext('2d');
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?= json_encode(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]) ?>,
-        datasets: [
-            {
-                label: 'Sales',
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                data: <?= json_encode(array_values($monthly_sales)) ?>
-            },
-            {
-                label: 'Expenses',
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                data: <?= json_encode(array_values($monthly_expenses)) ?>
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { position: 'top' },
-            title: { display: true, text: 'Monthly Sales vs Expenses' }
+    <script>
+    const ctx = document.getElementById('salesExpenseChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?= json_encode(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]) ?>,
+            datasets: [
+                {
+                    label: 'Sales',
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    data: <?= json_encode(array_values($monthly_sales)) ?>
+                },
+                {
+                    label: 'Expenses',
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    data: <?= json_encode(array_values($monthly_expenses)) ?>
+                }
+            ]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    callback: value => '₱' + value.toLocaleString()
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Monthly Sales vs Expenses' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => '₱' + value.toLocaleString()
+                    }
                 }
             }
         }
-    }
-});
-</script>
+    });
+    </script>
 
-<table>
-    <thead>
-        <tr>
-            <th>Month</th>
-            <th>Sales (₱)</th>
-            <th>Expenses (₱)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php for ($m = 1; $m <= 12; $m++): ?>
+    <table>
+        <thead>
             <tr>
-                <td style="text-align: left"><?= date('F', mktime(0, 0, 0, $m, 10)) ?></td>
-                <td><?= number_format($monthly_sales[$m], 2) ?></td>
-                <td><?= number_format($monthly_expenses[$m], 2) ?></td>
+                <th>Month</th>
+                <th>Sales (₱)</th>
+                <th>Expenses (₱)</th>
             </tr>
-        <?php endfor; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php for ($m = 1; $m <= 12; $m++): ?>
+                <tr>
+                    <td style="text-align: left"><?= date('F', mktime(0, 0, 0, $m, 10)) ?></td>
+                    <td><?= number_format($monthly_sales[$m], 2) ?></td>
+                    <td><?= number_format($monthly_expenses[$m], 2) ?></td>
+                </tr>
+            <?php endfor; ?>
+        </tbody>
+    </table>
+
+</div>
+
 
 </body>
 </html>

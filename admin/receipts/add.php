@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../../partials/topbar.css">
     <style>
             * {
             margin: 0;
@@ -72,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             justify-content: center;
             flex-direction: column;
-            margin-top: 20px;
-            margin:auto;
+            margin:40px auto;
         }
 
         .forms-container form {
@@ -167,7 +167,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <h1>Add New Receipt</h1>
+
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../../imgs/csk_logo.png" alt="">
+            <h1 style="color:#1ABC9C">Add New Receipt</h1>
+        </div>
+       
+        <div class="btn">
+            <a href="list.php">← Back to Receipt List</a>
+            <a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
+        </div>
+    </div>
+
 
     <?php if ($success): ?>
         <p style="color: green;"><?= $success ?></p>
@@ -220,11 +232,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <button type="submit">💾 Add Receipt</button>
         </form>
-
-        <div class="btns">
-            <a href="list.php">← Back to Receipt List</a>
-            <a href="../../admin_dashboard.php">← Back to Admin Dashboard</a>
-        </div>
         
     </div>
 
