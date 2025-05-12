@@ -127,25 +127,6 @@
     <title>Statement of Cash Flows</title>
     <link rel="stylesheet" href="../styles/reports/cash_flow.css">
     <link rel="stylesheet" href="../partials/topbar.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding:20px;}
-        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        h2{ text-align:center; margin:20px 0px;}
-        h4{ margin:25px 0px; color:#1ABC9C;}
-        table { border-collapse: collapse; width: 60%; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        .total { font-weight: bold; background-color: #f0f0f0; }
-        .section { margin-bottom: 40px; display:flex; justify-content:center; align-items:center; flex-direction:column;}
-    </style>
 </head>
 <body>
 
@@ -196,29 +177,11 @@
     </form>
 </div>
 
-    <form method="get">
-        <label>Client:
-            <select name="client_id" required>
-                <option value="">Select client</option>
-                <?php while ($row = $clients->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($row['name']) ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-        </label>
-        &nbsp;
-        <label>Date:
-            <input type="date" name="end_date" value="<?= $end_date ?>">
-        </label>
-        &nbsp;
-        <button type="submit">Generate</button>
-    </form>
 
     <?php if ($client_id): ?>
         <h2>Statement as of <?= htmlspecialchars($end_date) ?></h2>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Cash Flows from Operating Activities</h4>
             <table>
                 <tr><td>Cash Inflows (Sales)</td><td><?= number_format($operating_inflows, 2) ?></td></tr>
@@ -230,7 +193,7 @@
             </table>
         </div>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Cash Flows from Financing Activities</h4>
             <table>
                 <tr><td>Owner’s Capital</td><td><?= number_format($financing_inflows, 2) ?></td></tr>
@@ -242,7 +205,7 @@
             </table>
         </div>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Net Cash Flow & Ending Balance</h4>
             <table>
                 <tr><td>Net Cash Flow (Operating + Financing)</td><td><?= number_format($net_cash_flow, 2) ?></td></tr>

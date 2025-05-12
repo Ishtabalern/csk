@@ -61,90 +61,7 @@ while ($row = $result->fetch_assoc()) {
 <head>
     <title>Trial Balance</title>
     <link rel="stylesheet" href="../partials/topbar.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
-        th { background-color: #f2f2f2; }
-        td.left { text-align: left; }
-        .warning { color: red; font-weight: bold; }
-        .client-container {
-            display: flex;
-            justify-content: center; /* ➡ Center horizontally yung form */
-            margin-top: 20px; /* ➡ Small space above the form */
-            }
-
-            .client {
-            background-color: #fff;
-            padding: 20px;
-            border: 1px solid rgb(164, 164, 164);
-            border-radius: 7px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* ➡ Center all content inside the form */
-            gap: 20px;
-            max-width: 100%;
-            width: 800px;
-            }
-
-            .client .section {
-            display: flex;
-            flex-wrap: wrap; /* ➡ Para responsive, wrap if needed */
-            justify-content: center; /* ➡ Center the inputs */
-            gap: 30px;
-            }
-
-            .section .input {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            }
-
-            .input label {
-            font-size: 1rem;
-            font-weight: bolder;
-            }
-
-            .input select,
-            .input input[type="date"] {
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background-color: white;
-            cursor: pointer;
-            width: 250px; /* ➡ fixed width para same lahat ng input */
-            }
-
-            .client button {
-            width: 200px;
-            padding: 15px 0;
-            border-radius: 6px;
-            background-color: #00AF7E;
-            color: #FFF;
-            font-weight: bold;
-            border: 1px solid #c3c3c3;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            transform: scale(0.95);
-            margin-top: 10px;
-            align-self: center; /* ➡ Button is centered inside form */
-            }
-
-            .client button:active {
-            transform: scale(0.9);
-            }
-    </style>
+    <link rel="stylesheet" href="../styles/reports/trial_balance.css">
 </head>
 <body>
 
@@ -207,45 +124,48 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
         </form>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th class="left">Account Code</th>
-                <th class="left">Account Name</th>
-                <th class="left">Type</th>
-                <th>Debit (₱)</th>
-                <th>Credit (₱)</th>
-                <th>Running Debit</th>
-                <th>Running Credit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-            $running_debit = 0;
-            $running_credit = 0;
-            foreach ($rows as $r): 
-                $running_debit += $r['total_debit'];
-                $running_credit += $r['total_credit'];
-            ?>
+    <div class="table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
-                    <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
-                    <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
-                    <td><?= number_format($r['total_debit'], 2) ?></td>
-                    <td><?= number_format($r['total_credit'], 2) ?></td>
-                    <td><?= number_format($running_debit, 2) ?></td>
-                    <td><?= number_format($running_credit, 2) ?></td>
+                    <th class="left">Account Code</th>
+                    <th class="left">Account Name</th>
+                    <th class="left">Type</th>
+                    <th>Debit (₱)</th>
+                    <th>Credit (₱)</th>
+                    <th>Running Debit</th>
+                    <th>Running Credit</th>
                 </tr>
-            <?php endforeach; ?>
-            <tr>
-                <th colspan="3">TOTAL</th>
-                <th><?= number_format($total_debit, 2) ?></th>
-                <th><?= number_format($total_credit, 2) ?></th>
-                <th colspan="2"></th>
-            </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php 
+                $running_debit = 0;
+                $running_credit = 0;
+                foreach ($rows as $r): 
+                    $running_debit += $r['total_debit'];
+                    $running_credit += $r['total_credit'];
+                ?>
+                    <tr>
+                        <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
+                        <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
+                        <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
+                        <td><?= number_format($r['total_debit'], 2) ?></td>
+                        <td><?= number_format($r['total_credit'], 2) ?></td>
+                        <td><?= number_format($running_debit, 2) ?></td>
+                        <td><?= number_format($running_credit, 2) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <th colspan="3">TOTAL</th>
+                    <th><?= number_format($total_debit, 2) ?></th>
+                    <th><?= number_format($total_credit, 2) ?></th>
+                    <th colspan="2"></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
+    
     <?php if ($total_debit !== $total_credit): ?>
         <p class="warning">⚠️ Trial Balance is not balanced!</p>
     <?php endif; ?>

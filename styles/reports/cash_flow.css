@@ -1,3 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: Arial, sans-serif;
+}
+
 .client-container {
     display: flex;
     justify-content: center; /* ➡ Center horizontally yung form */
@@ -64,3 +74,81 @@
 .client button:active {
     transform: scale(0.9);
 }
+
+/* container main content  */
+
+.container{
+    padding:20px;
+}
+
+select, 
+input[type="date"], 
+button { 
+    margin: 5px; 
+    padding: 5px 10px; 
+}
+
+h2{ 
+    text-align:center; 
+    margin:20px 0px;
+}
+
+/* table  */
+
+.table-container { 
+    margin-top: 20px; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    flex-direction:column;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    gap: 20px;
+    max-width: 100%;
+    width: 800px;
+    margin: 40px auto;
+
+
+}
+
+.table-container h4{ 
+    margin:25px 0px; 
+    color:#1ABC9C;
+}
+
+ .table-container table{ 
+     width: 100%;
+     border-collapse: collapse;
+ }
+ 
+ .table-container th, .table-container td { 
+   padding: 15px !important;
+   text-align: left;
+   border: 1px solid #ddd;
+   font-size: 1rem;
+ }
+ 
+ .table-container th{
+   background-color: #00AF7E;
+   font-weight: bold;
+   color: #ffffff;
+ }
+ 
+ .table-container tbody tr:hover{
+   background-color: #f2f2f2;
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
