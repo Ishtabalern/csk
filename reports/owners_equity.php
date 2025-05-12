@@ -135,10 +135,16 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     
     <div class="btn">
         <?php
-        $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
         ?>
         <a href="<?= $dashboard_link ?>">
-                Back to Dashboard
+             Reports
+        </a>
+        <?php
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+        ?>
+        <a href="<?= $dashboard_link ?>">
+             Dashboard
         </a>
     </div>
 </div>

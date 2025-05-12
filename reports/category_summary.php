@@ -31,7 +31,18 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
         </div>
        
         <div class="btn">
-            <a href="../employee_dashboard.php">← Back to Employee Dashboard</a>
+            <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+            ?>
+            <a href="<?= $dashboard_link ?>">
+                Reports
+            </a>
+            <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+            ?>
+            <a href="<?= $dashboard_link ?>">
+                Dashboard
+            </a>
         </div>
     </div>
 

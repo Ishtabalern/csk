@@ -13,69 +13,86 @@ $financing_outflows = 0;
 $ending_cash = 0;
 
 if ($client_id) {
-    // Operating Inflows (Sales / Income)
+    // Operating Activities: Sales (Revenue)
     $stmt = $conn->prepare("
-        SELECT SUM(jl.debit) AS total
+        SELECT SUM(jl.credit - jl.debit) AS total
         FROM journal_entries je
         JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN categories c ON (
-            (c.credit_account_id = jl.account_id OR c.debit_account_id = jl.account_id)
-            AND c.type = 'income'
-            AND c.client_id = ?
-        )
-        WHERE je.client_id = ? AND je.entry_date <= ?
-    ");
-    $stmt->bind_param("iis", $client_id, $client_id, $end_date);
-    $stmt->execute();
-    $operating_inflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
-    $stmt->close();
-
-    // Operating Outflows (Expenses)
-    $stmt = $conn->prepare("
-        SELECT SUM(jl.credit) AS total
-        FROM journal_entries je
-        JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN categories c ON (
-            (c.credit_account_id = jl.account_id OR c.debit_account_id = jl.account_id)
-            AND c.type = 'expense'
-            AND c.client_id = ?
-        )
-        WHERE je.client_id = ? AND je.entry_date <= ?
-    ");
-    $stmt->bind_param("iis", $client_id, $client_id, $end_date);
-    $stmt->execute();
-    $operating_outflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
-    $stmt->close();
-
-    // Financing Inflows (Owner’s Capital)
-    $stmt = $conn->prepare("
-        SELECT SUM(jl.debit) AS total
-        FROM journal_entries je
-        JOIN journal_lines jl ON je.id = jl.entry_id
-        WHERE jl.account_id = 1
-        AND jl.debit > 0
-        AND je.client_id = ? AND je.entry_date <= ?
+        JOIN accounts a ON jl.account_id = a.id
+        WHERE je.client_id = ? AND je.entry_date <= ? AND a.type = 'Revenue'
     ");
     $stmt->bind_param("is", $client_id, $end_date);
     $stmt->execute();
-    $financing_inflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+    $stmt->bind_result($operating_inflows);
+    $stmt->fetch();
     $stmt->close();
 
-    // Financing Outflows (Withdrawals)
+    // Operating Activities: Expenses
+    // Operating Activities: Expenses (exclude liability accounts if miscategorized)
     $stmt = $conn->prepare("
-        SELECT SUM(jl.credit) AS total
+        SELECT SUM(jl.debit - jl.credit) AS total
         FROM journal_entries je
         JOIN journal_lines jl ON je.id = jl.entry_id
-        JOIN categories c ON (
-            (c.credit_account_id = jl.account_id OR c.debit_account_id = jl.account_id)
-            AND c.type = 'withdrawal'
-            AND c.client_id = ?
-        )
+        JOIN accounts a ON jl.account_id = a.id
         WHERE je.client_id = ? AND je.entry_date <= ?
+        AND a.type = 'Expense'
+        AND je.id NOT IN (
+            SELECT je2.id
+            FROM journal_entries je2
+            JOIN journal_lines jl2 ON je2.id = jl2.entry_id
+            JOIN accounts a2 ON jl2.account_id = a2.id
+            WHERE a2.type = 'Liability'
+        )
+
     ");
-    $stmt->bind_param("iis", $client_id, $client_id, $end_date);
+    $stmt->bind_param("is", $client_id, $end_date);
     $stmt->execute();
-    $financing_outflows = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+    $stmt->bind_result($operating_outflows);
+    $stmt->fetch();
+    $stmt->close();
+
+    // 1. Owner’s Capital via journal entries (optional - keep this if needed)
+    $stmt = $conn->prepare("
+        SELECT SUM(jl.credit - jl.debit) AS total
+        FROM journal_entries je
+        JOIN journal_lines jl ON je.id = jl.entry_id
+        JOIN accounts a ON jl.account_id = a.id
+        WHERE je.client_id = ? AND je.entry_date <= ? AND a.name = 'Owner’s Capital'
+    ");
+    $stmt->bind_param("is", $client_id, $end_date);
+    $stmt->execute();
+    $stmt->bind_result($capital_journal);
+    $stmt->fetch();
+    $stmt->close();
+
+    // 2. Beginning Capital from beginning_capital table
+    $stmt = $conn->prepare("
+        SELECT SUM(amount) AS total
+        FROM beginning_capital
+        WHERE client_id = ? AND effective_date <= ?
+    ");
+    $stmt->bind_param("is", $client_id, $end_date);
+    $stmt->execute();
+    $stmt->bind_result($beginning_capital);
+    $stmt->fetch();
+    $stmt->close();
+
+    // 3. Final financing inflows: combine both sources (handle NULLs safely)
+    $financing_inflows = ($capital_journal ?? 0) + ($beginning_capital ?? 0);
+
+
+    // Financing Activities: Owner’s Withdrawals
+    $stmt = $conn->prepare("
+        SELECT SUM(jl.debit - jl.credit) AS total
+        FROM journal_entries je
+        JOIN journal_lines jl ON je.id = jl.entry_id
+        JOIN accounts a ON jl.account_id = a.id
+        WHERE je.client_id = ? AND je.entry_date <= ? AND a.name = 'Owner’s Withdrawal'
+    ");
+    $stmt->bind_param("is", $client_id, $end_date);
+    $stmt->execute();
+    $stmt->bind_result($financing_outflows);
+    $stmt->fetch();
     $stmt->close();
 
     // Ending Cash Balance
@@ -93,6 +110,7 @@ if ($client_id) {
     $stmt->close();
 }
 
+
 $netOperating = $operating_inflows - $operating_outflows;
 $netFinancing = $financing_inflows - $financing_outflows;
 $net_cash_flow = $netOperating + $netFinancing;
@@ -107,6 +125,7 @@ $reconciliation_difference = $ending_cash - $net_cash_flow;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statement of Cash Flows</title>
+    <link rel="stylesheet" href="../partials/topbar.css">
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         table { border-collapse: collapse; width: 60%; margin-bottom: 20px; }
@@ -117,7 +136,27 @@ $reconciliation_difference = $ending_cash - $net_cash_flow;
 </head>
 <body>
 
-<h2>Statement of Cash Flows</h2>
+<div class="topbar-container">
+    <div class="header">
+        <img src="../imgs/csk_logo.png" alt="">
+        <h1 style="color: #1ABC9C">Statement of Cash Flow</h1>
+    </div>
+    
+    <div class="btn">
+        <?php
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+        ?>
+        <a href="<?= $dashboard_link ?>">
+             Reports
+        </a>
+        <?php
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+        ?>
+        <a href="<?= $dashboard_link ?>">
+             Dashboard
+        </a>
+    </div>
+</div>
 
 <form method="get">
     <label>Client:

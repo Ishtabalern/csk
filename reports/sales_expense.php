@@ -102,8 +102,17 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
         </div>
        
         <div class="btn">
+            <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+            ?>
             <a href="<?= $dashboard_link ?>">
-                 Back to Reports
+                Reports
+            </a>
+            <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+            ?>
+            <a href="<?= $dashboard_link ?>">
+                Dashboard
             </a>
         </div>
     </div>
