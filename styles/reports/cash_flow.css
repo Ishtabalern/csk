@@ -60,7 +60,7 @@
     width: 200px;
     padding: 15px 0;
     border-radius: 6px;
-    background-color: #00AF7E;
+    background-color: #18751e;
     color: #FFF;
     font-weight: bold;
     border: 1px solid #c3c3c3;
@@ -115,7 +115,7 @@ h2{
 
 .table-container h4{ 
     margin:25px 0px; 
-    color:#1ABC9C;
+    color:#0B440F;
 }
 
  .table-container table{ 
@@ -131,7 +131,7 @@ h2{
  }
  
  .table-container th{
-   background-color: #00AF7E;
+   background-color: #0B440F;
    font-weight: bold;
    color: #ffffff;
  }

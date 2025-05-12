@@ -117,7 +117,7 @@
 <div class="topbar-container">
     <div class="header">
         <img src="../imgs/csk_logo.png" alt="">
-        <h1 style="color: #1ABC9C">Statement of Cash Flow</h1>
+        <h1 style="color: #0B440F">Statement of Cash Flow</h1>
     </div>
     
     <div class="btn">
@@ -137,32 +137,32 @@
 </div>
 
 <div class="container">
-<div class="client-container">
-    <form class="client" method="get">
-        <div class="section">
-            
-            <div class="input">
-                <label>Client:</label>
-                <select name="client_id" required>
-                    <option value="">Select Client</option>
-                    <?php while ($c = $clients->fetch_assoc()): ?>
-                        <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
+    <div class="client-container">
+        <form class="client" method="get">
+            <div class="section">
+                
+                <div class="input">
+                    <label>Client:</label>
+                    <select name="client_id" required>
+                        <option value="">Select Client</option>
+                        <?php while ($c = $clients->fetch_assoc()): ?>
+                            <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-            <div class="input">             
-                <label>Date:</label>
-                <input type="date" name="end_date" value="<?= $end_date ?>">
+                <div class="input">             
+                    <label>Date:</label>
+                    <input type="date" name="end_date" value="<?= $end_date ?>">
+                </div>
             </div>
-        </div>
-    
-        <button type="submit">Generate</button>
-    </form>
-</div>
+        
+            <button type="submit">Generate</button>
+        </form>
+    </div>
 
     <?php if ($client_id): ?>
-        <h2>Statement as of <?= htmlspecialchars($end_date) ?></h2>
+        <h2 style="color: #0B440F;">Statement as of <?= htmlspecialchars($end_date) ?></h2>
 
         <div class="table-container">
             <h4>Cash Flows from Operating Activities</h4>
