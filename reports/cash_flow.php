@@ -28,7 +28,6 @@
         $stmt->close();
 
         // Operating Activities: Expenses
-        // Operating Activities: Expenses (exclude liability accounts if miscategorized)
         $stmt = $conn->prepare("
             SELECT SUM(jl.debit - jl.credit) AS total
             FROM journal_entries je
@@ -51,25 +50,11 @@
         $stmt->fetch();
         $stmt->close();
 
-        // 1. Owner’s Capital via journal entries (optional - keep this if needed)
+        // Owner's Capital from beginning_capital table
         $stmt = $conn->prepare("
-            SELECT SUM(jl.credit - jl.debit) AS total
-            FROM journal_entries je
-            JOIN journal_lines jl ON je.id = jl.entry_id
-            JOIN accounts a ON jl.account_id = a.id
-            WHERE je.client_id = ? AND je.entry_date <= ? AND a.name = 'Owner’s Capital'
-        ");
-        $stmt->bind_param("is", $client_id, $end_date);
-        $stmt->execute();
-        $stmt->bind_result($capital_journal);
-        $stmt->fetch();
-        $stmt->close();
-
-        // 2. Beginning Capital from beginning_capital table
-        $stmt = $conn->prepare("
-            SELECT SUM(amount) AS total
-            FROM beginning_capital
+            SELECT amount FROM beginning_capital
             WHERE client_id = ? AND effective_date <= ?
+            ORDER BY effective_date DESC LIMIT 1
         ");
         $stmt->bind_param("is", $client_id, $end_date);
         $stmt->execute();
@@ -77,9 +62,9 @@
         $stmt->fetch();
         $stmt->close();
 
-        // 3. Final financing inflows: combine both sources (handle NULLs safely)
-        $financing_inflows = ($capital_journal ?? 0) + ($beginning_capital ?? 0);
 
+        // 3. Final financing inflows: combine both sources (handle NULLs safely)
+        $financing_inflows = $beginning_capital ?? 0;
 
         // Financing Activities: Owner’s Withdrawals
         $stmt = $conn->prepare("
@@ -109,7 +94,6 @@
         $stmt->fetch();
         $stmt->close();
     }
-
 
     $netOperating = $operating_inflows - $operating_outflows;
     $netFinancing = $financing_inflows - $financing_outflows;
@@ -195,25 +179,6 @@
         <button type="submit">Generate</button>
     </form>
 </div>
-
-    <form method="get">
-        <label>Client:
-            <select name="client_id" required>
-                <option value="">Select client</option>
-                <?php while ($row = $clients->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($row['name']) ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-        </label>
-        &nbsp;
-        <label>Date:
-            <input type="date" name="end_date" value="<?= $end_date ?>">
-        </label>
-        &nbsp;
-        <button type="submit">Generate</button>
-    </form>
 
     <?php if ($client_id): ?>
         <h2>Statement as of <?= htmlspecialchars($end_date) ?></h2>
