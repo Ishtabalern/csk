@@ -1,3 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: Arial, sans-serif;
+}
+
 .client-container {
     display: flex;
     justify-content: center; /* ➡ Center horizontally yung form */
@@ -64,3 +74,97 @@
 .client button:active {
     transform: scale(0.9);
 }
+
+/* container main content  */
+
+ .container{
+    padding: 20px;
+}
+
+
+select, 
+input[type="date"], 
+button {
+    margin: 5px; 
+    padding: 5px 10px; 
+}
+
+.total { 
+    font-weight: bold; 
+}
+
+/* exports-btn  */
+
+.exports-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0px;
+
+}
+
+.exports-btn form button{
+    width: 150px;
+    padding: 15px 0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #454545;
+    font-weight: bold;
+    border: 1px solid #00AF7E;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Use 'ease-in-out' for smoother animation */
+    transform: scale(0.95);
+    margin-top: 10px;
+}
+ 
+.exports-btn form button:active {
+    transform: scale(0.9);
+}
+
+
+
+/* table  */
+
+ h2{
+    text-align: center;
+ }
+
+ .table-container { 
+   background-color: white;
+   padding: 20px;
+   border-radius: 10px;
+   border: 1px solid #ddd;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   max-width: 100%;
+   width: 800px;
+   margin: auto;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
+
+ .table-container table{ 
+     width: 100%;
+     border-collapse: collapse;
+ }
+ 
+ .table-container th, .table-container td { 
+   padding: 15px !important;
+   text-align: left;
+   border: 1px solid #ddd;
+   font-size: 1rem;
+ }
+ 
+ .table-container th{
+   background-color: #00AF7E;
+   font-weight: bold;
+   color: #ffffff;
+ }
+ 
+ .table-container tbody tr:hover{
+   background-color: #f2f2f2;
+ }
+
+

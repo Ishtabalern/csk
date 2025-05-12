@@ -123,22 +123,8 @@ $totals['equity'] = $total_equity;
     <link rel="stylesheet" href="../styles/reports/balance_sheet.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        .section { margin: 20px 0; }
-        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background: #008000; color: white; text-align: left; }
-        .total { font-weight: bold; }
+        
+       
     </style>
 </head>
 <body>
@@ -169,42 +155,44 @@ $totals['equity'] = $total_equity;
         <form class="client" method="get">
             <div class="section">
                 
-                <div class="input">
-                    <label>Client:</label>
-                    <select name="client_id" required>
-                        <option value="">Select Client</option>
-                        <?php while ($c = $clients->fetch_assoc()): ?>
-                            <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
+                    <div class="input">
+                        <label>Client:</label>
+                        <select name="client_id" required>
+                            <option value="">Select Client</option>
+                            <?php while ($c = $clients->fetch_assoc()): ?>
+                                <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
 
-                <div class="input">             
-                    <label>Date:</label>
-                    <input type="date" name="end_date" value="<?= $end_date ?>">
-                </div>
+                    <div class="input">             
+                        <label>Date:</label>
+                        <input type="date" name="end_date" value="<?= $end_date ?>">
+                    </div>
             </div>
-        
-            <button type="submit">Generate</button>
+            
+                <button type="submit">Generate</button>
         </form>
     </div>
 
     <?php if ($client_id): ?>
-        <form method="post" action="../process/export_balance_sheet.php" style="margin-top: 10px;">
-            <input type="hidden" name="client_id" value="<?= $client_id ?>">
-            <input type="hidden" name="end_date" value="<?= $end_date ?>">
-            <button name="export_pdf" type="submit">Export PDF</button>
-            <button name="export_excel" type="submit">Export Excel</button>
-        </form>
+        <div class="exports-btn">    
+            <form method="post" action="../process/export_balance_sheet.php" style="margin-top: 10px;">
+                <input type="hidden" name="client_id" value="<?= $client_id ?>">
+                <input type="hidden" name="end_date" value="<?= $end_date ?>">
+                <button name="export_pdf" type="submit">Export PDF</button>
+                <button name="export_excel" type="submit">Export Excel</button>
+            </form>
+         </div>       
     <?php endif; ?>
 
 
     <?php if ($client_id): ?>
-        <h3 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h3>
+        <h2 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h2>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Assets</h4>
-            <table>
+            <table class="">
                 <tr><th>Account</th><th>Amount</th></tr>
                 <?php foreach ($accounts_data['assets'] ?? [] as $acc): ?>
                     <tr>
@@ -216,7 +204,7 @@ $totals['equity'] = $total_equity;
             </table>
         </div>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Liabilities</h4>
             <table>
                 <tr><th>Account</th><th>Amount</th></tr>
@@ -230,7 +218,7 @@ $totals['equity'] = $total_equity;
             </table>
         </div>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Equity</h4>
             <table>
                 <tr><th>Component</th><th>Amount</th></tr>
@@ -241,7 +229,7 @@ $totals['equity'] = $total_equity;
             </table>
         </div>
 
-        <div class="section">
+        <div class="table-container">
             <h4>Total Liabilities & Equity</h4>
             <table>
                 <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $total_equity, 2) ?></td></tr>

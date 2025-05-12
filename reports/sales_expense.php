@@ -67,27 +67,9 @@ while ($row = $result->fetch_assoc()) {
 <html>
 <head>
     <title>Sales vs Expenses</title>
+    <link rel="stylesheet" href="../styles/reports/sales_expense.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        canvas { max-width: 100%; }
-        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        form {display:flex; margin-bottom:20px;}
-        select, button { padding: 5px 10px; margin-right: 10px; }
-        table { margin-top: 30px; border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
-        th { background-color: #f2f2f2; }
-    </style>
 </head>
 <body>
 
@@ -199,25 +181,26 @@ if (!empty($endDate)) {
         });
     </script>
 
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Month</th>
-                <th>Sales (₱)</th>
-                <th>Expenses (₱)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php for ($m = 1; $m <= 12; $m++): ?>
+    <div class="table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td style="text-align: left"><?= date('F', mktime(0, 0, 0, $m, 10)) ?></td>
-                    <td><?= number_format($monthly_sales[$m], 2) ?></td>
-                    <td><?= number_format($monthly_expenses[$m], 2) ?></td>
+                    <th>Month</th>
+                    <th>Sales (₱)</th>
+                    <th>Expenses (₱)</th>
                 </tr>
-            <?php endfor; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php for ($m = 1; $m <= 12; $m++): ?>
+                    <tr>
+                        <td style="text-align: left"><?= date('F', mktime(0, 0, 0, $m, 10)) ?></td>
+                        <td><?= number_format($monthly_sales[$m], 2) ?></td>
+                        <td><?= number_format($monthly_expenses[$m], 2) ?></td>
+                    </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

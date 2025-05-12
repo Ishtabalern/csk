@@ -106,24 +106,8 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
 <html>
 <head>
     <title>Statement of Owner's Equity</title>
-       <link rel="stylesheet" href="../styles/reports/owners_equity.css">
+    <link rel="stylesheet" href="../styles/reports/owners_equity.css">
     <link rel="stylesheet" href="../partials/topbar.css">
-    <style>
-        * {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        text-decoration: none;
-        box-sizing: border-box;
-        scroll-behavior: smooth;
-        font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px;}
-        th, td { padding: 10px; border: 1px solid #ccc; text-align: right; }
-        th.left, td.left { text-align: left; }
-    </style>
 </head>
 <body>
 
@@ -194,14 +178,15 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
         </form>
     <?php endif; ?>
 
-    <table>
-        <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
-        <tr><td class="left">Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
-        <tr><td class="left">Add: Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
-        <tr><td class="left">Less: Withdrawals</td><td><?= number_format($total_withdrawals, 2) ?></td></tr>
-        <tr><th class="left">Ending Capital</th><th><?= number_format($ending_capital, 2) ?></th></tr>
-    </table>
-
+    <div class="table-container">
+        <table>
+            <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
+            <tr><td class="left">Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
+            <tr><td class="left">Add: Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
+            <tr><td class="left">Less: Withdrawals</td><td><?= number_format($total_withdrawals, 2) ?></td></tr>
+            <tr><th class="left">Ending Capital</th><th><?= number_format($ending_capital, 2) ?></th></tr>
+        </table>
+    </div>
 </div>
 </body>
 </html>
