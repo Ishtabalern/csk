@@ -120,6 +120,7 @@ $totals['equity'] = $total_equity;
 <html>
 <head>
     <title>Balance Sheet</title>
+    <link rel="stylesheet" href="../styles/reports/balance_sheet.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <style>
         * {
@@ -164,20 +165,29 @@ $totals['equity'] = $total_equity;
 </div>
 
 <div class="container">
-    <form method="get">
-        <label>Client:
-            <select name="client_id" required>
-                <option value="">Select client</option>
-                <?php while ($row = $clients->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>><?= htmlspecialchars($row['name']) ?></option>
-                <?php endwhile; ?>
-            </select>
-        </label>
-        <label>Date:
-            <input type="date" name="end_date" value="<?= $end_date ?>">
-        </label>
-        <button type="submit">Generate</button>
-    </form>
+   <div class="client-container">
+        <form class="client" method="get">
+            <div class="section">
+                
+                <div class="input">
+                    <label>Client:</label>
+                    <select name="client_id" required>
+                        <option value="">Select Client</option>
+                        <?php while ($c = $clients->fetch_assoc()): ?>
+                            <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+
+                <div class="input">             
+                    <label>Date:</label>
+                    <input type="date" name="end_date" value="<?= $end_date ?>">
+                </div>
+            </div>
+        
+            <button type="submit">Generate</button>
+        </form>
+    </div>
 
     <?php if ($client_id): ?>
         <form method="post" action="../process/export_balance_sheet.php" style="margin-top: 10px;">

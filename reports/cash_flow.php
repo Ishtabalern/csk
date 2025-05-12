@@ -125,6 +125,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statement of Cash Flows</title>
+    <link rel="stylesheet" href="../styles/reports/cash_flow.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <style>
         * {
@@ -171,6 +172,29 @@
 </div>
 
 <div class="container">
+<div class="client-container">
+    <form class="client" method="get">
+        <div class="section">
+            
+            <div class="input">
+                <label>Client:</label>
+                <select name="client_id" required>
+                    <option value="">Select Client</option>
+                    <?php while ($c = $clients->fetch_assoc()): ?>
+                        <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="input">             
+                <label>Date:</label>
+                <input type="date" name="end_date" value="<?= $end_date ?>">
+            </div>
+        </div>
+    
+        <button type="submit">Generate</button>
+    </form>
+</div>
 
     <form method="get">
         <label>Client:
