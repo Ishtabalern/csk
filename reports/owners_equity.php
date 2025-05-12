@@ -106,6 +106,7 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
 <html>
 <head>
     <title>Statement of Owner's Equity</title>
+       <link rel="stylesheet" href="../styles/reports/owners_equity.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <style>
         * {
@@ -151,25 +152,35 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
 
 <div class="container">
 
-    <form method="GET">
-        <label>Client:</label>
-        <select name="client_id">
-            <option value="">All Clients</option>
-            <?php while ($row = $clients->fetch_assoc()): ?>
-                <option value="<?= $row['id'] ?>" <?= ($row['id'] == $client_id) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($row['name']) ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
+    <div class="client-container">
+        <form class="client" method="get">
+            <div class="section">
+                
+                <div class="input">
+                    <label>Client:</label>
+                    <select name="client_id" required>
+                        <option value="">Select Client</option>
+                        <?php while ($c = $clients->fetch_assoc()): ?>
+                            <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-        <label>Start Date:</label>
-        <input type="date" name="start_date" value="<?= $start_date ?>">
+                <div class="input">             
+                    <label>From:</label>
+                    <input type="date" name="start_date" value="<?= $start_date ?>" required>
+                </div>
 
-        <label>End Date:</label>
-        <input type="date" name="end_date" value="<?= $end_date ?>">
+                <div class="input">              
+                    <label>To:</label>
+                    <input type="date" name="end_date" value="<?= $end_date ?>" required>
+                </div>
 
-        <button type="submit">View</button>
-    </form>
+            </div>
+        
+            <button type="submit">Generate</button>
+        </form>
+    </div>
 
     <?php if ($_SESSION['role'] === 'admin' && !empty($client_id)): ?>
         <form method="POST" style="margin-top:30px;">

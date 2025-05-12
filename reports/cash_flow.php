@@ -125,6 +125,7 @@ $reconciliation_difference = $ending_cash - $net_cash_flow;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statement of Cash Flows</title>
+    <link rel="stylesheet" href="../styles/reports/cash_flow.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
@@ -158,24 +159,29 @@ $reconciliation_difference = $ending_cash - $net_cash_flow;
     </div>
 </div>
 
-<form method="get">
-    <label>Client:
-        <select name="client_id" required>
-            <option value="">Select client</option>
-            <?php while ($row = $clients->fetch_assoc()): ?>
-                <option value="<?= $row['id'] ?>" <?= ($client_id == $row['id']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($row['name']) ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
-    </label>
-    &nbsp;
-    <label>Date:
-        <input type="date" name="end_date" value="<?= $end_date ?>">
-    </label>
-    &nbsp;
-    <button type="submit">Generate</button>
-</form>
+<div class="client-container">
+    <form class="client" method="get">
+        <div class="section">
+            
+            <div class="input">
+                <label>Client:</label>
+                <select name="client_id" required>
+                    <option value="">Select Client</option>
+                    <?php while ($c = $clients->fetch_assoc()): ?>
+                        <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="input">             
+                <label>Date:</label>
+                <input type="date" name="end_date" value="<?= $end_date ?>">
+            </div>
+        </div>
+    
+        <button type="submit">Generate</button>
+    </form>
+</div>
 
 <?php if ($client_id): ?>
     <h3>Statement as of <?= htmlspecialchars($end_date) ?></h3>

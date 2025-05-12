@@ -78,6 +78,72 @@ while ($row = $result->fetch_assoc()) {
         th { background-color: #f2f2f2; }
         td.left { text-align: left; }
         .warning { color: red; font-weight: bold; }
+        .client-container {
+            display: flex;
+            justify-content: center; /* ➡ Center horizontally yung form */
+            margin-top: 20px; /* ➡ Small space above the form */
+            }
+
+            .client {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid rgb(164, 164, 164);
+            border-radius: 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* ➡ Center all content inside the form */
+            gap: 20px;
+            max-width: 100%;
+            width: 800px;
+            }
+
+            .client .section {
+            display: flex;
+            flex-wrap: wrap; /* ➡ Para responsive, wrap if needed */
+            justify-content: center; /* ➡ Center the inputs */
+            gap: 30px;
+            }
+
+            .section .input {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            }
+
+            .input label {
+            font-size: 1rem;
+            font-weight: bolder;
+            }
+
+            .input select,
+            .input input[type="date"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+            width: 250px; /* ➡ fixed width para same lahat ng input */
+            }
+
+            .client button {
+            width: 200px;
+            padding: 15px 0;
+            border-radius: 6px;
+            background-color: #00AF7E;
+            color: #FFF;
+            font-weight: bold;
+            border: 1px solid #c3c3c3;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+            margin-top: 10px;
+            align-self: center; /* ➡ Button is centered inside form */
+            }
+
+            .client button:active {
+            transform: scale(0.9);
+            }
     </style>
 </head>
 <body>
@@ -111,25 +177,35 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
 
 <div class="container">
 
-    <form method="GET">
-        <label>Client:</label>
-        <select name="client_id">
-            <option value="">All Clients</option>
-            <?php while ($row = $clients->fetch_assoc()): ?>
-                <option value="<?= $row['id'] ?>" <?= ($row['id'] == $client_id) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($row['name']) ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
+    <div class="client-container">
+        <form class="client" method="get">
+            <div class="section">
+                
+                <div class="input">
+                    <label>Client:</label>
+                    <select name="client_id" required>
+                        <option value="">Select Client</option>
+                        <?php while ($c = $clients->fetch_assoc()): ?>
+                            <option value="<?= $c['id'] ?>" <?= $c['id'] == $client_id ? 'selected' : '' ?>><?= $c['name'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-        <label>Start Date:</label>
-        <input type="date" name="start_date" value="<?= $start_date ?>">
+                <div class="input">             
+                    <label>From:</label>
+                    <input type="date" name="start_date" value="<?= $start_date ?>" required>
+                </div>
 
-        <label>End Date:</label>
-        <input type="date" name="end_date" value="<?= $end_date ?>">
+                <div class="input">              
+                    <label>To:</label>
+                    <input type="date" name="end_date" value="<?= $end_date ?>" required>
+                </div>
 
-        <button type="submit">🔍 Filter</button>
-    </form>
+            </div>
+        
+            <button type="submit">Generate</button>
+        </form>
+    </div>
 
     <table>
         <thead>
