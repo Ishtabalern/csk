@@ -52,22 +52,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../../partials/topbar.css">
-    <style>
-         * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 15px; border: 1px solid #ccc; text-align: left; }
-        th { background-color: #f0f0f0; }
-        select, input[type="date"], button {padding: 10px; }
-    </style>
+    <link rel="stylesheet" href="../../styles/admin_receipts/receipts.css">
 </head>
 <body>
 
@@ -109,47 +94,50 @@
         </select>
     </form>
 
-    <table border="1" cellpadding="8" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Client</th>
-                <th>Employee</th>
-                <th>Vendor</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Method</th>
-                <th>Date</th>
-                <th>Image</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($result->num_rows > 0): ?>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['client_name']) ?></td>
-                        <td><?= htmlspecialchars($row['employee_name']) ?></td>
-                        <td><?= htmlspecialchars($row['vendor']) ?></td>
-                        <td><?= htmlspecialchars($row['category']) ?></td>
-                        <td>₱<?= number_format($row['amount'], 2) ?></td>
-                        <td><?= htmlspecialchars($row['payment_method']) ?></td>
-                        <td><?= $row['receipt_date'] ?></td>
-                        <td>
-                            <?php if ($row['image_path']): ?>
-                                <a href="<?= $row['image_path'] ?>" target="_blank">
-                                    <img src="<?= $row['image_path'] ?>" width="80" height="80" style="object-fit:cover;" alt="receipt">
-                                </a>
-                            <?php else: ?>
-                                No Image
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr><td colspan="8">No receipts found.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-
+    <div class="table-container">
+  
+        <table border="1" cellpadding="8" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Employee</th>
+                    <th>Vendor</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['client_name']) ?></td>
+                            <td><?= htmlspecialchars($row['employee_name']) ?></td>
+                            <td><?= htmlspecialchars($row['vendor']) ?></td>
+                            <td><?= htmlspecialchars($row['category']) ?></td>
+                            <td>₱<?= number_format($row['amount'], 2) ?></td>
+                            <td><?= htmlspecialchars($row['payment_method']) ?></td>
+                            <td><?= $row['receipt_date'] ?></td>
+                            <td>
+                                <?php if ($row['image_path']): ?>
+                                    <a href="<?= $row['image_path'] ?>" target="_blank">
+                                        <img src="<?= $row['image_path'] ?>" width="80" height="80" style="object-fit:cover;" alt="receipt">
+                                    </a>
+                                <?php else: ?>
+                                    No Image
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr><td colspan="8">No receipts found.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+        
+    </div>
 </div>
 
 
