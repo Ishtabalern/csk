@@ -3,7 +3,7 @@ session_start();
 require_once '../../includes/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -19,7 +19,7 @@ $monthly_expenses = array_fill(1, 12, 0);
 $whereParts = [];
 
 if (!empty($client_id)) {
-    $whereParts[] = "client_id = " . intval($client_id);
+    $whereParts[] = "receipts.client_id = " . intval($client_id);
 }
 
 if (!empty($startDate)) {
@@ -35,22 +35,29 @@ if (!empty($whereParts)) {
     $whereClause = "WHERE " . implode(" AND ", $whereParts);
 }
 
-$sql = "SELECT MONTH(receipt_date) AS month, category, SUM(amount) AS total
+// Updated SQL to JOIN categories table
+$sql = "SELECT 
+            MONTH(receipt_date) AS month, 
+            categories.type AS category_type, 
+            SUM(amount) AS total
         FROM receipts
+        LEFT JOIN categories 
+            ON receipts.category = categories.name 
+            AND receipts.client_id = categories.client_id
         $whereClause
-        GROUP BY MONTH(receipt_date), category";
+        GROUP BY MONTH(receipt_date), categories.type";
 
 
 $result = $conn->query($sql);
 
 while ($row = $result->fetch_assoc()) {
     $month = (int)$row['month'];
-    $category = strtolower($row['category']);
+    $category_type = strtolower($row['category_type']);
     $amount = (float)$row['total'];
 
-    if (strpos($category, 'sale') !== false) {
+    if ($category_type === 'income') {
         $monthly_sales[$month] += $amount;
-    } elseif (strpos($category, 'expense') !== false || strpos($category, 'purchase') !== false) {
+    } elseif ($category_type === 'expense') {
         $monthly_expenses[$month] += $amount;
     }
 }
@@ -60,63 +67,53 @@ while ($row = $result->fetch_assoc()) {
 <html>
 <head>
     <title>Sales vs Expenses</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../../styles/reports/sales_expense.css">
     <link rel="stylesheet" href="../../partials/topbar.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        canvas { max-width: 100%; }
-        select, button { padding: 5px 10px; margin-right: 10px; }
-        select, input[type="date"], button { margin: 5px; padding: 5px 10px; }
-        form {display:flex; margin-bottom:20px;}
-        table { margin-top: 30px; border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
-        th { background-color: #f2f2f2; }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <?php
-$dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : '../employee_dashboard.php';
+$dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_reports.php' : 'view_reports.php';
 ?>
 
-<div class="topbar-container">
-    <div class="header">
-        <img src="../../imgs/csk_logo.png" alt="">
-        <h1 style="color:#1ABC9C">Sales vs Expenses Report</h1>
+    <div class="topbar-container">
+        <div class="header">
+            <img src="../imgs/csk_logo.png" alt="">
+            <h1> Sales vs Expenses Report</h1>
+        </div>
+       
+        <div class="btn">
+            <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+            ?>
+            <a href="<?= $dashboard_link ?>">
+                Reports
+            </a>
+            <?php
+                $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin_dashboard.php' : '../employee_dashboard.php';
+            ?>
+            <a href="<?= $dashboard_link ?>">
+                Dashboard
+            </a>
+        </div>
     </div>
-    
-    <div class="btn">
-        <a href="<?= $dashboard_link ?>">
-            Back to Reports
-        </a>
-    </div>
-</div>
 
 
 <?php
-    $startDate = $_GET['start_date'] ?? '';
-    $endDate = $_GET['end_date'] ?? '';
+$startDate = $_GET['start_date'] ?? '';
+$endDate = $_GET['end_date'] ?? '';
 
-    $dateCondition = '';
-    if (!empty($startDate)) {
-        $dateCondition .= " AND receipt_date >= '$startDate'";
-    }
-    if (!empty($endDate)) {
-        $dateCondition .= " AND receipt_date <= '$endDate'";
-    }
+$dateCondition = '';
+if (!empty($startDate)) {
+    $dateCondition .= " AND receipt_date >= '$startDate'";
+}
+if (!empty($endDate)) {
+    $dateCondition .= " AND receipt_date <= '$endDate'";
+}
 ?>
 
 <div class="container">
-
     <form method="GET" class="row g-3 mb-4">
 
         <div class="col-md-3">
@@ -145,66 +142,67 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : '../emp
         </div>
     </form>
 
-
     <canvas id="salesExpenseChart" height="100"></canvas>
 
     <script>
-    const ctx = document.getElementById('salesExpenseChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: <?= json_encode(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]) ?>,
-            datasets: [
-                {
-                    label: 'Sales',
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    data: <?= json_encode(array_values($monthly_sales)) ?>
-                },
-                {
-                    label: 'Expenses',
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    data: <?= json_encode(array_values($monthly_expenses)) ?>
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-                title: { display: true, text: 'Monthly Sales vs Expenses' }
+        const ctx = document.getElementById('salesExpenseChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]) ?>,
+                datasets: [
+                    {
+                        label: 'Sales',
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        data: <?= json_encode(array_values($monthly_sales)) ?>
+                    },
+                    {
+                        label: 'Expenses',
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        data: <?= json_encode(array_values($monthly_expenses)) ?>
+                    }
+                ]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: value => '₱' + value.toLocaleString()
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Monthly Sales vs Expenses' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: value => '₱' + value.toLocaleString()
+                        }
                     }
                 }
             }
-        }
-    });
+        });
     </script>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Month</th>
-                <th>Sales (₱)</th>
-                <th>Expenses (₱)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php for ($m = 1; $m <= 12; $m++): ?>
+    <div class="table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td style="text-align: left"><?= date('F', mktime(0, 0, 0, $m, 10)) ?></td>
-                    <td><?= number_format($monthly_sales[$m], 2) ?></td>
-                    <td><?= number_format($monthly_expenses[$m], 2) ?></td>
+                    <th>Month</th>
+                    <th>Sales (₱)</th>
+                    <th>Expenses (₱)</th>
                 </tr>
-            <?php endfor; ?>
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                <?php for ($m = 1; $m <= 12; $m++): ?>
+                    <tr>
+                        <td style="text-align: left"><?= date('F', mktime(0, 0, 0, $m, 10)) ?></td>
+                        <td><?= number_format($monthly_sales[$m], 2) ?></td>
+                        <td><?= number_format($monthly_expenses[$m], 2) ?></td>
+                    </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 
 </body>

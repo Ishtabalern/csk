@@ -16,12 +16,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['set_capital'])) {
     $effective_date = $_POST['effective_date'];
     $client_id = intval($_POST['client_id']);
 
+    // Insert into beginning_capital table
     $stmt = $conn->prepare("INSERT INTO beginning_capital (client_id, amount, effective_date) VALUES (?, ?, ?)");
     $stmt->bind_param("ids", $client_id, $amount, $effective_date);
     $stmt->execute();
 
-    echo "<p style='color:green;'>✅ Beginning capital saved for client ID $client_id.</p>";
+    // ✅ Also insert into journal_entries
+    $desc = "Declared Beginning Capital";
+    $entry_stmt = $conn->prepare("INSERT INTO journal_entries (client_id, entry_date, description, created_at) VALUES (?, ?, ?, NOW())");
+    $entry_stmt->bind_param("iss", $client_id, $effective_date, $desc);
+    $entry_stmt->execute();
+    $entry_id = $entry_stmt->insert_id;
+
+    // ✅ Determine the capital account (credit side)
+    $capital_account = $conn->query("SELECT id FROM accounts WHERE type = 'Equity' AND name LIKE '%capital%' LIMIT 1")->fetch_assoc();
+    $capital_account_id = $capital_account['id'] ?? null;
+
+    // ✅ Determine the cash account (debit side)
+    $cash_account = $conn->query("SELECT id FROM accounts WHERE type = 'Asset' AND name LIKE '%cash%' LIMIT 1")->fetch_assoc();
+    $cash_account_id = $cash_account['id'] ?? null;
+
+    if ($capital_account_id && $cash_account_id) {
+        // Insert debit line (Cash)
+        $line_stmt = $conn->prepare("INSERT INTO journal_lines (entry_id, account_id, debit, credit) VALUES (?, ?, ?, ?)");
+        $zero = 0.00;
+        $line_stmt->bind_param("iidd", $entry_id, $cash_account_id, $amount, $zero);
+        $line_stmt->execute();
+
+        // Insert credit line (Capital)
+        $line_stmt->bind_param("iidd", $entry_id, $capital_account_id, $zero, $amount);
+        $line_stmt->execute();
+    }
+
+    echo "<p style='color:green;'>✅ Beginning capital saved for client ID $client_id and posted to journal.</p>";
 }
+
 
 
 $clients = $conn->query("SELECT id, name FROM clients ORDER BY name");
@@ -120,7 +149,7 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     
     <div class="btn">
         <?php
-            $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_reports.php' : 'view_reports.php';
         ?>
         <a href="<?= $dashboard_link ?>">
              Reports

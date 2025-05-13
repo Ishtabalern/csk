@@ -11,8 +11,42 @@
     $financing_inflows = 0;
     $financing_outflows = 0;
     $ending_cash = 0;
+    $beginning_cash = 0;
 
     if ($client_id) {
+        // Get Cash Balance at the Beginning of the Year
+        $beginning_cash = 0;
+        $start_of_year = date('Y-01-01', strtotime($end_date));
+
+        $stmt = $conn->prepare("
+            SELECT SUM(jl.debit - jl.credit) AS cash_balance
+            FROM journal_entries je
+            JOIN journal_lines jl ON je.id = jl.entry_id
+            JOIN accounts a ON jl.account_id = a.id
+            WHERE je.client_id = ? AND je.entry_date < ? AND a.name = 'Cash'
+        ");
+        $stmt->bind_param("is", $client_id, $start_of_year);
+        $stmt->execute();
+        $stmt->bind_result($beginning_cash);
+        $stmt->fetch();
+        $stmt->close();
+        
+        // Add beginning capital if not posted in journal entries
+        $stmt = $conn->prepare("
+            SELECT amount FROM beginning_capital
+            WHERE client_id = ? AND effective_date <= ?
+            ORDER BY effective_date DESC LIMIT 1
+        ");
+        $stmt->bind_param("is", $client_id, $start_of_year);
+        $stmt->execute();
+        $stmt->bind_result($beginning_capital);
+        $stmt->fetch();
+        $stmt->close();
+
+        $beginning_capital = $beginning_capital ?? 0;
+        $beginning_cash += $beginning_capital;
+
+
         // Operating Activities: Sales (Revenue)
         $stmt = $conn->prepare("
             SELECT SUM(jl.credit - jl.debit) AS total
@@ -50,21 +84,32 @@
         $stmt->fetch();
         $stmt->close();
 
-        // Owner's Capital from beginning_capital table
+        // Financing Activities: Capital Contributions (including beginning capital)
         $stmt = $conn->prepare("
-            SELECT amount FROM beginning_capital
-            WHERE client_id = ? AND effective_date <= ?
-            ORDER BY effective_date DESC LIMIT 1
+            SELECT SUM(jl.debit) AS total
+            FROM journal_entries je
+            JOIN journal_lines jl ON je.id = jl.entry_id
+            JOIN accounts a ON jl.account_id = a.id
+            WHERE je.client_id = ?
+            AND je.entry_date <= ?
+            AND a.name = 'Cash'
+            AND jl.entry_id IN (
+                SELECT jl2.entry_id
+                FROM journal_lines jl2
+                JOIN accounts a2 ON jl2.account_id = a2.id
+                WHERE a2.type = 'Equity'
+                    AND a2.name LIKE '%capital%'
+                    AND jl2.credit > 0
+            )
         ");
+
         $stmt->bind_param("is", $client_id, $end_date);
         $stmt->execute();
-        $stmt->bind_result($beginning_capital);
+        $stmt->bind_result($financing_inflows);
         $stmt->fetch();
         $stmt->close();
 
-
-        // 3. Final financing inflows: combine both sources (handle NULLs safely)
-        $financing_inflows = $beginning_capital ?? 0;
+        $financing_inflows = $financing_inflows ?? 0;
 
         // Financing Activities: Owner’s Withdrawals
         $stmt = $conn->prepare("
@@ -98,7 +143,7 @@
     $netOperating = $operating_inflows - $operating_outflows;
     $netFinancing = $financing_inflows - $financing_outflows;
     $net_cash_flow = $netOperating + $netFinancing;
-    $reconciliation_difference = $ending_cash - $net_cash_flow;
+    $cash_increase = $ending_cash - $beginning_cash;
 ?>
 
 
@@ -189,13 +234,19 @@
         </div>
 
         <div class="table-container">
-            <h4>Net Cash Flow & Ending Balance</h4>
-            <table>
-                <tr><td>Net Cash Flow (Operating + Financing)</td><td><?= number_format($net_cash_flow, 2) ?></td></tr>
-                <tr><td>Ending Cash Balance</td><td><?= number_format($ending_cash, 2) ?></td></tr>
-                <tr class="total">
-                    <td>Reconciliation Adjustment</td>
-                    <td><?= number_format($reconciliation_difference, 2) ?></td>
+            <h4 class="text-success">Net Cash Flow & Ending Balance</h4>
+            <table class="table table-bordered">
+                <tr>
+                    <td>Cash at Beginning of Year (<?php echo date('Y-01-01', strtotime($end_date)); ?>)</td>
+                    <td><?php echo number_format($beginning_cash, 2); ?></td>
+                </tr>
+                <tr>
+                    <td>Net Increase in Cash</td>
+                    <td><?php echo number_format($cash_increase, 2); ?></td>
+                </tr>
+                <tr>
+                    <th>Cash at End of Year (<?php echo date('Y-m-d', strtotime($end_date)); ?>)</th>
+                    <th><?php echo number_format($ending_cash, 2); ?></th>
                 </tr>
             </table>
         </div>
