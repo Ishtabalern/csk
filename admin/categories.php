@@ -46,24 +46,9 @@ $clients = $conn->query("SELECT id, name FROM clients");
     <title>Manage Categories</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../partials/topbar.css">
+    <link rel="stylesheet" href="../styles/admin/categories.css">
     <style>
-          * {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-decoration: none;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-            font-family: Arial, sans-serif;
-        }
-        .container{padding: 20px;}
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 15px; border: 1px solid #ccc; text-align: left; }
-        th { background-color: #f0f0f0; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { background: white; padding: 20px; margin: 100px auto; width: 500px; border-radius: 5px; }
-        .modal.active { display: block; }
-        button { padding: 10px 20px; }
+
     </style>
 </head>
 <body>
@@ -81,31 +66,37 @@ $clients = $conn->query("SELECT id, name FROM clients");
 
     <div class="container">
 
-        <button onclick="document.getElementById('addModal').classList.add('active')">Add Category</button>
+        <div class="add-btn">
+            <button onclick="document.getElementById('addModal').classList.add('active')">Add Category</button>
+        </div>
+        
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Category Name</th>
-                    <th>Type</th>
-                    <th>Debit Account</th>
-                    <th>Credit Account</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($cat = $categories->fetch_assoc()): ?>
+        <div class="table-container">
+            
+            <table>
+                <thead>
                     <tr>
-                        <td><?= htmlspecialchars($cat['client']) ?></td>
-                        <td><?= htmlspecialchars($cat['name']) ?></td>
-                        <td><?= ucfirst($cat['type']) ?></td>
-                        <td><?= htmlspecialchars($cat['debit_account']) ?></td>
-                        <td><?= htmlspecialchars($cat['credit_account']) ?></td>
+                        <th>Client</th>
+                        <th>Category Name</th>
+                        <th>Type</th>
+                        <th>Debit Account</th>
+                        <th>Credit Account</th>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php while ($cat = $categories->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($cat['client']) ?></td>
+                            <td><?= htmlspecialchars($cat['name']) ?></td>
+                            <td><?= ucfirst($cat['type']) ?></td>
+                            <td><?= htmlspecialchars($cat['debit_account']) ?></td>
+                            <td><?= htmlspecialchars($cat['credit_account']) ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
 
+         </div>
         <!-- Add Modal -->
         <div class="modal" id="addModal">
             <div class="modal-content">

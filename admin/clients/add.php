@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <title>Add New Client</title>
-    <link rel="stylesheet" href="../../styles/clients/add.css">
+    <link rel="stylesheet" href="../../styles/admin_clients/add.css">
     <link rel="stylesheet" href="../../partials/topbar.css">
 </head>
 <body>
