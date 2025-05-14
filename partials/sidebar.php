@@ -84,7 +84,7 @@ if (!isset($page)) {
             <div class="btn-container">
                 <a class="btn-tabs <?= $page === 'employee_dashboard' ? 'active' : '' ?>" href="employee_dashboard.php">Home</a>
                 <a class="btn-tabs" href="receipts/add.php">Add Receipt</a>
-                <a class="btn-tabs" href="receipts/scanned_view.php">Scan Receipts</a>
+                <a class="btn-tabs" href="receipts/scan.php">Scan Receipts</a>
                 <a class="btn-tabs" href="receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs" href="reports/all_receipts.php">All Receipts Report</a>
                 <a class="btn-tabs" href="reports/view_reports.php">Reports</a>
@@ -98,7 +98,7 @@ if (!isset($page)) {
             <div class="btn-container">
                 <a class="btn-tabs" href="../employee_dashboard.php">Home</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
-                <a class="btn-tabs" href="../receipts/scanned_view.php">Scan Receipts</a>
+                <a class="btn-tabs" href="../receipts/scan.php">Scan Receipts</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs <?= $page === 'all_receipts' ? 'active' : '' ?>" href="all_receipts.php">All Receipts Report</a>
                 <a class="btn-tabs" href="view_reports.php">Reports</a>
@@ -112,7 +112,7 @@ if (!isset($page)) {
             <div class="btn-container">
                 <a class="btn-tabs" href="../employee_dashboard.php">Home</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
-                <a class="btn-tabs" href="../receipts/scanned_view.php">Scan Receipts</a>
+                <a class="btn-tabs" href="../receipts/scan.php">Scan Receipts</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
                 <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
                 <a class="btn-tabs <?= $page === 'view_reports' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
