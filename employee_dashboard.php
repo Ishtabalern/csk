@@ -42,9 +42,11 @@ while ($row = $result->fetch_assoc()) {
 $profit_loss = $income - $expense;
 ?>
 
-<!DOCTYPE html>                     
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Dashboard</title>
     <link rel="stylesheet" href="styles/employee/employee_dashboard.css">
     <link rel="stylesheet" href="partials/sidebar.css">
@@ -122,8 +124,13 @@ $profit_loss = $income - $expense;
                     <h3>Total Expenses</h3>
                     <div class="amount expense">₱<?= number_format($expense, 2) ?></div>
                 </div>
+            </div>
+        </div>
 
-                <div class="box">
+        <div class="container">
+            <div class="invoice-container">
+                <h2>Invoice</h2>
+                <div class="invoice">
                     <h3>Invoices</h3>
                     <canvas id="invoiceChart" aria-label="Invoice payment status chart" role="img" width="200" height="200"></canvas>
                 </div>
@@ -155,5 +162,4 @@ $profit_loss = $income - $expense;
         });
     </script>
 </body>
-
 </html>

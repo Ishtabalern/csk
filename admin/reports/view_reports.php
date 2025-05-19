@@ -65,7 +65,7 @@ if (!isset($_SESSION['user_id'])) {
         a.report-card:hover,
         a.report-card:focus {
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            color: #1070ca;
+            color: #0B440F;
             transform: translateY(-4px);
             outline: none;
         }
@@ -78,7 +78,7 @@ if (!isset($_SESSION['user_id'])) {
         }
         a.report-card:hover svg.icon,
         a.report-card:focus svg.icon {
-            fill: #1070ca;
+            fill: #0B440F;
         }
         span.label {
             font-size: 1rem;
