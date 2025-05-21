@@ -89,6 +89,34 @@ button {
     padding: 5px 10px; 
 }
 
+/* exports-btn  */
+
+.exports-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0px;
+
+}
+
+.exports-btn form button{
+    width: 150px;
+    padding: 15px 0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #454545;
+    font-weight: bold;
+    border: 1px solid #00AF7E;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Use 'ease-in-out' for smoother animation */
+    transform: scale(0.95);
+    margin-top: 10px;
+}
+ 
+.exports-btn form button:active {
+    transform: scale(0.9);
+}
+
 /* table  */
 
 .table-container { 

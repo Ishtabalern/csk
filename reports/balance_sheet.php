@@ -175,19 +175,35 @@ $totals['equity'] = $total_equity;
         </form>
     </div>
 
+
+
+
     <?php if ($client_id): ?>
-        <div class="exports-btn">    
-            <form method="post" action="../process/export_balance_sheet.php" style="margin-top: 10px;">
-                <input type="hidden" name="client_id" value="<?= $client_id ?>">
-                <input type="hidden" name="end_date" value="<?= $end_date ?>">
-                <button name="export_pdf" type="submit">Export PDF</button>
-                <button name="export_excel" type="submit">Export Excel</button>
+        <div class="exports-btn">
+            <form id="exportPDFForm" method="POST" action="../process/balance_export.php" target="_blank">
+            <input type="hidden" name="html_content" id="html_content">
+            <button type="submit" name="export_pdf">Export as PDF</button>
             </form>
-         </div>       
-    <?php endif; ?>
+                <script>
+                document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+                const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
+                document.getElementById('html_content').value = tableHtml;
+                });
+                </script>
 
+            <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
+            <input type="hidden" name="client_id" value="<?= $client_id ?>">
+            <input type="hidden" name="year" value="<?= $year ?>">
+            <button type="submit">Export to Excel</button>
+            </form>
+                <script>
+                document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
+                const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
+                document.getElementById('excel_html_content').value = tableHtml;
+                });
+                </script>
+        </div>
 
-    <?php if ($client_id): ?>
         <div id ="balance_sheet_table">
             <h2 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h2>
 
@@ -237,29 +253,6 @@ $totals['equity'] = $total_equity;
                 </table>
             </div>
         </div>
-
-        <form id="exportPDFForm" method="POST" action="../process/balance_export.php" target="_blank">
-        <input type="hidden" name="html_content" id="html_content">
-        <button type="submit" name="export_pdf">Export as PDF</button>
-        </form>
-            <script>
-            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
-            document.getElementById('html_content').value = tableHtml;
-            });
-            </script>
-
-        <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
-        <input type="hidden" name="client_id" value="<?= $client_id ?>">
-        <input type="hidden" name="year" value="<?= $year ?>">
-        <button type="submit">Export to Excel</button>
-        </form>
-            <script>
-            document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
-            document.getElementById('excel_html_content').value = tableHtml;
-            });
-            </script>
     <?php endif; ?>
 
     

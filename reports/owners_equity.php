@@ -207,16 +207,8 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
         </form>
     <?php endif; ?>
 
-    <div class="table-container" id="owners_equity_table">
-        <table>
-            <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
-            <tr><td class="left">Beginning Capital</td><td>₱<?= number_format($beginning_capital, 2) ?></td></tr>
-            <tr><td class="left">Add: Net Income</td><td>₱<?= number_format($net_income, 2) ?></td></tr>
-            <tr><td class="left">Less: Withdrawals</td><td>₱<?= number_format($total_withdrawals, 2) ?></td></tr>
-            <tr><th class="left">Ending Capital</th><th>₱<?= number_format($ending_capital, 2) ?></th></tr>
-        </table>
-    </div>
-     <form id="exportPDFForm" method="POST" action="../process/owners_equity_export.php" target="_blank">
+    <div class="exports-btn">
+        <form id="exportPDFForm" method="POST" action="../process/owners_equity_export.php" target="_blank">
         <input type="hidden" name="html_content" id="html_content">
         <button type="submit" name="export_pdf">Export as PDF</button>
         </form>
@@ -238,6 +230,19 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
             document.getElementById('excel_html_content').value = tableHtml;
             });
             </script>
+    </div>
+
+    <div class="table-container" id="owners_equity_table">
+        <table>
+            <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
+            <tr><td class="left">Beginning Capital</td><td>₱<?= number_format($beginning_capital, 2) ?></td></tr>
+            <tr><td class="left">Add: Net Income</td><td>₱<?= number_format($net_income, 2) ?></td></tr>
+            <tr><td class="left">Less: Withdrawals</td><td>₱<?= number_format($total_withdrawals, 2) ?></td></tr>
+            <tr><th class="left">Ending Capital</th><th>₱<?= number_format($ending_capital, 2) ?></th></tr>
+        </table>
+    </div>
+
+
 </div>
 </body>
 </html>
