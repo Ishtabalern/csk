@@ -78,6 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
         $line_stmt->execute();
     }
 
+    $conn->query("DELETE FROM scanned_receipts");
+
     header("Location: ../receipts/scan.php?success=Receipts uploaded.");
     exit;
 } else {

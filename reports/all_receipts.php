@@ -92,76 +92,83 @@ $payment_methods = $conn->query("SELECT DISTINCT payment_method FROM receipts");
 
     <br>
 
-    <table id="receiptTable" class="display">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Client</th>
-                <th>Vendor</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Payment</th>
-                <th>Uploaded By</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Build the WHERE clause
-            $where = [];
-            if (!empty($_GET['client_id'])) {
-                $client_id = intval($_GET['client_id']);
-                $where[] = "r.client_id = $client_id";
-            }
-            if (!empty($_GET['vendor'])) {
-                $vendor = $conn->real_escape_string($_GET['vendor']);
-                $where[] = "r.vendor = '$vendor'";
-            }
-            if (!empty($_GET['category'])) {
-                $category = $conn->real_escape_string($_GET['category']);
-                $where[] = "r.category = '$category'";
-            }
-            if (!empty($_GET['payment_method'])) {
-                $pm = $conn->real_escape_string($_GET['payment_method']);
-                $where[] = "r.payment_method = '$pm'";
-            }
-            if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
-                $from = $_GET['from_date'];
-                $to = $_GET['to_date'];
-                $where[] = "r.receipt_date BETWEEN '$from' AND '$to'";
-            }
-
-            $filterQuery = "SELECT r.*, c.name AS client_name, u.username 
-                            FROM receipts r
-                            JOIN clients c ON r.client_id = c.id
-                            LEFT JOIN users u ON r.uploaded_by = u.id";
-
-            if ($where) {
-                $filterQuery .= " WHERE " . implode(" AND ", $where);
-            }
-
-            $filterQuery .= " ORDER BY r.receipt_date DESC";
-            $result = $conn->query($filterQuery);
-
-            while ($row = $result->fetch_assoc()):
-            ?>
+    <div id="all_receipts_table">
+        <table id="receiptTable" class="display">
+            <thead>
                 <tr>
-                    <td><?= $row['receipt_date'] ?></td>
-                    <td><?= $row['client_name'] ?></td>
-                    <td><?= $row['vendor'] ?></td>
-                    <td><?= $row['category'] ?></td>
-                    <td>₱<?= number_format($row['amount'], 2) ?></td>
-                    <td><?= $row['payment_method'] ?></td>
-                    <td><?= $row['username'] ?? 'N/A' ?></td>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Vendor</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Uploaded By</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php
+                // Build the WHERE clause
+                $where = [];
+                if (!empty($_GET['client_id'])) {
+                    $client_id = intval($_GET['client_id']);
+                    $where[] = "r.client_id = $client_id";
+                }
+                if (!empty($_GET['vendor'])) {
+                    $vendor = $conn->real_escape_string($_GET['vendor']);
+                    $where[] = "r.vendor = '$vendor'";
+                }
+                if (!empty($_GET['category'])) {
+                    $category = $conn->real_escape_string($_GET['category']);
+                    $where[] = "r.category = '$category'";
+                }
+                if (!empty($_GET['payment_method'])) {
+                    $pm = $conn->real_escape_string($_GET['payment_method']);
+                    $where[] = "r.payment_method = '$pm'";
+                }
+                if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+                    $from = $_GET['from_date'];
+                    $to = $_GET['to_date'];
+                    $where[] = "r.receipt_date BETWEEN '$from' AND '$to'";
+                }
 
+                $filterQuery = "SELECT r.*, c.name AS client_name, u.username 
+                                FROM receipts r
+                                JOIN clients c ON r.client_id = c.id
+                                LEFT JOIN users u ON r.uploaded_by = u.id";
+
+                if ($where) {
+                    $filterQuery .= " WHERE " . implode(" AND ", $where);
+                }
+
+                $filterQuery .= " ORDER BY r.receipt_date DESC";
+                $result = $conn->query($filterQuery);
+
+                while ($row = $result->fetch_assoc()):
+                ?>
+                    <tr>
+                        <td><?= $row['receipt_date'] ?></td>
+                        <td><?= $row['client_name'] ?></td>
+                        <td><?= $row['vendor'] ?></td>
+                        <td><?= $row['category'] ?></td>
+                        <td>₱<?= number_format($row['amount'], 2) ?></td>
+                        <td><?= $row['payment_method'] ?></td>
+                        <td><?= $row['username'] ?? 'N/A' ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
     <br>
-    <form action="export_excel.php" method="POST">
-        <input type="hidden" name="filters" value='<?= json_encode($_GET) ?>'>
-        <button type="submit">📥 Export to Excel</button>
-    </form>
+    <form id="exportPDFForm" method="POST" action="../process/all_receipts_export.php" target="_blank">
+        <input type="hidden" name="html_content" id="html_content">
+        <button type="submit" name="export_pdf">Export as PDF</button>
+        </form>
+            <script>
+            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('all_receipts_table').outerHTML;
+            document.getElementById('html_content').value = tableHtml;
+            });
+            </script>
 </div>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

@@ -123,7 +123,7 @@ if (!empty($client_id)) {
     </div>
  
     <?php if ($client_id): ?>
-        <div class="incomeStatement-container">
+        <div class="incomeStatement-container" id="income_statement_table">
             <h3 style="color: #00AF7E; padding:0px 35px;">From <?= $start_date ?> to <?= $end_date ?></h3>
             
             <div class="customer-name">              
@@ -157,9 +157,30 @@ if (!empty($client_id)) {
             <?= ($total_income - $total_expenses) >= 0 ? 'Net Profit' : 'Net Loss' ?>:
             <?= number_format($total_income - $total_expenses, 2) ?>
             </h3>
-
-         
         </div>
+        
+        <form id="exportPDFForm" method="POST" action="../process/income_statement_export.php" target="_blank">
+        <input type="hidden" name="html_content" id="html_content">
+        <button type="submit" name="export_pdf">Export as PDF</button>
+        </form>
+            <script>
+            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('income_statement_table').outerHTML;
+            document.getElementById('html_content').value = tableHtml;
+            });
+            </script>
+
+        <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
+        <input type="hidden" name="client_id" value="<?= $client_id ?>">
+        <input type="hidden" name="year" value="<?= $year ?>">
+        <button type="submit">Export to Excel</button>
+        </form>
+            <script>
+            document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('income_statement_table').outerHTML;
+            document.getElementById('excel_html_content').value = tableHtml;
+            });
+            </script>
     <?php endif; ?>
     
         

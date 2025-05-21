@@ -188,56 +188,83 @@ $totals['equity'] = $total_equity;
 
 
     <?php if ($client_id): ?>
-        <h2 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h2>
+        <div id ="balance_sheet_table">
+            <h2 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h2>
 
-        <div class="table-container">
-            <h4>Assets</h4>
-            <table class="">
-                <tr><th>Account</th><th>Amount</th></tr>
-                <?php foreach ($accounts_data['assets'] ?? [] as $acc): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($acc['name']) ?></td>
-                        <td><?= number_format($acc['balance'], 2) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-                <tr class="total"><td>Total Assets</td><td><?= number_format($totals['assets'], 2) ?></td></tr>
-            </table>
+            <div class="table-container">
+                <h4>Assets</h4>
+                <table class="">
+                    <tr><th>Account</th><th>Amount</th></tr>
+                    <?php foreach ($accounts_data['assets'] ?? [] as $acc): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($acc['name']) ?></td>
+                            <td><?= number_format($acc['balance'], 2) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr class="total"><td>Total Assets</td><td><?= number_format($totals['assets'], 2) ?></td></tr>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>Liabilities</h4>
+                <table>
+                    <tr><th>Account</th><th>Amount</th></tr>
+                    <?php foreach ($accounts_data['liabilities'] ?? [] as $acc): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($acc['name']) ?></td>
+                            <td><?= number_format($acc['balance'], 2) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr class="total"><td>Total Liabilities</td><td><?= number_format($totals['liabilities'], 2) ?></td></tr>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>Equity</h4>
+                <table>
+                    <tr><th>Component</th><th>Amount</th></tr>
+                    <tr><td>Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
+                    <tr><td>Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
+                    <tr><td>Withdrawals</td><td>(<?= number_format($withdrawals, 2) ?>)</td></tr>
+                    <tr class="total"><td>Total Equity</td><td><?= number_format($total_equity, 2) ?></td></tr>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>Total Liabilities & Equity</h4>
+                <table>
+                    <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $total_equity, 2) ?></td></tr>
+                </table>
+            </div>
         </div>
 
-        <div class="table-container">
-            <h4>Liabilities</h4>
-            <table>
-                <tr><th>Account</th><th>Amount</th></tr>
-                <?php foreach ($accounts_data['liabilities'] ?? [] as $acc): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($acc['name']) ?></td>
-                        <td><?= number_format($acc['balance'], 2) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-                <tr class="total"><td>Total Liabilities</td><td><?= number_format($totals['liabilities'], 2) ?></td></tr>
-            </table>
-        </div>
+        <form id="exportPDFForm" method="POST" action="../process/balance_export.php" target="_blank">
+        <input type="hidden" name="html_content" id="html_content">
+        <button type="submit" name="export_pdf">Export as PDF</button>
+        </form>
+            <script>
+            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
+            document.getElementById('html_content').value = tableHtml;
+            });
+            </script>
 
-        <div class="table-container">
-            <h4>Equity</h4>
-            <table>
-                <tr><th>Component</th><th>Amount</th></tr>
-                <tr><td>Beginning Capital</td><td><?= number_format($beginning_capital, 2) ?></td></tr>
-                <tr><td>Net Income</td><td><?= number_format($net_income, 2) ?></td></tr>
-                <tr><td>Withdrawals</td><td>(<?= number_format($withdrawals, 2) ?>)</td></tr>
-                <tr class="total"><td>Total Equity</td><td><?= number_format($total_equity, 2) ?></td></tr>
-            </table>
-        </div>
-
-        <div class="table-container">
-            <h4>Total Liabilities & Equity</h4>
-            <table>
-                <tr><td class="total">Total</td><td class="total"><?= number_format($totals['liabilities'] + $total_equity, 2) ?></td></tr>
-            </table>
-        </div>
-        
-
+        <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
+        <input type="hidden" name="client_id" value="<?= $client_id ?>">
+        <input type="hidden" name="year" value="<?= $year ?>">
+        <button type="submit">Export to Excel</button>
+        </form>
+            <script>
+            document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
+            document.getElementById('excel_html_content').value = tableHtml;
+            });
+            </script>
     <?php endif; ?>
+
+    
+
+
 
 </div>
  

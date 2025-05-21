@@ -207,49 +207,74 @@
     </div>
 
     <?php if ($client_id): ?>
-        <h2 style="color: #0B440F;">Statement as of <?= htmlspecialchars($end_date) ?></h2>
+        <div id="cash_flow_table">
+            <h2 style="color: #0B440F;">Statement as of <?= htmlspecialchars($end_date) ?></h2>
 
-        <div class="table-container">
-            <h4>Cash Flows from Operating Activities</h4>
-            <table>
-                <tr><td>Cash Inflows (Sales)</td><td><?= number_format($operating_inflows, 2) ?></td></tr>
-                <tr><td>Cash Outflows (Expenses)</td><td>(<?= number_format($operating_outflows, 2) ?>)</td></tr>
-                <tr class="total">
-                    <td>Net Operating Cash Flow</td>
-                    <td><?= number_format($netOperating, 2) ?></td>
-                </tr>
-            </table>
+            <div class="table-container">
+                <h4>Cash Flows from Operating Activities</h4>
+                <table>
+                    <tr><td>Cash Inflows (Sales)</td><td><?= number_format($operating_inflows, 2) ?></td></tr>
+                    <tr><td>Cash Outflows (Expenses)</td><td>(<?= number_format($operating_outflows, 2) ?>)</td></tr>
+                    <tr class="total">
+                        <td>Net Operating Cash Flow</td>
+                        <td><?= number_format($netOperating, 2) ?></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>Cash Flows from Financing Activities</h4>
+                <table>
+                    <tr><td>Owner’s Capital</td><td><?= number_format($financing_inflows, 2) ?></td></tr>
+                    <tr><td>Owner’s Withdrawals</td><td>(<?= number_format($financing_outflows, 2) ?>)</td></tr>
+                    <tr class="total">
+                        <td>Net Financing Cash Flow</td>
+                        <td><?= number_format($netFinancing, 2) ?></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4 class="text-success">Net Cash Flow & Ending Balance</h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Cash at Beginning of Year (<?php echo date('Y-01-01', strtotime($end_date)); ?>)</td>
+                        <td><?php echo number_format($beginning_cash, 2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Net Increase in Cash</td>
+                        <td><?php echo number_format($cash_increase, 2); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Cash at End of Year (<?php echo date('Y-m-d', strtotime($end_date)); ?>)</th>
+                        <th><?php echo number_format($ending_cash, 2); ?></th>
+                    </tr>
+                </table>
+            </div>
         </div>
 
-        <div class="table-container">
-            <h4>Cash Flows from Financing Activities</h4>
-            <table>
-                <tr><td>Owner’s Capital</td><td><?= number_format($financing_inflows, 2) ?></td></tr>
-                <tr><td>Owner’s Withdrawals</td><td>(<?= number_format($financing_outflows, 2) ?>)</td></tr>
-                <tr class="total">
-                    <td>Net Financing Cash Flow</td>
-                    <td><?= number_format($netFinancing, 2) ?></td>
-                </tr>
-            </table>
-        </div>
+         <form id="exportPDFForm" method="POST" action="../process/cash_flow_export.php" target="_blank">
+        <input type="hidden" name="html_content" id="html_content">
+        <button type="submit" name="export_pdf">Export as PDF</button>
+        </form>
+            <script>
+            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('cash_flow_table').outerHTML;
+            document.getElementById('html_content').value = tableHtml;
+            });
+            </script>
 
-        <div class="table-container">
-            <h4 class="text-success">Net Cash Flow & Ending Balance</h4>
-            <table class="table table-bordered">
-                <tr>
-                    <td>Cash at Beginning of Year (<?php echo date('Y-01-01', strtotime($end_date)); ?>)</td>
-                    <td><?php echo number_format($beginning_cash, 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Net Increase in Cash</td>
-                    <td><?php echo number_format($cash_increase, 2); ?></td>
-                </tr>
-                <tr>
-                    <th>Cash at End of Year (<?php echo date('Y-m-d', strtotime($end_date)); ?>)</th>
-                    <th><?php echo number_format($ending_cash, 2); ?></th>
-                </tr>
-            </table>
-        </div>
+        <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
+        <input type="hidden" name="client_id" value="<?= $client_id ?>">
+        <input type="hidden" name="year" value="<?= $year ?>">
+        <button type="submit">Export to Excel</button>
+        </form>
+            <script>
+            document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
+            const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
+            document.getElementById('excel_html_content').value = tableHtml;
+            });
+            </script>
     <?php endif; ?>
 </div>
 
