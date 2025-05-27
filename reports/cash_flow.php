@@ -144,6 +144,14 @@
     $netFinancing = $financing_inflows - $financing_outflows;
     $net_cash_flow = $netOperating + $netFinancing;
     $cash_increase = $ending_cash - $beginning_cash;
+
+    $client_name = '';
+    if (!empty($client_id)) {
+        $result = $conn->query("SELECT name FROM clients WHERE id = " . (int)$client_id);
+        if ($row = $result->fetch_assoc()) {
+            $client_name = $row['name'];
+        }
+    }
 ?>
 
 
@@ -233,7 +241,7 @@
         </div>
         
         <div id="cash_flow_table">
-            <h2 style="color: #0B440F;">Statement as of <?= htmlspecialchars($end_date) ?></h2>
+            <h2 style="color: #0B440F;">Statement of Cash Flow of <?= htmlspecialchars($client_name) ?> as of <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
 
             <div class="table-container">
                 <h4>Cash Flows from Operating Activities</h4>

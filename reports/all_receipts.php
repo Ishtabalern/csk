@@ -159,16 +159,6 @@ $payment_methods = $conn->query("SELECT DISTINCT payment_method FROM receipts");
         </table>
     </div>
     <br>
-    <form id="exportPDFForm" method="POST" action="../process/all_receipts_export.php" target="_blank">
-        <input type="hidden" name="html_content" id="html_content">
-        <button type="submit" name="export_pdf">Export as PDF</button>
-        </form>
-            <script>
-            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('all_receipts_table').outerHTML;
-            document.getElementById('html_content').value = tableHtml;
-            });
-            </script>
 </div>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

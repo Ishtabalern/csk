@@ -129,6 +129,14 @@ $withdrawals_result = $conn->query($withdrawal_sql)->fetch_assoc();
 $total_withdrawals = $withdrawals_result['total_withdrawals'] ?? 0;
 
 $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
+
+$client_name = '';
+if (!empty($client_id)) {
+    $result = $conn->query("SELECT name FROM clients WHERE id = " . (int)$client_id);
+    if ($row = $result->fetch_assoc()) {
+        $client_name = $row['name'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -233,6 +241,11 @@ $ending_capital = $beginning_capital + $net_income - $total_withdrawals;
     </div>
 
     <div class="table-container" id="owners_equity_table">
+        <div class="customer-name" style="text-align: center; font-size: 1.2rem;">              
+                <p><?= htmlspecialchars($client_name) ?></p>
+                <h3 id="tab-content">Statement of Owner's Equity</h3>
+                <h3>From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
+            </div>
         <table>
             <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
             <tr><td class="left">Beginning Capital</td><td>₱<?= number_format($beginning_capital, 2) ?></td></tr>

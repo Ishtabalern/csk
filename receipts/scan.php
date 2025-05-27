@@ -8,7 +8,7 @@ if ($_SESSION['role'] !== 'employee') {
 include '../includes/db.php';
 
 
-$stmt = $conn->prepare("SELECT * FROM scanned_receipts ORDER BY created_at DESC");
+$stmt = $conn->prepare("SELECT * FROM scanned_receipts ORDER BY receipt_date DESC");
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -20,6 +20,7 @@ $result = $stmt->get_result();
     <title>Scanned Receipts</title>
     <link rel="stylesheet" href="view.css">
     <link rel="stylesheet" href="../partials/topbar.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         .modal {
             display: none;
@@ -47,6 +48,36 @@ $result = $stmt->get_result();
             text-align: right;
             margin-top: 10px;
         }
+        .buttons{
+            display: flex;
+            flex-direction: row;
+            margin-top: 20px;
+            margin-left: 750px;
+        }
+        .buttons button{
+            background-color: white;
+            border-radius: 10px;
+            border-width: 1px;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+        .buttons button:active{
+               transform: scale(0.96);
+        }
+        .buttons button:hover{
+            background-color:#0B440F;
+            color: #fff;
+        }
+        .scan-btn{
+            padding: 10px;
+            width: 200px;
+            height: 50px;
+        }
+        .upload-btn{
+            padding: 10px;
+            width: 200px;
+            height: 50px;
+            margin-right: 50px;
+        }
     </style>
 </head>
 <body>
@@ -63,8 +94,9 @@ $result = $stmt->get_result();
 </div>
 
 <!-- Upload Button -->
-<div style="text-align:right; margin: 20px;">
-    <button id="openUploadModal">📤 Upload All to Receipts</button>
+<div class="buttons">
+    <button id="openUploadModal" class="upload-btn">📤 Upload All to Receipts</button>
+    <button class="scan-btn">Scan on raspberry</button>
 </div>
 
 <!-- Modal -->
@@ -98,13 +130,14 @@ $result = $stmt->get_result();
 <br>
 
 <div class="receipts-container">
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table id="receiptTable" border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
+                <th style="display: none;">Raw Date</th> <!-- Hidden column for sorting -->
                 <th>Vendor</th>
                 <th>Category</th>
                 <th>Total</th>
-                <th>Method</th>
+                <th>Payment Method</th>
                 <th>Date</th>
                 <th>Image</th>
                 <th>Action</th>
@@ -114,11 +147,12 @@ $result = $stmt->get_result();
             <?php if ($result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr data-id="<?= $row['id'] ?>" data-vendor="<?= htmlspecialchars($row['vendor']) ?>" data-category="<?= htmlspecialchars($row['category']) ?>" data-amount="<?= $row['amount'] ?>" data-date="<?= $row['receipt_date'] ?>">
+                        <td style="display: none;"><?= $row['receipt_date'] ?></td> <!-- Hidden raw date -->
                         <td><?= htmlspecialchars($row['vendor']) ?></td>
                         <td><?= htmlspecialchars($row['category']) ?></td>
                         <td>₱<?= number_format($row['amount'], 2) ?></td>
                         <td><?= htmlspecialchars($row['payment_method']) ?></td>
-                        <td><?= $row['receipt_date'] ?></td>
+                        <td><?= date("m-d-Y", strtotime($row['receipt_date'])) ?></td> <!-- Display formatted -->
                         <td style="text-align: center;">
                             <?php if ($row['image_path']): ?>
                                 <a href="<?= $row['image_path'] ?>" target="_blank">
@@ -160,7 +194,30 @@ $result = $stmt->get_result();
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
+    
+    // Scan button triggers script on Raspberry Pi
+            $('.scan-btn').click(() => {
+                fetch('http://192.168.1.13:5000/run-script', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Script ran successfully:\n' + data.output);
+                    } else {
+                        alert('Error running script:\n' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Failed to connect to the server:\n' + error);
+                });
+            });
+    
     const modal = document.getElementById('editModal');
     let currentRow = null;
 
@@ -229,6 +286,25 @@ $result = $stmt->get_result();
             closeModal();
         }
     }
+    
+    $(document).ready(function () {
+        $('#receiptTable').DataTable({
+            "order": [[0, "desc"]], // Sort using the hidden raw date
+            "columnDefs": [
+                { "targets": 0, "visible": false }, // Hide the raw date column
+            ],
+            "pageLength": 10,
+            "lengthMenu": [5, 10, 25, 50, 100],
+            "language": {
+                "search": "Search Receipts:",
+                "lengthMenu": "Show _MENU_ entries",
+                "zeroRecords": "No matching receipts found",
+                "info": "Showing _START_ to _END_ of _TOTAL_ receipts",
+                "infoEmpty": "No receipts available",
+                "infoFiltered": "(filtered from _MAX_ total receipts)"
+            }
+        });
+    });
 </script>
 
 </body>

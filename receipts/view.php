@@ -41,6 +41,7 @@ $result = $stmt->get_result();
     <title>Document</title>
     <link rel="stylesheet" href="view.css">
     <link rel="stylesheet" href="../partials/topbar.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <body>
    
@@ -78,16 +79,16 @@ $result = $stmt->get_result();
     
 
     <br>
-
     <div class="receipts-container">
-        <table border="1" cellpadding="8" cellspacing="0">
+        <table id="receiptTable" border="1" cellpadding="8" cellspacing="0">
             <thead>
                 <tr>
+                    <th style="display: none;">Raw Date</th> <!-- Hidden column for sorting -->
                     <th>Client</th>
                     <th>Vendor</th>
                     <th>Category</th>
                     <th>Amount</th>
-                    <th>Method</th>
+                    <th>Payment Method</th>
                     <th>Date</th>
                     <th>Image</th>
                 </tr>
@@ -96,12 +97,13 @@ $result = $stmt->get_result();
                 <?php if ($result->num_rows > 0): ?>
                     <?php while ($row = $result->fetch_assoc()): ?>
                         <tr>
+                            <td style="display: none;"><?= $row['receipt_date'] ?></td> <!-- Hidden raw date -->
                             <td><?= htmlspecialchars($row['client_name']) ?></td>
                             <td><?= htmlspecialchars($row['vendor']) ?></td>
                             <td><?= htmlspecialchars($row['category']) ?></td>
                             <td>₱<?= number_format($row['amount'], 2) ?></td>
                             <td><?= htmlspecialchars($row['payment_method']) ?></td>
-                            <td><?= $row['receipt_date'] ?></td>
+                            <td><?= date("m-d-Y", strtotime($row['receipt_date'])) ?></td> <!-- Display formatted -->
                             <td style="text-align: center; vertical-align: middle;">
                                 <?php if ($row['image_path']): ?>
                                     <a href="<?= $row['image_path'] ?>" target="_blank">
@@ -119,9 +121,28 @@ $result = $stmt->get_result();
             </tbody>
         </table>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('#receiptTable').DataTable({
+            "order": [[0, "desc"]], // Sort using the hidden raw date
+            "columnDefs": [
+                { "targets": 0, "visible": false }, // Hide the raw date column
+            ],
+            "pageLength": 10,
+            "lengthMenu": [5, 10, 25, 50, 100],
+            "language": {
+                "search": "Search Receipts:",
+                "lengthMenu": "Show _MENU_ entries",
+                "zeroRecords": "No matching receipts found",
+                "info": "Showing _START_ to _END_ of _TOTAL_ receipts",
+                "infoEmpty": "No receipts available",
+                "infoFiltered": "(filtered from _MAX_ total receipts)"
+            }
+        });
+    });
 
- 
-  
-
+</script>
 </body>
 </html>

@@ -54,6 +54,18 @@ while ($row = $result->fetch_assoc()) {
     $total_debit += $row['total_debit'];
     $total_credit += $row['total_credit'];
 }
+
+// Fetch client name
+$client_name = '';
+if ($client_id) {
+    $client_stmt = $conn->prepare("SELECT name FROM clients WHERE id = ?");
+    $client_stmt->bind_param("i", $client_id);
+    $client_stmt->execute();
+    $client_stmt->bind_result($client_name);
+    $client_stmt->fetch();
+    $client_stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -150,6 +162,7 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
     </div>
 
     <div class="table-container" id="trial_balance_table">
+        <h2 style="margin-top:15px; color:#1ABC9C; text-align:center;">Trial Balance Report of <?= htmlspecialchars($client_name) ?> from <?= htmlspecialchars(date("m-d-Y", strtotime($start_date))) ?> to <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
         <table>
             <thead>
                 <tr>

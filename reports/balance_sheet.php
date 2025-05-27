@@ -113,6 +113,18 @@ $withdraw_stmt->close();
 $total_equity = $beginning_capital + $net_income - $withdrawals;
 $totals['equity'] = $total_equity;
 
+// Fetch client name
+$client_name = '';
+if ($client_id) {
+    $client_stmt = $conn->prepare("SELECT name FROM clients WHERE id = ?");
+    $client_stmt->bind_param("i", $client_id);
+    $client_stmt->execute();
+    $client_stmt->bind_result($client_name);
+    $client_stmt->fetch();
+    $client_stmt->close();
+}
+
+
 ?>
 
 
@@ -175,9 +187,6 @@ $totals['equity'] = $total_equity;
         </form>
     </div>
 
-
-
-
     <?php if ($client_id): ?>
         <div class="exports-btn">
             <form id="exportPDFForm" method="POST" action="../process/balance_export.php" target="_blank">
@@ -205,7 +214,7 @@ $totals['equity'] = $total_equity;
         </div>
 
         <div id ="balance_sheet_table">
-            <h2 style="margin-top:15px; color:#1ABC9C;">As of <?= htmlspecialchars($end_date) ?></h2>
+            <h2 style="margin-top:15px; color:#1ABC9C;">Balance Sheet of <?= htmlspecialchars($client_name) ?> as of <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
 
             <div class="table-container">
                 <h4>Assets</h4>
@@ -254,13 +263,6 @@ $totals['equity'] = $total_equity;
             </div>
         </div>
     <?php endif; ?>
-
-    
-
-
-
 </div>
- 
-
 </body>
 </html>

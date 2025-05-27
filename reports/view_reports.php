@@ -112,12 +112,6 @@ if (!isset($_SESSION['user_id'])) {
     <div class="container">
         <h2>Reports</h2>
         <div class="grid">
-            <a class="report-card" href="balance_sheet.php" title="Balance Sheet Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
-                </svg>
-                <span class="label">Balance Sheet</span>
-            </a>
             <a class="report-card" href="category_summary.php" title="Category Summary Report">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <circle cx="12" cy="7" r="4"/>
@@ -156,6 +150,12 @@ if (!isset($_SESSION['user_id'])) {
                     <path d="M3 11h18v2H3v-2zm6-6v13l4-7-4-6z"/>
                 </svg>
                 <span class="label">Statement of Cash Flow</span>
+            </a>
+            <a class="report-card" href="balance_sheet.php" title="Balance Sheet Report">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+                </svg>
+                <span class="label">Balance Sheet</span>
             </a>
         </div>
     </div>

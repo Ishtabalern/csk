@@ -149,12 +149,11 @@ if (!empty($client_id)) {
                 </script>
         </div>
 
-        <div class="incomeStatement-container" id="income_statement_table">
-            <h3 style="color: #00AF7E; padding:0px 35px;">From <?= $start_date ?> to <?= $end_date ?></h3>
-            
+        <div class="incomeStatement-container" id="income_statement_table">            
             <div class="customer-name">              
                 <p><?= htmlspecialchars($client_name) ?></p>
                 <h3 id="tab-content">Income Statement</h3>
+                <h3>From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
             </div>
 
             <div class="table">
