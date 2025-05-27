@@ -98,7 +98,7 @@ $profit_loss = $income - $expense;
             </section>
 
             <section class="section task" aria-label="Tasks">
-                <h2>Task</h2>
+                <h2>Summary</h2>
                 <div class="task-container">
                     <!-- Placeholder for future content -->
                 </div>
@@ -123,16 +123,6 @@ $profit_loss = $income - $expense;
                 <div class="box">
                     <h3>Total Expenses</h3>
                     <div class="amount expense">₱<?= number_format($expense, 2) ?></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="invoice-container">
-                <h2>Invoice</h2>
-                <div class="invoice">
-                    <h3>Invoices</h3>
-                    <canvas id="invoiceChart" aria-label="Invoice payment status chart" role="img" width="200" height="200"></canvas>
                 </div>
             </div>
         </div>
