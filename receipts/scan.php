@@ -88,7 +88,6 @@ $result = $stmt->get_result();
         <h1>Scanned Receipts</h1>
     </div>
     <div class="btn">
-        <a href="scanned_upload.php">Upload Scanned Receipt</a>
         <a href="../employee_dashboard.php">← Back to Dashboard</a>
     </div>
 </div>
