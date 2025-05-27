@@ -69,11 +69,14 @@ if (!isset($page)) {
 
         <?php if ($_SESSION['role'] === 'admin' && $page === 'all_receipts'): ?>
             <div class="btn-container">
+                <a class="btn-tabs" href="../admin_dashboard.php">Home</a>
                 <a class="btn-tabs" href="../admin/clients/add.php">Add New Client</a>
                 <a class="btn-tabs" href="../admin/clients/list.php">View Clients</a>
                 <a class="btn-tabs" href="../employees/manage.php">Manage Employees</a>
-                <a class="btn-tabs" href="../admin/receipts/add.php">Add Receipt</a>
-                <a class="btn-tabs" href="../admin/receipts/list.php">View All Receipts</a>
+                <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
+                <a class="btn-tabs" href="../receipts/list.php">View My Receipts</a>
+                <a class="btn-tabs" href="../receipts/receipts.php">All Receipts Report</a>
+                <a class="btn-tabs <?= $page === 'view_reports_admin' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
                 <a class="bottom-btn" href="../process/logout.php">Logout</a>
