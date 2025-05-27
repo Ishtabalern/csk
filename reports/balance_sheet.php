@@ -203,7 +203,6 @@ if ($client_id) {
             <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
             <input type="hidden" name="client_id" value="<?= $client_id ?>">
             <input type="hidden" name="year" value="<?= $year ?>">
-            <button type="submit">Export to Excel</button>
             </form>
                 <script>
                 document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
