@@ -120,10 +120,10 @@
                             <td>₱<?= number_format($row['amount'], 2) ?></td>
                             <td><?= htmlspecialchars($row['payment_method']) ?></td>
                             <td><?= $row['receipt_date'] ?></td>
-                            <td>
+                            <td style="text-align: center; vertical-align: middle;">
                                 <?php if ($row['image_path']): ?>
-                                    <a href="<?= $row['image_path'] ?>" target="_blank">
-                                        <img src="<?= $row['image_path'] ?>" width="80" height="80" style="object-fit:cover;" alt="receipt">
+                                    <a href="../<?= $row['image_path'] ?>" target="_blank">
+                                        <img src="../<?= $row['image_path'] ?>" width="80" height="80" style="object-fit:cover;" alt="receipt">
                                     </a>
                                 <?php else: ?>
                                     No Image

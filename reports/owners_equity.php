@@ -204,7 +204,7 @@ if (!empty($client_id)) {
     </div>
 
     <?php if ($_SESSION['role'] === 'admin' && !empty($client_id)): ?>
-        <form method="POST" style="margin-top:30px;">
+        <form method="POST" style="margin-top:30px; text-align:center;">
             <h3>💼 Declare Beginning Capital</h3>
             <label>Amount (₱):</label>
             <input type="number" name="capital_amount" step="0.01" required>

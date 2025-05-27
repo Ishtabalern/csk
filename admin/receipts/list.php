@@ -65,7 +65,7 @@ $result = $conn->query("SELECT * FROM receipts ORDER BY created_at DESC");
                                 <td><?= htmlspecialchars($row['category']) ?></td>
                                 <td><?= htmlspecialchars($row['amount']) ?></td>
                                 <td><?= htmlspecialchars($row['payment_method']) ?></td>
-                                <td><a href="<?= htmlspecialchars($row['image_path']) ?>" target="_blank">View</a></td>
+                                <td><a href="../<?= htmlspecialchars($row['image_path']) ?>" target="_blank">View</a></td>
                                 <td style="display: flex; align-items: center; justify-content: space-evenly;">
                                     <a href="edit.php?id=<?= $row['id'] ?>" style="background-color: #00AF7E; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">✏️ Edit</a> |
                                     <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this client?')" style="background-color: rgb(169, 40, 1); color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">❌ Delete</a>

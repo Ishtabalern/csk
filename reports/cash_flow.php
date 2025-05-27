@@ -175,7 +175,7 @@
     
     <div class="btn">
         <?php
-            $dashboard_link = ($_SESSION['role'] === 'admin') ? 'view_reports.php' : 'view_reports.php';
+            $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_reports.php' : 'view_reports.php';
         ?>
         <a href="<?= $dashboard_link ?>">
              Reports
