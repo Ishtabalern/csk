@@ -50,15 +50,16 @@ $profit_loss = $income - $expense;
     <title>Employee Dashboard</title>
     <link rel="stylesheet" href="styles/employee/employee_dashboard.css">
     <link rel="stylesheet" href="partials/sidebar.css">
+    <link rel="stylesheet" href="partials/navbar.css">
 </head>
 <body>
     <?php
         $page = 'employee_dashboard';
         include 'partials/sidebar.php'; 
+        include 'partials/navbar.php'
     ?>
 
     <main class="dashboard" role="main">
-        <h1 class="dashboard-header">Employee Dashboard</h1>
 
         <div class="client-dropdown">
             <form method="get">

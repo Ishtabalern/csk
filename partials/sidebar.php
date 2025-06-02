@@ -21,18 +21,18 @@ if (!isset($page)) {
 <div class="sidebar">
         <div class="company-logo">
         <?php if ($page === 'sidebar'): ?>
-            <img src="../imgs/csk_logo.png" alt="">
+            <img src="../imgs/csk_logo.pn" alt="">
         <?php endif; ?>
         <?php if ($page === 'all_receipts'): ?>
-            <img src="../imgs/csk_logo.png" alt="">
+            <img src="../imgs/csk_logo.pn" alt="">
         <?php endif; ?>
         <?php if ($page === 'view_reports'): ?>
-            <img src="../imgs/csk_logo.png" alt="">
+            <img src="../imgs/csk_logo.pn" alt="">
         <?php endif; ?>
         <?php if ($page === 'view_reports_admin'): ?>
-            <img src="../../imgs/csk_logo.png" alt="">
+            <img src="../../imgs/csk_logo.pn" alt="">
         <?php endif; ?>
-            <img src="imgs/csk_logo.png" alt="">
+            <img src="imgs/csk_logo.pn" alt="">
         </div>
         
         <?php if ($_SESSION['role'] === 'admin' && $page === 'admin_dashboard'): ?>

@@ -35,7 +35,8 @@ body {
 
 .dashboard {
     padding: 20px;
-    margin-left: 250px; /* Sidebar width */
+    margin-left: 275px; /* Sidebar width */
+    margin-top: 175px;
     background-color: #f4f4f4;
     color: #333;
 }
