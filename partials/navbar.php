@@ -39,7 +39,6 @@ if (!isset($page)) {
         <?php if ($_SESSION['role'] === 'employee' && $page === 'employee_dashboard'): ?>
         <div class="navtabs">
             <h1 class="title-tabs">Employee Dashboard</h1>
-            <h2 class="title-tabs"><?php echo htmlspecialchars($_SESSION['full_name']); ?></h2>
         </div>
         <?php endif; ?>
         <?php if ($_SESSION['role'] === 'employee' && $page === '1employee_dashboard'): ?>

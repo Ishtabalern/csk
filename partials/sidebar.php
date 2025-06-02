@@ -21,18 +21,18 @@ if (!isset($page)) {
 <div class="sidebar">
         <div class="company-logo">
         <?php if ($page === 'sidebar'): ?>
-            <img src="../imgs/csk_logo.pn" alt="">
+            <img src="../imgs/csk_logo.png" alt="">
         <?php endif; ?>
         <?php if ($page === 'all_receipts'): ?>
-            <img src="../imgs/csk_logo.pn" alt="">
+            <img src="../imgs/csk_logo.png" alt="">
         <?php endif; ?>
         <?php if ($page === 'view_reports'): ?>
-            <img src="../imgs/csk_logo.pn" alt="">
+            <img src="../imgs/csk_logo.png" alt="">
         <?php endif; ?>
         <?php if ($page === 'view_reports_admin'): ?>
-            <img src="../../imgs/csk_logo.pn" alt="">
+            <img src="../../imgs/csk_logo.png" alt="">
         <?php endif; ?>
-            <img src="imgs/csk_logo.pn" alt="">
+            <img src="imgs/csk_logo.png" alt="">
         </div>
         
         <?php if ($_SESSION['role'] === 'admin' && $page === 'admin_dashboard'): ?>
@@ -43,7 +43,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="employees/manage.php">Manage Employees</a>
                 <a class="btn-tabs" href="admin/receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="admin/receipts/list.php">View My Receipts</a>
-                <a class="btn-tabs" href="admin/receipts/receipts.php">All Receipts Report</a>
+                <a class="btn-tabs" href="reports/all_receipts.php">General Ledger</a>
                 <a class="btn-tabs" href="admin/reports/view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
@@ -59,7 +59,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../../employees/manage.php">Manage Employees</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/list.php">View My Receipts</a>
-                <a class="btn-tabs" href="../receipts/receipts.php">All Receipts Report</a>
+                <a class="btn-tabs" href="../../reports/all_receipts.php">General Ledger</a>
                 <a class="btn-tabs <?= $page === 'view_reports_admin' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
@@ -75,8 +75,8 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../employees/manage.php">Manage Employees</a>
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/list.php">View My Receipts</a>
-                <a class="btn-tabs" href="../receipts/receipts.php">All Receipts Report</a>
-                <a class="btn-tabs <?= $page === 'view_reports_admin' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
+                <a class="btn-tabs" href="all_receipts.php">General Ledger</a>
+                <a class="btn-tabs" href="../admin/reports/view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
                 <a class="bottom-btn" href="../process/logout.php">Logout</a>
@@ -89,7 +89,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="receipts/scan.php">Scan Receipts</a>
                 <a class="btn-tabs" href="receipts/view.php">View My Receipts</a>
-                <a class="btn-tabs" href="reports/all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs" href="reports/all_receipts.php">General Ledger</a>
                 <a class="btn-tabs" href="reports/view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
@@ -103,7 +103,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/scan.php">Scan Receipts</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
-                <a class="btn-tabs <?= $page === 'all_receipts' ? 'active' : '' ?>" href="all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs <?= $page === 'all_receipts' ? 'active' : '' ?>" href="all_receipts.php">General Ledger</a>
                 <a class="btn-tabs" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">
@@ -117,7 +117,7 @@ if (!isset($page)) {
                 <a class="btn-tabs" href="../receipts/add.php">Add Receipt</a>
                 <a class="btn-tabs" href="../receipts/scan.php">Scan Receipts</a>
                 <a class="btn-tabs" href="../receipts/view.php">View My Receipts</a>
-                <a class="btn-tabs" href="all_receipts.php">All Receipts Report</a>
+                <a class="btn-tabs" href="all_receipts.php">General Ledger</a>
                 <a class="btn-tabs <?= $page === 'view_reports' ? 'active' : '' ?>" href="view_reports.php">Reports</a>
             </div>
             <div class="bottom-link">

@@ -76,7 +76,7 @@ if ($_SESSION['role'] !== 'admin') {
     include 'partials/sidebar.php'; 
     ?>
     <main class="dashboard" role="main">
-        <h2>Admin Dashboard</h2>
+        <h2 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Admin Dashboard</h2>
         <a href="admin/clients/add.php" tabindex="0"><span class="icon">➕</span> Add New Client</a>
         <a href="admin/categories.php" tabindex="0"><span class="icon">🏷️</span> Categories</a>
         <a href="admin/clients/list.php" tabindex="0"><span class="icon">📋</span> View Clients</a>

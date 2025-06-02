@@ -28,36 +28,44 @@ if (!isset($_SESSION['user_id'])) {
             color: #222;
         }
         .container {
-            width: 95%;
-            max-width: 900px;
-            margin: 120px auto 60px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 80px auto 40px;
             text-align: center;
         }
         h2 {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
             font-weight: 600;
-            font-size: 2.25rem;
+            font-size: 70px;
             color: #111;
-            margin-bottom: 40px;
+            margin-top: -10px;
+            margin-bottom: 50px;
             letter-spacing: 0.05em;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(4, auto);
+            grid-template-rows: repeat(2, 1fr); /* Four rows */
+            gap: 50px;
             justify-items: center;
         }
+        a.report-card:nth-child(5) {
+            grid-column: span 2; /* Makes the bottom card span across both columns */
+            justify-self: center; /* Centers it */
+        }
+
         a.report-card {
             text-decoration: none;
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.07);
-            width: 140px;
-            height: 140px;
+            width: 220px;
+            height: 220px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #333;
+            color: #062335;
             transition: box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease;
             cursor: pointer;
             user-select: none;
@@ -81,8 +89,9 @@ if (!isset($_SESSION['user_id'])) {
             fill: #0B440F;
         }
         span.label {
-            font-size: 1rem;
-            font-weight: 500;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 22px;
+            font-weight: 600;
             letter-spacing: 0.03em;
         }
         @media (max-width: 480px) {
@@ -101,6 +110,9 @@ if (!isset($_SESSION['user_id'])) {
             span.label {
                 font-size: 0.9rem;
             }
+            .grid {
+                grid-template-columns: repeat(2, 1fr); /* Adjust for smaller screens */
+            }
         }
     </style>
 </head>
@@ -112,50 +124,33 @@ if (!isset($_SESSION['user_id'])) {
     <div class="container">
         <h2>Reports</h2>
         <div class="grid">
-            <a class="report-card" href="../../reports/balance_sheet.php" title="Balance Sheet Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
-                </svg>
-                <span class="label">Balance Sheet</span>
-            </a>
             <a class="report-card" href="category_summary.php" title="Category Summary Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <circle cx="12" cy="7" r="4"/>
-                    <path d="M2 20c0-3 5-5 10-5s10 2 10 5v1H2v-1z"/>
-                </svg>
+                <span style="font-size: 75px; margin-bottom: 10px">📃</span>
                 <span class="label">Category Summary</span>
             </a>
             <a class="report-card" href="sales_expense.php" title="Sales Vs Expense Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M4 17h16v2H4zM4 14h8v2H4zM4 11h5v2H4z"/>
-                </svg>
+                <span style="font-size: 75px; margin-bottom: 10px">📊</span>
                 <span class="label">Sales Vs Expense</span>
             </a>
-            <a class="report-card" href="../../reports/trial_balance.php" title="Trial Balance Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <rect x="3" y="4" width="18" height="2" rx="1"/>
-                    <path d="M6 8h12v1H6zM6 12h9v1H6zM6 16h7v1H6z"/>
-                </svg>
+            <a class="report-card" href="trial_balance.php" title="Trial Balance Report">
+                <span style="font-size: 75px; margin-bottom: 10px">⚖️</span>
                 <span class="label">Trial Balance</span>
             </a>
-            <a class="report-card" href="../../reports/income_statement.php" title="Income Statement Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M12 3l7 6v12H5V9l7-6z" fill="none" stroke="#000" stroke-width="2"/>
-                </svg>
+            <a class="report-card" href="income_statement.php" title="Income Statement Report">
+                <span style="font-size: 75px; margin-bottom: 10px">💵</span>
                 <span class="label">Income Statement</span>
             </a>
-            <a class="report-card" href="../../reports/owners_equity.php" title="Owner's Equity Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <circle cx="12" cy="12" r="10" stroke="#000" stroke-width="1" fill="none"/>
-                    <path d="M8 12h8M12 8v8" stroke="#000" stroke-width="1" />
-                </svg>
+            <a class="report-card" href="owners_equity.php" title="Owner's Equity Report">
+                <span style="font-size: 75px; margin-bottom: 10px">🏦</span>
                 <span class="label">Owner's Equity</span>
             </a>
-            <a class="report-card" href="../../reports/cash_flow.php" title="Statement of Cash Flow Report">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M3 11h18v2H3v-2zm6-6v13l4-7-4-6z"/>
-                </svg>
+            <a class="report-card" href="cash_flow.php" title="Statement of Cash Flow Report" style="margin-left: -300px;">
+                <span style="font-size: 75px; margin-bottom: 10px">💸</span>
                 <span class="label">Statement of Cash Flow</span>
+            </a>
+            <a class="report-card" href="balance_sheet.php" title="Balance Sheet Report" style="margin-left: -300px;">
+                <span style="font-size: 75px; margin-bottom: 10px">🧾</span>
+                <span class="label">Balance Sheet</span>
             </a>
         </div>
     </div>

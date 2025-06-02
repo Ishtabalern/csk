@@ -33,28 +33,39 @@ body {
     cursor: pointer;
 }
 
+.top-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .dashboard {
     padding: 20px;
-    margin-left: 275px; /* Sidebar width */
-    margin-top: 175px;
+    margin-left: 250px; /* Sidebar width */
     background-color: #f4f4f4;
     color: #333;
 }
 
 .dashboard .dashboard-header {
-    font-size: 2rem;
+    font-size: 3rem;
     margin-bottom: 20px;
     color: #062335;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .dashboard .client-dropdown {
     margin-bottom: 20px;
 }
 
-.dashboard .container {
+.dashboard .section-container {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 25px;
+    color: #062335;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .dashboard .section {
@@ -63,10 +74,67 @@ body {
 }
 
 .dashboard .shortcut-container {
+    padding: 20px;
+    height: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 50px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates 2 columns */
+    gap: 30px; /* Adjust space between items */
+    justify-items: center; /* Centers items in the grid */
 }
+
+.shortcut-container span{
+    font-size: 10px;
+    width: 200px;
+    justify-self: center;
+}
+.shortcut-container label{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 25px;
+    font-weight: 600;
+    color: #062335;
+}
+.dashboard .shortcut-container a {
+    flex: 1 1 500px; /* Increase size */
+    max-width: 500px; /* Increase the size */
+    padding: 50px; /* More padding for bigger appearance */
+    font-size: 1.2rem; /* Larger font size */
+}
+
+.dashboard .summary-container {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 25px;
+    color: #062335;
+    margin-left: 40px;
+    justify-items: center; /* Centers items in the grid */
+    display: flex;
+    flex-direction: column; /* Aligns items vertically */
+    width: 100%; /* Ensures full width */
+    padding: 25px;
+    border-radius: 10px;
+    background-color: #fff;
+    gap: 15px;
+
+}
+
+.dashboard .profit-loss {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 10px;
+    color: #062335;
+    width: 100%; /* Stretches across the container */
+    height: 235px;
+    text-align: center; /* Centers text */
+    font-size: 1.5rem; /* Larger font */
+    font-weight: bold;
+    padding: 20px;
+    border-radius: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 
 .dashboard a {
     text-decoration: none;
@@ -89,14 +157,19 @@ body {
 
 .dashboard .box-container {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
 }
 
 .dashboard .box {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 30px;
     background: white;
     border-radius: 8px;
-    height: 150px;
-    width: 250px;
+    margin-bottom: 25px;
+    height: 205px;
+    gap: 10px;
+    width: 393px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -156,6 +229,41 @@ body {
     display: block;
     margin-bottom: 8px;
 }
+
+.recent-container {
+    border-radius: 10px;
+    margin-top: 25px;
+    background-color: #fff;
+    padding: 20px;
+}
+.recent-container h2 {
+    margin-bottom: 20px;
+    
+}
+
+.recent-container table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .recent-container th, .recent-container td {
+        padding: 12px;
+        text-align: left;
+    }
+    
+    .recent-container th {
+        background-color: #062335;
+        color: white;
+    }
+    
+    .recent-container tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    
+    .recent-container tr:hover {
+        background-color: #ddd;
+    }
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
