@@ -200,7 +200,7 @@ $result = $stmt->get_result();
     
     // Scan button triggers script on Raspberry Pi
             $('.scan-btn').click(() => {
-                fetch('http://192.168.1.2:5000/run-script', {
+                fetch('http://192.168.1.12:5000/run-script', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 })
