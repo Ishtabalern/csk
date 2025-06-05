@@ -59,6 +59,22 @@
  }
 
 
+.edit-btn {
+  padding: 8px 14px;
+  border: 2px solid #0B440F; 
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #fff;
+}
+
+.edit-btn:hover {
+  background-color: #0B440F;
+  color: #fff;
+}
+
+
+
 /*
 table {
     width: 100%;

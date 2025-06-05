@@ -161,7 +161,8 @@ $result = $stmt->get_result();
                                 No Image
                             <?php endif; ?>
                         </td>
-                        <td><button class="edit-btn">Edit</button></td>
+                     <td style="text-align: center; vertical-align: middle;"><button class="edit-btn">Edit</button></td>
+
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>

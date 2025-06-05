@@ -152,7 +152,7 @@ if (!empty($client_id)) {
 <div class="topbar-container">
     <div class="header">
         <img src="../imgs/csk_logo.png" alt="">
-        <h1 style="color: #1ABC9C">Statement of Owner’s Equity</h1>
+        <h1 style="color: #0B440F">Statement of Owner’s Equity</h1>
     </div>
     
     <div class="btn">
