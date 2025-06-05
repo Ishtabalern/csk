@@ -8,7 +8,7 @@ if ($_SESSION['role'] !== 'employee') {
 include '../includes/db.php';
 
 
-$stmt = $conn->prepare("SELECT * FROM scanned_receipts ORDER BY receipt_date DESC");
+$stmt = $conn->prepare("SELECT * FROM scanned_receipts ORDER BY confidence_score ASC");
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -78,6 +78,21 @@ $result = $stmt->get_result();
             height: 50px;
             margin-right: 50px;
         }
+        .low-quality {
+            background-color: rgba(255, 0, 0, 0.2) !important; /* Light red */
+        }
+
+        .good-quality {
+            background-color: rgba(255, 255, 0, 0.2) !important; /* Light yellow */
+        }
+
+        .very-good-quality {
+            background-color: rgba(0, 255, 0, 0.2) !important; /* Light green */
+        }
+        .excellent-quality {
+            background-color: #ccf6e4; /* light greenish-blue */
+        }
+
     </style>
 </head>
 <body>
@@ -132,21 +147,26 @@ $result = $stmt->get_result();
     <table id="receiptTable" border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
-                <th style="display: none;">Raw Date</th> <!-- Hidden column for sorting -->
                 <th>Vendor</th>
                 <th>Category</th>
                 <th>Total</th>
                 <th>Payment Method</th>
                 <th>Date</th>
                 <th>Image</th>
+                <th>Confidence Score</th>
+                <th>Quality</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <?php if ($result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr data-id="<?= $row['id'] ?>" data-vendor="<?= htmlspecialchars($row['vendor']) ?>" data-category="<?= htmlspecialchars($row['category']) ?>" data-amount="<?= $row['amount'] ?>" data-date="<?= $row['receipt_date'] ?>">
-                        <td style="display: none;"><?= $row['receipt_date'] ?></td> <!-- Hidden raw date -->
+                    <tr data-id="<?= $row['id'] ?>" data-vendor="<?= htmlspecialchars($row['vendor']) ?>" data-category="<?= htmlspecialchars($row['category']) ?>" data-amount="<?= $row['amount'] ?>" data-date="<?= $row['receipt_date'] ?>" data-payment_method="<?= htmlspecialchars($row['payment_method']) ?>" class="<?php 
+                        if ($row['quality_flag'] === 'Low') echo 'low-quality'; 
+                        elseif ($row['quality_flag'] === 'Good') echo 'good-quality'; 
+                        elseif ($row['quality_flag'] === 'Very Good') echo 'very-good-quality';
+                        elseif ($row['quality_flag'] === 'Excellent - Edited') echo 'excellent-quality'; 
+                    ?>">
                         <td><?= htmlspecialchars($row['vendor']) ?></td>
                         <td><?= htmlspecialchars($row['category']) ?></td>
                         <td>₱<?= number_format($row['amount'], 2) ?></td>
@@ -161,8 +181,10 @@ $result = $stmt->get_result();
                                 No Image
                             <?php endif; ?>
                         </td>
-                     <td style="text-align: center; vertical-align: middle;"><button class="edit-btn">Edit</button></td>
-
+                
+                        <td><?= htmlspecialchars($row['confidence_score']) ?></td>
+                        <td><?= htmlspecialchars($row['quality_flag']) ?></td>
+                        <td style="text-align: center; vertical-align: middle;"><button class="edit-btn">Edit</button></td>
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>
@@ -273,6 +295,14 @@ $result = $stmt->get_result();
                 currentRow.children[2].textContent = `₱${parseFloat(amount).toFixed(2)}`;
                 currentRow.children[3].textContent = payment_method;
                 currentRow.children[4].textContent = date;
+                currentRow.children[6].textContent = data.score;
+                currentRow.children[7].textContent = data.quality;
+
+                // Reset quality color
+                currentRow.classList.remove('low-quality', 'good-quality', 'very-good-quality', 'excellent-quality');
+                if (data.quality === "Excellent - Edited") {
+                    currentRow.classList.add('excellent-quality');
+                }
 
                 closeModal();
             } else {
@@ -288,23 +318,32 @@ $result = $stmt->get_result();
     }
     
     $(document).ready(function () {
-        $('#receiptTable').DataTable({
-            "order": [[0, "desc"]], // Sort using the hidden raw date
-            "columnDefs": [
-                { "targets": 0, "visible": false }, // Hide the raw date column
-            ],
-            "pageLength": 10,
-            "lengthMenu": [5, 10, 25, 50, 100],
-            "language": {
-                "search": "Search Receipts:",
-                "lengthMenu": "Show _MENU_ entries",
-                "zeroRecords": "No matching receipts found",
-                "info": "Showing _START_ to _END_ of _TOTAL_ receipts",
-                "infoEmpty": "No receipts available",
-                "infoFiltered": "(filtered from _MAX_ total receipts)"
+    $('#receiptTable').DataTable({
+        "order": [[6, "asc"]],
+        "pageLength": 10,
+        "lengthMenu": [5, 10, 25, 50, 100],
+        "language": {
+            "search": "Search Receipts:",
+            "lengthMenu": "Show _MENU_ entries",
+            "zeroRecords": "No matching receipts found",
+            "info": "Showing _START_ to _END_ of _TOTAL_ receipts",
+            "infoEmpty": "No receipts available",
+            "infoFiltered": "(filtered from _MAX_ total receipts)"
+        },
+        "createdRow": function (row, data, dataIndex) {
+            var quality = (data[7] || "").trim().toLowerCase();
+            if (quality === "low") {
+                $(row).addClass('low-quality');
+            } else if (quality === "good") {
+                $(row).addClass('good-quality');
+            } else if (quality === "very good") {
+                $(row).addClass('very-good-quality');
+            } else if (quality === "excellent - edited") {
+                $(row).addClass('excellent-quality');
             }
-        });
+        }
     });
+});
 </script>
 
 </body>
