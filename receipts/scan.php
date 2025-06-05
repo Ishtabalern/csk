@@ -89,6 +89,10 @@ $result = $stmt->get_result();
         .very-good-quality {
             background-color: rgba(0, 255, 0, 0.2) !important; /* Light green */
         }
+        .excellent-quality {
+            background-color: #ccf6e4; /* light greenish-blue */
+        }
+
     </style>
 </head>
 <body>
@@ -160,7 +164,8 @@ $result = $stmt->get_result();
                     <tr data-id="<?= $row['id'] ?>" data-vendor="<?= htmlspecialchars($row['vendor']) ?>" data-category="<?= htmlspecialchars($row['category']) ?>" data-amount="<?= $row['amount'] ?>" data-date="<?= $row['receipt_date'] ?>" data-payment_method="<?= htmlspecialchars($row['payment_method']) ?>" class="<?php 
                         if ($row['quality_flag'] === 'Low') echo 'low-quality'; 
                         elseif ($row['quality_flag'] === 'Good') echo 'good-quality'; 
-                        elseif ($row['quality_flag'] === 'Very Good') echo 'very-good-quality'; 
+                        elseif ($row['quality_flag'] === 'Very Good') echo 'very-good-quality';
+                        elseif ($row['quality_flag'] === 'Excellent - Edited') echo 'excellent-quality'; 
                     ?>">
                         <td><?= htmlspecialchars($row['vendor']) ?></td>
                         <td><?= htmlspecialchars($row['category']) ?></td>
@@ -289,6 +294,14 @@ $result = $stmt->get_result();
                 currentRow.children[2].textContent = `₱${parseFloat(amount).toFixed(2)}`;
                 currentRow.children[3].textContent = payment_method;
                 currentRow.children[4].textContent = date;
+                currentRow.children[6].textContent = data.score;
+                currentRow.children[7].textContent = data.quality;
+
+                // Reset quality color
+                currentRow.classList.remove('low-quality', 'good-quality', 'very-good-quality', 'excellent-quality');
+                if (data.quality === "Excellent - Edited") {
+                    currentRow.classList.add('excellent-quality');
+                }
 
                 closeModal();
             } else {
@@ -324,6 +337,8 @@ $result = $stmt->get_result();
                 $(row).addClass('good-quality');
             } else if (quality === "very good") {
                 $(row).addClass('very-good-quality');
+            } else if (quality === "excellent - edited") {
+                $(row).addClass('excellent-quality');
             }
         }
     });
