@@ -135,72 +135,74 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
             <button type="submit">Generate</button>
         </form>
     </div>
+    
+    <?php if ($client_id): ?>
+        <div class="exports-btn">
+            <form id="exportPDFForm" method="POST" action="../process/trial_balance_export.php" target="_blank">
+            <input type="hidden" name="html_content" id="html_content">
+            <button type="submit" name="export_pdf">Export as PDF</button>
+            </form>
+                <script>
+                document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+                const tableHtml = document.getElementById('trial_balance_table').outerHTML;
+                document.getElementById('html_content').value = tableHtml;
+                });
+                </script>
 
-    <div class="exports-btn">
-        <form id="exportPDFForm" method="POST" action="../process/trial_balance_export.php" target="_blank">
-        <input type="hidden" name="html_content" id="html_content">
-        <button type="submit" name="export_pdf">Export as PDF</button>
-        </form>
-            <script>
-            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('trial_balance_table').outerHTML;
-            document.getElementById('html_content').value = tableHtml;
-            });
-            </script>
+            <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
+            <input type="hidden" name="client_id" value="<?= $client_id ?>">
+            <input type="hidden" name="year" value="<?= $year ?>">
+            </form>
+                <script>
+                document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
+                const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
+                document.getElementById('excel_html_content').value = tableHtml;
+                });
+                </script>
+        </div>
 
-        <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
-        <input type="hidden" name="client_id" value="<?= $client_id ?>">
-        <input type="hidden" name="year" value="<?= $year ?>">
-        </form>
-            <script>
-            document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('balance_sheet_table').outerHTML;
-            document.getElementById('excel_html_content').value = tableHtml;
-            });
-            </script>
-    </div>
-
-    <div class="table-container" id="trial_balance_table">
-        <h2 style="margin-top:15px; color:#1ABC9C; text-align:center;">Trial Balance Report of <?= htmlspecialchars($client_name) ?> from <?= htmlspecialchars(date("m-d-Y", strtotime($start_date))) ?> to <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
-        <table>
-            <thead>
-                <tr>
-                    <th class="left">Account Code</th>
-                    <th class="left">Account Name</th>
-                    <th class="left">Type</th>
-                    <th>Debit (₱)</th>
-                    <th>Credit (₱)</th>
-                    <th>Running Debit</th>
-                    <th>Running Credit</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                $running_debit = 0;
-                $running_credit = 0;
-                foreach ($rows as $r): 
-                    $running_debit += $r['total_debit'];
-                    $running_credit += $r['total_credit'];
-                ?>
+        <div class="table-container" id="trial_balance_table">
+            <h2 style="margin-top:15px; color:#1ABC9C; text-align:center;">Trial Balance Report of <?= htmlspecialchars($client_name) ?> from <?= htmlspecialchars(date("m-d-Y", strtotime($start_date))) ?> to <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
+            <table>
+                <thead>
                     <tr>
-                        <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
-                        <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
-                        <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
-                        <td><?= number_format($r['total_debit'], 2) ?></td>
-                        <td><?= number_format($r['total_credit'], 2) ?></td>
-                        <td><?= number_format($running_debit, 2) ?></td>
-                        <td><?= number_format($running_credit, 2) ?></td>
+                        <th class="left">Account Code</th>
+                        <th class="left">Account Name</th>
+                        <th class="left">Type</th>
+                        <th>Debit (₱)</th>
+                        <th>Credit (₱)</th>
+                        <th>Running Debit</th>
+                        <th>Running Credit</th>
                     </tr>
-                <?php endforeach; ?>
-                <tr>
-                    <th colspan="3">TOTAL</th>
-                    <th><?= number_format($total_debit, 2) ?></th>
-                    <th><?= number_format($total_credit, 2) ?></th>
-                    <th colspan="2"></th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <?php 
+                    $running_debit = 0;
+                    $running_credit = 0;
+                    foreach ($rows as $r): 
+                        $running_debit += $r['total_debit'];
+                        $running_credit += $r['total_credit'];
+                    ?>
+                        <tr>
+                            <td class="left"><?= htmlspecialchars($r['account_code']) ?></td>
+                            <td class="left"><?= htmlspecialchars($r['account_name']) ?></td>
+                            <td class="left"><?= htmlspecialchars($r['account_type']) ?></td>
+                            <td><?= number_format($r['total_debit'], 2) ?></td>
+                            <td><?= number_format($r['total_credit'], 2) ?></td>
+                            <td><?= number_format($running_debit, 2) ?></td>
+                            <td><?= number_format($running_credit, 2) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr>
+                        <th colspan="3">TOTAL</th>
+                        <th><?= number_format($total_debit, 2) ?></th>
+                        <th><?= number_format($total_credit, 2) ?></th>
+                        <th colspan="2"></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
 
  
     <?php if ($total_debit !== $total_credit): ?>

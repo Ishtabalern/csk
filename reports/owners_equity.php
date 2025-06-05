@@ -215,44 +215,46 @@ if (!empty($client_id)) {
         </form>
     <?php endif; ?>
 
-    <div class="exports-btn">
-        <form id="exportPDFForm" method="POST" action="../process/owners_equity_export.php" target="_blank">
-        <input type="hidden" name="html_content" id="html_content">
-        <button type="submit" name="export_pdf">Export as PDF</button>
-        </form>
-            <script>
-            document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('owners_equity_table').outerHTML;
-            document.getElementById('html_content').value = tableHtml;
-            });
-            </script>
+    <?php if ($client_id): ?>
+        <div class="exports-btn">
+            <form id="exportPDFForm" method="POST" action="../process/owners_equity_export.php" target="_blank">
+            <input type="hidden" name="html_content" id="html_content">
+            <button type="submit" name="export_pdf">Export as PDF</button>
+            </form>
+                <script>
+                document.getElementById('exportPDFForm').addEventListener('submit', function (e) {
+                const tableHtml = document.getElementById('owners_equity_table').outerHTML;
+                document.getElementById('html_content').value = tableHtml;
+                });
+                </script>
 
-        <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
-        <input type="hidden" name="client_id" value="<?= $client_id ?>">
-        <input type="hidden" name="year" value="<?= $year ?>">
-        </form>
-            <script>
-            document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
-            const tableHtml = document.getElementById('owners_equity_table').outerHTML;
-            document.getElementById('excel_html_content').value = tableHtml;
-            });
-            </script>
-    </div>
+            <form id="exportExcelForm" method="POST" action="../process/balance_export_excel.php">
+            <input type="hidden" name="client_id" value="<?= $client_id ?>">
+            <input type="hidden" name="year" value="<?= $year ?>">
+            </form>
+                <script>
+                document.getElementById('exportExcelForm').addEventListener('submit', function (e) {
+                const tableHtml = document.getElementById('owners_equity_table').outerHTML;
+                document.getElementById('excel_html_content').value = tableHtml;
+                });
+                </script>
+        </div>
 
-    <div class="table-container" id="owners_equity_table">
-        <div class="customer-name" style="text-align: center; font-size: 1.2rem;">              
-                <p><?= htmlspecialchars($client_name) ?></p>
-                <h3 id="tab-content">Statement of Owner's Equity</h3>
-                <h3>From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
-            </div>
-        <table>
-            <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
-            <tr><td class="left">Beginning Capital</td><td>₱<?= number_format($beginning_capital, 2) ?></td></tr>
-            <tr><td class="left">Add: Net Income</td><td>₱<?= number_format($net_income, 2) ?></td></tr>
-            <tr><td class="left">Less: Withdrawals</td><td>₱<?= number_format($total_withdrawals, 2) ?></td></tr>
-            <tr><th class="left">Ending Capital</th><th>₱<?= number_format($ending_capital, 2) ?></th></tr>
-        </table>
-    </div>
+        <div class="table-container" id="owners_equity_table">
+            <div class="customer-name" style="text-align: center; font-size: 1.2rem;">              
+                    <p><?= htmlspecialchars($client_name) ?></p>
+                    <h3 id="tab-content">Statement of Owner's Equity</h3>
+                    <h3>From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
+                </div>
+            <table>
+                <tr><th class="left">Item</th><th>Amount (₱)</th></tr>
+                <tr><td class="left">Beginning Capital</td><td>₱<?= number_format($beginning_capital, 2) ?></td></tr>
+                <tr><td class="left">Add: Net Income</td><td>₱<?= number_format($net_income, 2) ?></td></tr>
+                <tr><td class="left">Less: Withdrawals</td><td>₱<?= number_format($total_withdrawals, 2) ?></td></tr>
+                <tr><th class="left">Ending Capital</th><th>₱<?= number_format($ending_capital, 2) ?></th></tr>
+            </table>
+        </div>
+    <?php endif; ?>
 
 
 </div>
