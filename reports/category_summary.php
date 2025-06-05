@@ -52,7 +52,7 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
             <div class="section">
                 <div class="input col-md-4">
                     <label for="client_id" class="form-label">Select Client:</label>
-                    <select name="client_id" id="client_id" class="form-control">
+                    <select name="client_id" id="client_id" class="form-control" required>
                         <option value="0">-- All Clients --</option>
                         <?php mysqli_data_seek($clients, 0); while ($client = mysqli_fetch_assoc($clients)) : ?>
                             <option value="<?= $client['id'] ?>" <?= $client['id'] == $selectedClientId ? 'selected' : '' ?>>
@@ -65,13 +65,13 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
                 <div class="input col-md-3">
                     <label for="start_date" class="form-label">Start Date:</label>
                     <input type="date" name="start_date" id="start_date" class="form-control"
-                        value="<?= isset($_GET['start_date']) ? $_GET['start_date'] : '' ?>">
+                        value="<?= isset($_GET['start_date']) ? $_GET['start_date'] : '' ?>" required>
                 </div>
 
                 <div class="input col-md-3">
                     <label for="end_date" class="form-label">End Date:</label>
                     <input type="date" name="end_date" id="end_date" class="form-control"
-                        value="<?= isset($_GET['end_date']) ? $_GET['end_date'] : '' ?>">
+                        value="<?= isset($_GET['end_date']) ? $_GET['end_date'] : '' ?>" required>
                 </div>   
             </div>     
 
