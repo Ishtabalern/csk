@@ -83,55 +83,61 @@ $selectedClientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : 0;
         
     </div>
 
-    <div class="category-container">
-        <div class="table">
-            <table class="table table-bordered table-striped" id="categorySummary" >
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Total Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $conditions = [];
+    <?php
+        $formSubmitted = isset($_GET['client_id']) || isset($_GET['start_date']) || isset($_GET['end_date']);
+        if ($formSubmitted):
+        ?>
+        <div class="category-container">
+            <div class="table">
+                <table class="table table-bordered table-striped" id="categorySummary" >
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $conditions = [];
 
-                    if ($selectedClientId > 0) {
-                        $conditions[] = "client_id = $selectedClientId";
-                    }
-                    
-                    if (!empty($_GET['start_date'])) {
-                        $startDate = $_GET['start_date'];
-                        $conditions[] = "receipt_date >= '$startDate'";
-                    }
-                    
-                    if (!empty($_GET['end_date'])) {
-                        $endDate = $_GET['end_date'];
-                        $conditions[] = "receipt_date <= '$endDate'";
-                    }
-                    
-                    $whereClause = count($conditions) > 0 ? "WHERE " . implode(" AND ", $conditions) : "";
-                    
-                    $query = "
-                        SELECT category, SUM(amount) AS total 
-                        FROM receipts 
-                        $whereClause
-                        GROUP BY category
-                    ";
+                        if ($selectedClientId > 0) {
+                            $conditions[] = "client_id = $selectedClientId";
+                        }
 
-                    $result = mysqli_query($conn, $query);
+                        if (!empty($_GET['start_date'])) {
+                            $startDate = $_GET['start_date'];
+                            $conditions[] = "receipt_date >= '$startDate'";
+                        }
 
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr>
-                                <td>" . htmlspecialchars($row['category']) . "</td>
-                                <td>₱" . number_format($row['total'], 2) . "</td>
-                            </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>     
-    </div>
+                        if (!empty($_GET['end_date'])) {
+                            $endDate = $_GET['end_date'];
+                            $conditions[] = "receipt_date <= '$endDate'";
+                        }
+
+                        $whereClause = count($conditions) > 0 ? "WHERE " . implode(" AND ", $conditions) : "";
+
+                        $query = "
+                            SELECT category, SUM(amount) AS total 
+                            FROM receipts 
+                            $whereClause
+                            GROUP BY category
+                        ";
+
+                        $result = mysqli_query($conn, $query);
+
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<tr>
+                                    <td>" . htmlspecialchars($row['category']) . "</td>
+                                    <td>₱" . number_format($row['total'], 2) . "</td>
+                                </tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>     
+        </div>
+    <?php endif; ?>
+
  
 </div>
 
