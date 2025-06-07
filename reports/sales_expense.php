@@ -153,12 +153,12 @@ if (!empty($endDate)) {
                 datasets: [
                     {
                         label: 'Sales',
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        backgroundColor: ' #0B440F',
                         data: <?= json_encode(array_values($monthly_sales)) ?>
                     },
                     {
                         label: 'Expenses',
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        backgroundColor: ' #7c0404',
                         data: <?= json_encode(array_values($monthly_expenses)) ?>
                     }
                 ]

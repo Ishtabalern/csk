@@ -132,23 +132,23 @@ if (!isset($_SESSION['user_id'])) {
                 <span style="font-size: 75px; margin-bottom: 10px">📊</span>
                 <span class="label">Sales Vs Expense</span>
             </a>
-            <a class="report-card" href="trial_balance.php" title="Trial Balance Report">
+            <a class="report-card" href="../../reports/trial_balance.php" title="Trial Balance Report">
                 <span style="font-size: 75px; margin-bottom: 10px">⚖️</span>
                 <span class="label">Trial Balance</span>
             </a>
-            <a class="report-card" href="income_statement.php" title="Income Statement Report">
+            <a class="report-card" href="../../reports/income_statement.php" title="Income Statement Report">
                 <span style="font-size: 75px; margin-bottom: 10px">💵</span>
                 <span class="label">Income Statement</span>
             </a>
-            <a class="report-card" href="owners_equity.php" title="Owner's Equity Report">
+            <a class="report-card" href="../../reports/owners_equity.php" title="Owner's Equity Report">
                 <span style="font-size: 75px; margin-bottom: 10px">🏦</span>
                 <span class="label">Owner's Equity</span>
             </a>
-            <a class="report-card" href="cash_flow.php" title="Statement of Cash Flow Report" style="margin-left: -300px;">
+            <a class="report-card" href="../../reports/cash_flow.php" title="Statement of Cash Flow Report" style="margin-left: -300px;">
                 <span style="font-size: 75px; margin-bottom: 10px">💸</span>
                 <span class="label">Statement of Cash Flow</span>
             </a>
-            <a class="report-card" href="balance_sheet.php" title="Balance Sheet Report" style="margin-left: -300px;">
+            <a class="report-card" href="../../reports/balance_sheet.php" title="Balance Sheet Report" style="margin-left: -300px;">
                 <span style="font-size: 75px; margin-bottom: 10px">🧾</span>
                 <span class="label">Balance Sheet</span>
             </a>

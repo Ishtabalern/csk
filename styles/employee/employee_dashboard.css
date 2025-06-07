@@ -9,7 +9,6 @@
 }
 
 body {
-    background-color: #f4f4f4;
 }
 
 .client-dropdown {
@@ -41,7 +40,6 @@ body {
 .dashboard {
     padding: 20px;
     margin-left: 250px; /* Sidebar width */
-    background-color: #f4f4f4;
     color: #333;
 }
 

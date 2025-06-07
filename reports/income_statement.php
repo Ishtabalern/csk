@@ -151,25 +151,25 @@ if (!empty($client_id)) {
         <div class="incomeStatement-container" id="income_statement_table">            
             <div class="customer-name">              
                 <p><?= htmlspecialchars($client_name) ?></p>
-                <h3 id="tab-content">Income Statement</h3>
-                <h3>From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
+                <h3 style="color:#0B440F;" id="tab-content">Income Statement</h3>
+                <h3 style="color:#0B440F;">From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
+            </div>
+
+            <div class="table">
+            <table border="1" cellpadding="5">
+                <tr><td class="left bold" colspan="2">Income</td></tr>
+                <tr style="background-color: #00AF7E; color:#fff;"><th>Account</th><th>Amount</th></tr>
+                <?php foreach ($income as $i): ?>
+                    <tr><td><?= $i['name'] ?></td><td><?= number_format($i['amount'], 2) ?></td></tr>
+                <?php endforeach; ?>
+                <tr><td><strong>Total Income</strong></td><td><strong><?= number_format($total_income, 2) ?></strong></td></tr>
+            </table>
             </div>
 
             <div class="table">
                 <table border="1" cellpadding="5">
-                    <tr><td class="left bold">Income</td></tr>
-                    <tr><th>Account</th><th>Amount</th></tr>
-                    <?php foreach ($income as $i): ?>
-                        <tr><td><?= $i['name'] ?></td><td><?= number_format($i['amount'], 2) ?></td></tr>
-                    <?php endforeach; ?>
-                    <tr><td><strong>Total Income</strong></td><td><strong><?= number_format($total_income, 2) ?></strong></td></tr>
-                </table>
-            </div>
-
-            <div class="table">
-                <table border="1" cellpadding="5">
-                    <tr><td class="left bold">Expense</td></tr>
-                    <tr><th>Account</th><th>Amount</th></tr>
+                    <tr><td class="left bold" colspan="2">Expense</td></tr>
+                    <tr style="background-color: #00AF7E; color:#fff;"><th>Account</th><th>Amount</th></tr>
                     <?php foreach ($expenses as $e): ?>
                         <tr><td><?= $e['name'] ?></td><td><?= number_format($e['amount'], 2) ?></td></tr>
                     <?php endforeach; ?>

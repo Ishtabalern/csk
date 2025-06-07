@@ -213,7 +213,7 @@ if ($client_id) {
         </div>
 
         <div id ="balance_sheet_table">
-            <h2 style="margin-top:15px; color:#1ABC9C;">Balance Sheet of <?= htmlspecialchars($client_name) ?> as of <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
+            <h2 style="margin-top:15px; color: #0B440F;">Balance Sheet of <?= htmlspecialchars($client_name) ?> as of <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
 
             <div class="table-container">
                 <h4>Assets</h4>

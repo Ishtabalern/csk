@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="topbar-container">
         <div class="header">
             <img src="../../imgs/csk_logo.png" alt="">
-            <h1 style="color:#1ABC9C">Add New Client</h1>
+            <h1 style="color: #0B440F">Add New Client</h1>
         </div>
        
         <div class="btn">

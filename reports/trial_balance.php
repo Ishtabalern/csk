@@ -162,7 +162,7 @@ $dashboard_link = ($_SESSION['role'] === 'admin') ? '../admin/reports/view_repor
         </div>
 
         <div class="table-container" id="trial_balance_table">
-            <h2 style="margin-top:15px; color:#1ABC9C; text-align:center;">Trial Balance Report of <?= htmlspecialchars($client_name) ?> from <?= htmlspecialchars(date("m-d-Y", strtotime($start_date))) ?> to <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
+            <h2 style="margin-top:15px; color:#0B440F; text-align:center;">Trial Balance Report of <?= htmlspecialchars($client_name) ?> from <?= htmlspecialchars(date("m-d-Y", strtotime($start_date))) ?> to <?= htmlspecialchars(date("m-d-Y", strtotime($end_date))) ?></h2>
             <table>
                 <thead>
                     <tr>

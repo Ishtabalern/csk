@@ -243,8 +243,8 @@ if (!empty($client_id)) {
         <div class="table-container" id="owners_equity_table">
             <div class="customer-name" style="text-align: center; font-size: 1.2rem;">              
                     <p><?= htmlspecialchars($client_name) ?></p>
-                    <h3 id="tab-content">Statement of Owner's Equity</h3>
-                    <h3>From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
+                    <h3 style="color:#0B440F;" id="tab-content">Statement of Owner's Equity</h3>
+                    <h3 style="color:#0B440F;">From <?= date("m-d-Y", strtotime($start_date)) ?> to <?= date("m-d-Y", strtotime($end_date)) ?></h3>
                 </div>
             <table>
                 <tr><th class="left">Item</th><th>Amount (₱)</th></tr>

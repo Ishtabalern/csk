@@ -43,7 +43,7 @@ $payment_methods = $conn->query("SELECT DISTINCT payment_method FROM receipts");
     ?>
 
 <div class="main">
-    <h2>📄 All Receipts Report</h2>
+    <h2 style="color: #0B440F">📄 All Receipts Report</h2>
     <a href="<?= $dashboard_link ?>" style="text-decoration:none; background:#007bff; color:white; padding:8px 12px; border-radius:5px;">
         ⬅️ Back to Dashboard
     </a>
