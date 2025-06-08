@@ -21,6 +21,7 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="view.css">
     <link rel="stylesheet" href="../partials/topbar.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .modal {
             display: none;
@@ -92,6 +93,69 @@ $result = $stmt->get_result();
         .excellent-quality {
             background-color: #ccf6e4; /* light greenish-blue */
         }
+        
+        #uploadModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        #rawTextModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        #rawTextModal .modal-content {
+            background: #fff;
+            padding: 20px;
+            width: 500px; /* Fixed width */
+            height: 300px; /* Fixed height */
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden; /* Prevent stretching */
+        }
+
+        #rawTextContent {
+            max-height: 500px; /* Limited height inside modal */
+            overflow-y: auto; /* Enables scrolling */
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+        }
+        .close-btn {
+            background-color: #ff4d4d; /* Red for emphasis */
+            margin-top: 10px;
+            margin-left: 200px;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .close-btn:hover {
+            background-color: #cc0000; /* Darker red on hover */
+        }
 
     </style>
 </head>
@@ -143,6 +207,15 @@ $result = $stmt->get_result();
 
 <br>
 
+<!-- Raw Text Modal -->
+<div id="rawTextModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color:rgba(0,0,0,0.5);">
+    <div style="background:#fff; padding:20px; max-width:500px; margin:100px auto; border-radius:10px;">
+        <h3 style="margin-bottom: 10px; margin-left:180px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">RAW TEXT</h3>
+        <pre id="rawTextContent" style="white-space: pre-wrap; word-wrap: break-word; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"></pre>
+        <button onclick="document.getElementById('rawTextModal').style.display='none'" class="close-btn"><i class="fas fa-times"></i> Close</button>
+    </div>
+</div>
+
 <div class="receipts-container">
     <table id="receiptTable" border="1" cellpadding="8" cellspacing="0">
         <thead>
@@ -155,6 +228,7 @@ $result = $stmt->get_result();
                 <th>Image</th>
                 <th>Confidence Score</th>
                 <th>Quality</th>
+                <th>Raw Text</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -184,6 +258,9 @@ $result = $stmt->get_result();
                 
                         <td><?= htmlspecialchars($row['confidence_score']) ?></td>
                         <td><?= htmlspecialchars($row['quality_flag']) ?></td>
+                        <td>
+                            <button class="view-btn" onclick="openRawTextModal(`<?= htmlspecialchars($row['raw_text']) ?>`)">View Raw Text</button>
+                        </td>
                         <td style="text-align: center; vertical-align: middle;"><button class="edit-btn">Edit</button></td>
                     </tr>
                 <?php endwhile; ?>
@@ -254,12 +331,11 @@ $result = $stmt->get_result();
             const date = currentRow.dataset.date;
 
             document.getElementById('edit-id').value = id;
-            document.getElementById('edit-vendor').value = vendor;
-            document.getElementById('edit-category').value = category;
-            document.getElementById('edit-amount').value = amount;
-            document.getElementById('edit-payment_method').value = payment_method;
-            document.getElementById('edit-date').value = date;
-
+            document.getElementById('edit-vendor').value = currentRow.dataset.vendor;
+            document.getElementById('edit-category').value = currentRow.dataset.category;
+            document.getElementById('edit-amount').value = currentRow.dataset.amount;
+            document.getElementById('edit-payment_method').value = currentRow.dataset.payment_method;
+            document.getElementById('edit-date').value = currentRow.dataset.date;
             modal.style.display = 'block';
         });
     });
@@ -268,7 +344,7 @@ $result = $stmt->get_result();
         modal.style.display = 'none';
     }
 
-    function saveChanges() {
+        function saveChanges() {
         const id = document.getElementById('edit-id').value;
         const vendor = document.getElementById('edit-vendor').value;
         const category = document.getElementById('edit-category').value;
@@ -278,12 +354,12 @@ $result = $stmt->get_result();
 
         fetch('../process/scanned_update.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `id=${id}&vendor=${encodeURIComponent(vendor)}&category=${encodeURIComponent(category)}&amount=${amount}&payment_method=${encodeURIComponent(payment_method)}&date=${date}`
         })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            if (data.trim() === 'success') {
+            if (data.status === 'success') {
                 currentRow.dataset.vendor = vendor;
                 currentRow.dataset.category = category;
                 currentRow.dataset.amount = amount;
@@ -295,19 +371,22 @@ $result = $stmt->get_result();
                 currentRow.children[2].textContent = `₱${parseFloat(amount).toFixed(2)}`;
                 currentRow.children[3].textContent = payment_method;
                 currentRow.children[4].textContent = date;
-                currentRow.children[6].textContent = data.score;
                 currentRow.children[7].textContent = data.quality;
 
-                // Reset quality color
+                // Reset and reapply quality color
                 currentRow.classList.remove('low-quality', 'good-quality', 'very-good-quality', 'excellent-quality');
                 if (data.quality === "Excellent - Edited") {
                     currentRow.classList.add('excellent-quality');
                 }
 
+                alert("Update successful!");
                 closeModal();
             } else {
                 alert("Failed to save changes.");
             }
+        })
+        .catch(error => {
+            alert("Error saving changes: " + error);
         });
     }
 
@@ -344,6 +423,11 @@ $result = $stmt->get_result();
         }
     });
 });
+
+function openRawTextModal(rawText) {
+    document.getElementById('rawTextContent').textContent = rawText;
+    document.getElementById('rawTextModal').style.display = 'block';
+}
 </script>
 
 </body>
