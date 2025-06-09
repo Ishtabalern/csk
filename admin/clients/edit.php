@@ -76,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         body {   
-        background-color: #dce3e9;
         min-height: 100vh;
         display: flex;
         justify-content: center;
@@ -92,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         min-height: 100px;
         text-align: center; /* center text inside container */
         background-color: #fff;
+        border: 1px solid #ddd;
         }
 
         .container h2 {
